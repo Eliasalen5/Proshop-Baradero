@@ -1,5 +1,5 @@
 import { useEffect, useState, useRef } from 'react'
-import { collection, getDocs, updateDoc, doc, query, orderBy, where } from 'firebase/firestore'
+import { collection, updateDoc, doc, query, orderBy, onSnapshot } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 
 export default function UsersManager() {
@@ -15,33 +15,22 @@ export default function UsersManager() {
   const scannerRef = useRef(null)
   const html5QrCodeRef = useRef(null)
 
-  const loadUsers = () => {
+  useEffect(() => {
     const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
-    getDocs(q).then((snap) => {
+    const unsub = onSnapshot(q, (snap) => {
       const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
       setUsers(list.filter(u => u.role !== 'admin'))
     })
-  }
-
-  const loadRedemptions = () => {
-    const q = query(collection(db, 'redemptions'), orderBy('date', 'desc'))
-    getDocs(q).then((snap) => {
-      setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-    })
-  }
-
-  useEffect(() => { loadUsers() }, [])
-
-  useEffect(() => {
-    const interval = setInterval(loadUsers, 15000)
-    return () => clearInterval(interval)
+    return () => unsub()
   }, [])
 
   useEffect(() => {
     if (view !== 'redemptions') return
-    loadRedemptions()
-    const interval = setInterval(loadRedemptions, 15000)
-    return () => clearInterval(interval)
+    const q = query(collection(db, 'redemptions'), orderBy('date', 'desc'))
+    const unsub = onSnapshot(q, (snap) => {
+      setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    })
+    return () => unsub()
   }, [view])
 
   const assignPoints = async (userId, currentPoints) => {
@@ -49,7 +38,6 @@ export default function UsersManager() {
     if (!added || added <= 0) return
     const newTotal = (currentPoints || 0) + added
     await updateDoc(doc(db, 'users', userId), { points: newTotal })
-    setUsers(users.map((u) => (u.id === userId ? { ...u, points: newTotal } : u)))
     setPointsInput({ ...pointsInput, [userId]: '' })
   }
 
@@ -70,7 +58,6 @@ export default function UsersManager() {
       await updateDoc(doc(db, 'redemptions', match.id), { status: 'completed', completedAt: new Date().toISOString() })
       setConfirmMsg(`Canje de "${match.benefitName}" confirmado`)
       setCodeInput('')
-      loadRedemptions()
     } catch {
       setConfirmMsg('Error al confirmar el canje')
     }

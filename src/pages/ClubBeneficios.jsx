@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { collection, getDocs, query, where, orderBy, addDoc, doc, updateDoc } from 'firebase/firestore'
+import { collection, getDocs, query, where, orderBy, addDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 
 function generateCode() {
@@ -21,22 +21,15 @@ export default function ClubBeneficios() {
   const [message, setMessage] = useState('')
   const [redeemed, setRedeemed] = useState(null)
 
-  const loadData = () => {
-    Promise.all([
-      getDocs(query(collection(db, 'benefits'), where('active', '!=', false))),
-      getDocs(query(collection(db, 'categories'), orderBy('createdAt', 'desc'))),
-    ]).then(([bSnap, cSnap]) => {
-      setBenefits(bSnap.docs.map((d) => ({ id: d.id, ...d.data() })))
-      setCategories(cSnap.docs.map((d) => ({ id: d.id, ...d.data() })))
-      setLoading(false)
-    }).catch(() => setLoading(false))
-  }
-
-  useEffect(() => { loadData() }, [])
-
   useEffect(() => {
-    const interval = setInterval(loadData, 15000)
-    return () => clearInterval(interval)
+    const unsubBenefits = onSnapshot(query(collection(db, 'benefits'), where('active', '!=', false)), (snap) => {
+      setBenefits(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+      setLoading(false)
+    })
+    const unsubCategories = onSnapshot(query(collection(db, 'categories'), orderBy('createdAt', 'desc')), (snap) => {
+      setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    })
+    return () => { unsubBenefits(); unsubCategories() }
   }, [])
 
   const handleRedeem = async (benefit) => {

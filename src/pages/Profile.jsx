@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { collection, query, where, getDocs } from 'firebase/firestore'
+import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/AuthContext'
 
@@ -26,20 +26,13 @@ export default function Profile() {
   const [qrModal, setQrModal] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
 
-  const loadRedemptions = () => {
-    if (!user) return
-    const q = query(collection(db, 'redemptions'), where('userId', '==', user.uid))
-    getDocs(q).then((snap) => {
-      setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-    })
-  }
-
-  useEffect(() => { loadRedemptions() }, [user])
-
   useEffect(() => {
     if (!user) return
-    const interval = setInterval(loadRedemptions, 15000)
-    return () => clearInterval(interval)
+    const q = query(collection(db, 'redemptions'), where('userId', '==', user.uid))
+    const unsub = onSnapshot(q, (snap) => {
+      setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    })
+    return () => unsub()
   }, [user])
 
   useEffect(() => {
