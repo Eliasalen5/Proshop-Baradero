@@ -260,17 +260,32 @@ export default function Profile() {
       ) : (
         <div className="space-y-3">
           {redemptions.map((r) => (
-            <div key={r.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center justify-between">
-              <div>
-                <p className="text-white font-medium">{r.benefitName}</p>
-                <p className="text-gray-500 text-sm">{new Date(r.date).toLocaleDateString('es-AR')}</p>
+            <div key={r.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-white font-medium">{r.benefitName}</p>
+                  <p className="text-gray-500 text-sm">{new Date(r.date).toLocaleDateString('es-AR')}</p>
+                </div>
+                <div className="text-right">
+                  <p className="text-club-yellow font-bold">-{r.pointsSpent} pts</p>
+                  <span className={`text-xs ${r.status === 'completed' ? 'text-green-400' : r.status === 'pending' ? 'text-yellow-400' : 'text-red-400'}`}>
+                    {r.status === 'completed' ? 'Completado' : r.status === 'pending' ? 'Pendiente' : 'Cancelado'}
+                  </span>
+                </div>
               </div>
-              <div className="text-right">
-                <p className="text-club-yellow font-bold">-{r.pointsSpent} pts</p>
-                <span className={`text-xs ${r.status === 'completed' ? 'text-green-400' : r.status === 'pending' ? 'text-yellow-400' : 'text-red-400'}`}>
-                  {r.status === 'completed' ? 'Completado' : r.status === 'pending' ? 'Pendiente' : 'Cancelado'}
-                </span>
-              </div>
+              {r.status === 'pending' && r.code && (
+                <div className="mt-3 pt-3 border-t border-gray-800 flex items-center gap-4">
+                  <img
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${r.code}`}
+                    alt="QR"
+                    className="w-16 h-16 rounded"
+                  />
+                  <div>
+                    <p className="text-xs text-gray-500">Código de verificación</p>
+                    <p className="text-lg font-bold tracking-widest text-club-yellow">{r.code}</p>
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
