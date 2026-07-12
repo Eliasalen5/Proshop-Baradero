@@ -78,24 +78,37 @@ export default function CarouselManager() {
       <h2 className="text-2xl font-bold text-white mb-6">Carrusel</h2>
       {error && <div className="bg-red-900/50 text-red-300 p-3 rounded mb-4 text-sm">{error}</div>}
 
-      <form onSubmit={handleUpload} className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8 space-y-4">
-        <h3 className="text-club-yellow font-semibold">Agregar imagen</h3>
-        <div>
-          <p className="text-gray-500 text-sm mb-1">Imagen (recomendado 1920x820 o 21:9)</p>
-          <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm" required />
+      {images.length >= 5 ? (
+        <div className="bg-yellow-900/30 border border-yellow-600/30 rounded-lg p-4 mb-8 text-yellow-300 text-sm">
+          Límite alcanzado. Eliminá una imagen para poder subir otra (máximo 5).
         </div>
-        <input placeholder="Título (opcional)" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
-        <input placeholder="Descripción (opcional)" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
-        <button type="submit" disabled={uploading || !file} className="bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition disabled:opacity-50">
-          {uploading ? 'Subiendo...' : 'Agregar'}
-        </button>
-      </form>
+      ) : (
+        <form onSubmit={handleUpload} className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8 space-y-4">
+          <h3 className="text-club-yellow font-semibold">Agregar imagen ({images.length}/5)</h3>
+          <div>
+            <p className="text-gray-500 text-sm mb-1">Imagen (recomendado 1920x820 o 21:9)</p>
+            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm" required />
+          </div>
+          <input placeholder="Título (opcional)" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
+          <input placeholder="Descripción (opcional)" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
+          <button type="submit" disabled={uploading || !file} className="bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition disabled:opacity-50">
+            {uploading ? 'Subiendo...' : 'Agregar'}
+          </button>
+        </form>
+      )}
 
       <div className="grid gap-3">
         {images.map((img, i) => (
           <div key={img.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
-            <div className="w-36 h-20 bg-gray-800 rounded overflow-hidden flex-shrink-0">
-              {img.imageUrl ? <img src={img.imageUrl} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">?</div>}
+            <div className="w-40 h-[80px] sm:h-[100px] bg-gray-800 rounded overflow-hidden flex-shrink-0 relative">
+              {img.imageUrl ? (
+                <>
+                  <img src={img.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover blur-sm opacity-40 scale-110" />
+                  <img src={img.imageUrl} alt="" className="relative w-full h-full object-contain" />
+                </>
+              ) : (
+                <div className="w-full h-full flex items-center justify-center text-gray-600">?</div>
+              )}
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-white font-medium truncate">{img.title || 'Sin título'}</p>

@@ -17,8 +17,7 @@ export default function Carousel({ images = [], interval = 10000 }) {
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-gray-900"
-      style={{ aspectRatio: '21/9' }}
+      className="relative w-full overflow-hidden bg-gray-900 h-[220px] sm:h-[350px] md:h-[450px] lg:h-[500px]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -30,8 +29,13 @@ export default function Carousel({ images = [], interval = 10000 }) {
           <div key={i} className="min-w-full h-full relative flex-shrink-0">
             <img
               src={img.imageUrl}
+              alt=""
+              className="absolute inset-0 w-full h-full object-cover blur-xl opacity-40 scale-110"
+            />
+            <img
+              src={img.imageUrl}
               alt={img.title || ''}
-              className="w-full h-full object-cover"
+              className="relative w-full h-full object-contain"
             />
             {(img.title || img.description) && (
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 md:p-10">
@@ -46,7 +50,7 @@ export default function Carousel({ images = [], interval = 10000 }) {
       </div>
 
       {images.length > 1 && (
-        <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 flex gap-2">
+        <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {images.map((_, i) => (
             <button
               key={i}
