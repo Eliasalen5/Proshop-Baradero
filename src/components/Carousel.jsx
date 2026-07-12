@@ -69,7 +69,7 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
             <img
               src={img.imageUrl}
               alt={img.title || ''}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-contain"
             />
             {(img.title || img.description) && (
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 md:p-10">
