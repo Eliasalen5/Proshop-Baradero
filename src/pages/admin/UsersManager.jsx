@@ -43,8 +43,13 @@ export default function UsersManager() {
     setPointsInput({ ...pointsInput, [userId]: '' })
   }
 
+  const extractCode = (text) => {
+    const match = (text || '').match(/\/canjear\/(\w+)/i)
+    return match ? match[1].toUpperCase() : text.trim().toUpperCase()
+  }
+
   const handleConfirmRedemption = async (scannedCode) => {
-    const code = (scannedCode || codeInput).trim().toUpperCase()
+    const code = extractCode(scannedCode || codeInput)
     if (!code) return
     const match = redemptions.find((r) => r.code === code && r.status === 'pending')
     if (!match) {
@@ -220,7 +225,7 @@ export default function UsersManager() {
                   onClick={() => setQrModal(r)}>
                   <div className="flex items-center gap-4">
                     <div className="bg-yellow-900/30 border border-yellow-600/30 rounded-lg p-2">
-                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${r.code}`} alt="" className="w-12 h-12" />
+                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=https://proshop-baradero.vercel.app/canjear/${r.code}`} alt="" className="w-12 h-12" />
                     </div>
                     <div>
                       <p className="text-white font-medium">{r.benefitName}</p>
@@ -280,7 +285,7 @@ export default function UsersManager() {
           <div className="bg-gray-900 border border-yellow-600/30 rounded-2xl p-8 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
             <div className="bg-white rounded-xl p-4 inline-block mb-4">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${qrModal.code}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://proshop-baradero.vercel.app/canjear/${qrModal.code}`}
                 alt="QR de canje"
                 className="w-60 h-60 mx-auto"
               />

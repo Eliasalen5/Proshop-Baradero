@@ -278,7 +278,7 @@ export default function Profile() {
               {r.status === 'pending' && r.code && (
                 <div className="mt-3 pt-3 border-t border-gray-800 flex items-center gap-4">
                   <img
-                    src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${r.code}`}
+                    src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=https://proshop-baradero.vercel.app/canjear/${r.code}`}
                     alt="QR"
                     className="w-16 h-16 rounded"
                   />
@@ -300,7 +300,7 @@ export default function Profile() {
           <div className="bg-gray-900 border border-yellow-600/30 rounded-2xl p-8 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
             <div className="bg-white rounded-xl p-4 inline-block mb-4">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${qrModal.code}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://proshop-baradero.vercel.app/canjear/${qrModal.code}`}
                 alt="QR de canje"
                 className="w-60 h-60 mx-auto"
               />
