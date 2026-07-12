@@ -10,7 +10,7 @@ import {
   reauthenticateWithCredential,
   EmailAuthProvider,
 } from 'firebase/auth'
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { auth, db, storage } from '../services/firebase'
 
@@ -22,20 +22,29 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser)
-      if (firebaseUser) {
-        const docSnap = await getDoc(doc(db, 'users', firebaseUser.uid))
-        if (docSnap.exists()) {
-          setUserData(docSnap.data())
-        }
-      } else {
+      if (!firebaseUser) {
         setUserData(null)
+        setLoading(false)
       }
-      setLoading(false)
     })
     return unsubscribe
   }, [])
+
+  useEffect(() => {
+    if (!user) return
+    const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+      if (snap.exists()) {
+        setUserData(snap.data())
+      }
+      setLoading(false)
+    }, (err) => {
+      console.error('User doc onSnapshot:', err)
+      setLoading(false)
+    })
+    return unsub
+  }, [user])
 
   const register = async (email, password, name, phone, documento) => {
     const cred = await createUserWithEmailAndPassword(auth, email, password)

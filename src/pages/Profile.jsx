@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { collection, query, where, onSnapshot, doc } from 'firebase/firestore'
+import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/AuthContext'
 
@@ -46,26 +46,7 @@ export default function Profile() {
     return () => { if (unsub2) unsub2(); if (retry) clearTimeout(retry) }
   }, [user])
 
-  useEffect(() => {
-    if (!user) return
-    let unsub3, retry3
-    const listenUser = () => {
-      unsub3 = onSnapshot(
-        doc(db, 'users', user.uid),
-        (snap) => {
-          if (snap.exists() && snap.data().points !== undefined) {
-            refreshUserData()
-          }
-        },
-        (err) => {
-          console.error('User doc onSnapshot:', err)
-          retry3 = setTimeout(listenUser, 3000)
-        }
-      )
-    }
-    listenUser()
-    return () => { if (unsub3) unsub3(); if (retry3) clearTimeout(retry3) }
-  }, [user])
+
 
   useEffect(() => {
     if (userData) {
