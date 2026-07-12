@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { collection, getDocs, updateDoc, doc, query, orderBy, where } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 
@@ -11,6 +11,9 @@ export default function UsersManager() {
   const [codeInput, setCodeInput] = useState('')
   const [confirmMsg, setConfirmMsg] = useState('')
   const [qrModal, setQrModal] = useState(null)
+  const [scannerOpen, setScannerOpen] = useState(false)
+  const scannerRef = useRef(null)
+  const html5QrCodeRef = useRef(null)
 
   useEffect(() => {
     const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
@@ -56,6 +59,39 @@ export default function UsersManager() {
     } catch {
       setConfirmMsg('Error al confirmar el canje')
     }
+  }
+
+  const startScanner = async () => {
+    setScannerOpen(true)
+    setTimeout(async () => {
+      if (!scannerRef.current) return
+      try {
+        const { Html5Qrcode } = await import('html5-qrcode')
+        const scanner = new Html5Qrcode('qr-scanner')
+        html5QrCodeRef.current = scanner
+        await scanner.start(
+          { facingMode: 'environment' },
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            setCodeInput(decodedText.toUpperCase())
+            scanner.stop().catch(() => {})
+            setScannerOpen(false)
+            setTimeout(() => handleConfirmRedemption(), 100)
+          },
+          () => {}
+        )
+      } catch {
+        setScannerOpen(false)
+      }
+    }, 300)
+  }
+
+  const stopScanner = async () => {
+    if (html5QrCodeRef.current) {
+      try { await html5QrCodeRef.current.stop() } catch {}
+      html5QrCodeRef.current = null
+    }
+    setScannerOpen(false)
   }
 
   const pending = redemptions.filter((r) => r.status === 'pending')
@@ -159,6 +195,16 @@ export default function UsersManager() {
               >
                 Confirmar canje
               </button>
+              <button
+                onClick={startScanner}
+                className="bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-500 transition flex items-center gap-2"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                  <rect x="7" y="7" width="10" height="10" rx="2" />
+                </svg>
+                QR
+              </button>
             </div>
           </div>
 
@@ -213,6 +259,19 @@ export default function UsersManager() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Escáner QR */}
+      {scannerOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={stopScanner}>
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-white font-semibold mb-4 text-center">Escaneá el código QR</h3>
+            <div id="qr-scanner" ref={scannerRef} className="w-full aspect-square bg-black rounded-lg overflow-hidden" />
+            <button onClick={stopScanner} className="mt-4 bg-gray-700 text-white px-6 py-2 rounded hover:bg-gray-600 transition w-full">
+              Cancelar
+            </button>
+          </div>
         </div>
       )}
 
