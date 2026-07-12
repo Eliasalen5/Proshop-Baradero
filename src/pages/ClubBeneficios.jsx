@@ -168,7 +168,7 @@ export default function ClubBeneficios() {
 
             <div className="bg-white rounded-xl p-4 inline-block mb-4">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://proshop-baradero.vercel.app/verificar/${redeemed.code}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`https://proshop-baradero.vercel.app/verificar/${redeemed.code}`)}`}
                 alt="QR de canje"
                 className="w-44 h-44 mx-auto"
               />
