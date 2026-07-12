@@ -72,8 +72,14 @@ export default function Profile() {
       if (Object.keys(updates).length > 0) await updateUserProfile(updates)
       if (photoFile) {
         setUploading(true)
-        await uploadProfilePhoto(photoFile)
-        setPhotoFile(null)
+        try {
+          await uploadProfilePhoto(photoFile)
+          setPhotoFile(null)
+        } catch {
+          showMsg('error', 'Error al subir foto')
+          setUploading(false)
+          return
+        }
         setUploading(false)
       }
       showMsg('success', 'Perfil actualizado')

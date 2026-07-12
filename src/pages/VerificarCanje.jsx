@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react'
-import { useParams, Link, useNavigate } from 'react-router-dom'
+import { useParams, Link } from 'react-router-dom'
 import { collection, query, where, getDocs, updateDoc, doc } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/AuthContext'
 
 export default function VerificarCanje() {
   const { code } = useParams()
-  const navigate = useNavigate()
-  const { user, userData, loading: authLoading } = useAuth()
+  const { userData, loading: authLoading } = useAuth()
   const [redemption, setRedemption] = useState(null)
   const [loading, setLoading] = useState(true)
   const [confirming, setConfirming] = useState(false)
@@ -16,13 +15,20 @@ export default function VerificarCanje() {
 
   useEffect(() => {
     if (authLoading) return
-    const q = query(collection(db, 'redemptions'), where('code', '==', code?.toUpperCase()), where('status', '==', 'pending'))
-    getDocs(q).then((snap) => {
-      if (!snap.empty) {
-        setRedemption({ id: snap.docs[0].id, ...snap.docs[0].data() })
-      }
-      setLoading(false)
-    }).catch(() => setLoading(false))
+    let retry
+    const fetchRedemption = () => {
+      const q = query(collection(db, 'redemptions'), where('code', '==', code?.toUpperCase()), where('status', '==', 'pending'))
+      getDocs(q).then((snap) => {
+        if (!snap.empty) {
+          setRedemption({ id: snap.docs[0].id, ...snap.docs[0].data() })
+        }
+        setLoading(false)
+      }).catch(() => {
+        retry = setTimeout(fetchRedemption, 3000)
+      })
+    }
+    fetchRedemption()
+    return () => { if (retry) clearTimeout(retry) }
   }, [code, authLoading])
 
   const handleConfirm = async () => {

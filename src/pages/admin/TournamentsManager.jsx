@@ -121,7 +121,7 @@ export default function TournamentsManager() {
     const conflicts = []
     const dur = Number(form.matchDuration) || 60
     const matchesAll = []
-    formZones.forEach((zone, zi) => zone.matches?.forEach((m, mi) => {
+    formZones.forEach((zone) => zone.matches?.forEach((m, mi) => {
       if (m.court && m.time) matchesAll.push({ court: m.court, time: parseTime(m.time), key: `Zona ${zone.name} #${mi + 1}` })
     }))
     elimination.forEach((round, ri) => round.matches?.forEach((m, mi) => {
@@ -259,27 +259,6 @@ export default function TournamentsManager() {
   }
 
   const teamOptions = formZones.flatMap(z => z.teams.map(t => t.name)).filter(Boolean)
-
-  const hasOverlap = (court, time, excludeKey) => {
-    if (!court || !time) return false
-    const duration = Number(form.matchDuration) || 60
-    const newStart = parseTime(time)
-    const check = (m, key) => {
-      if (key === excludeKey) return false
-      if (m.court !== court || !m.time) return false
-      const es = parseTime(m.time)
-      const ee = es + duration
-      const ne = newStart + duration
-      return newStart < ee && ne > es
-    }
-    for (let zi = 0; zi < formZones.length; zi++)
-      for (let mi = 0; mi < formZones[zi].matches.length; mi++)
-        if (check(formZones[zi].matches[mi], `z:${zi}:${mi}`)) return true
-    for (let ri = 0; ri < elimination.length; ri++)
-      for (let mi = 0; mi < elimination[ri].matches.length; mi++)
-        if (check(elimination[ri].matches[mi], `e:${ri}:${mi}`)) return true
-    return false
-  }
 
   const addRound = () => {
     setElimination([...elimination, { name: '', matches: [{ team1: '', team2: '', court: '', time: '', sets: [{ s1: '', s2: '' }] }] }])

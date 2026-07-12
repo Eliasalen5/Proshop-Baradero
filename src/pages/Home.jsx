@@ -41,27 +41,27 @@ export default function Home() {
 
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8">
-          <div className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center">
+          <Link to="/proshop" className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center block hover:border-club-yellow/50 transition group">
             <div className="text-club-yellow text-3xl mb-3">🏪</div>
-            <h3 className="text-white font-bold text-lg mb-2">Proshop</h3>
+            <h3 className="text-white font-bold text-lg mb-2 group-hover:text-club-yellow transition">Proshop</h3>
             <p className="text-gray-400 text-sm">
               Productos deportivos de primera calidad
             </p>
-          </div>
-          <div className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center">
+          </Link>
+          <Link to="/torneos" className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center block hover:border-club-yellow/50 transition group">
             <div className="text-club-yellow text-3xl mb-3">🏆</div>
-            <h3 className="text-white font-bold text-lg mb-2">Torneos</h3>
+            <h3 className="text-white font-bold text-lg mb-2 group-hover:text-club-yellow transition">Torneos</h3>
             <p className="text-gray-400 text-sm">
               Torneos de pádel en parejas
             </p>
-          </div>
-          <div className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center">
+          </Link>
+          <Link to="/club-beneficios" className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center block hover:border-club-yellow/50 transition group">
             <div className="text-club-yellow text-3xl mb-3">🎁</div>
-            <h3 className="text-white font-bold text-lg mb-2">Club Beneficios</h3>
+            <h3 className="text-white font-bold text-lg mb-2 group-hover:text-club-yellow transition">Club Beneficios</h3>
             <p className="text-gray-400 text-sm">
               Canjeá tus puntos por productos con descuento
             </p>
-          </div>
+          </Link>
         </div>
       </section>
     </div>

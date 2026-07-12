@@ -34,16 +34,20 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (!user) return
-    const unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
-      if (snap.exists()) {
-        setUserData(snap.data())
-      }
-      setLoading(false)
-    }, (err) => {
-      console.error('User doc onSnapshot:', err)
-      setLoading(false)
-    })
-    return unsub
+    let unsub, retry
+    const listen = () => {
+      unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+        if (snap.exists()) {
+          setUserData(snap.data())
+        }
+        setLoading(false)
+      }, (err) => {
+        console.error('User doc onSnapshot:', err)
+        retry = setTimeout(listen, 3000)
+      })
+    }
+    listen()
+    return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
   }, [user])
 
   const register = async (email, password, name, phone, documento) => {

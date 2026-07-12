@@ -15,7 +15,7 @@ export default function Login() {
     try {
       await login(email, password)
       navigate('/')
-    } catch (err) {
+    } catch {
       setError('Email o contraseña incorrectos')
     }
   }

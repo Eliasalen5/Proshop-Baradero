@@ -13,7 +13,7 @@ function generateCode() {
 }
 
 export default function ClubBeneficios() {
-  const { user, userData, refreshUserData } = useAuth()
+  const { user, userData } = useAuth()
   const [benefits, setBenefits] = useState([])
   const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('')
@@ -82,7 +82,6 @@ export default function ClubBeneficios() {
         })
         const newPoints = (userData?.points || 0) - benefit.pointsRequired
         await updateDoc(doc(db, 'users', user.uid), { points: newPoints })
-        await refreshUserData()
         setRedeemed({ benefit, code })
       } catch {
         setMessage('Error al canjear. Intentá de nuevo.')
