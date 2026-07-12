@@ -100,12 +100,9 @@ export default function CarouselManager() {
       <div className="grid gap-3">
         {images.map((img, i) => (
           <div key={img.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
-            <div className="w-40 h-[80px] sm:h-[100px] bg-gray-800 rounded overflow-hidden flex-shrink-0 relative">
+            <div className="w-40 h-[60px] sm:h-[80px] bg-gray-800 rounded overflow-hidden flex-shrink-0">
               {img.imageUrl ? (
-                <>
-                  <img src={img.imageUrl} alt="" className="absolute inset-0 w-full h-full object-cover blur-sm opacity-40 scale-110" />
-                  <img src={img.imageUrl} alt="" className="relative w-full h-full object-contain" />
-                </>
+                <img src={img.imageUrl} alt="" className="w-full h-full object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-gray-600">?</div>
               )}

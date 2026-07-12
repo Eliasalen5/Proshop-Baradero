@@ -13,13 +13,11 @@ export default function Pantalla() {
   }, [])
 
   return (
-    <div className="fixed inset-0 bg-black z-50 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black z-50">
       {images.length > 0 ? (
-        <div className="w-full h-full">
-          <Carousel images={images} interval={5000} fullscreen />
-        </div>
+        <Carousel images={images} interval={5000} fullscreen />
       ) : (
-        <div className="text-center">
+        <div className="h-full flex items-center justify-center">
           <p className="text-gray-500 text-lg">Sin imágenes</p>
         </div>
       )}

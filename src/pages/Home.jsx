@@ -17,37 +17,19 @@ export default function Home() {
 
   return (
     <div>
-      {carouselImages === null ? (
+      {carouselImages === null || carouselImages.length === 0 ? (
         <section className="relative bg-gradient-to-br from-black via-gray-900 to-black py-24 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-club-yellow mb-4">
               Bienvenido a Proshop Baradero
             </h1>
-            <p className="text-gray-400 text-lg md:text-xl mb-8">
-              Tu club deportivo de confianza
+            <p className="text-gray-400 text-lg md:text-xl">
+              Tu tienda de confianza
             </p>
-            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
-              <Link to="/proshop" className="bg-club-yellow text-black font-bold px-6 py-3 rounded hover:bg-yellow-400 transition text-center">
-                Ver Productos
-              </Link>
-              <Link to="/torneos" className="border border-club-yellow text-club-yellow px-6 py-3 rounded hover:bg-club-yellow/10 transition text-center">
-                Torneos
-              </Link>
-            </div>
           </div>
         </section>
       ) : (
-        <div className="relative">
-          <Carousel images={carouselImages} interval={10000} />
-          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-3 sm:gap-4">
-            <Link to="/proshop" className="bg-club-yellow text-black font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded hover:bg-yellow-400 transition text-sm sm:text-base shadow-lg">
-              Ver Productos
-            </Link>
-            <Link to="/torneos" className="border border-club-yellow text-club-yellow px-5 py-2.5 sm:px-6 sm:py-3 rounded hover:bg-club-yellow/10 transition text-sm sm:text-base shadow-lg">
-              Torneos
-            </Link>
-          </div>
-        </div>
+        <Carousel images={carouselImages} interval={5000} />
       )}
 
       <section className="max-w-7xl mx-auto px-4 py-16">
@@ -56,7 +38,7 @@ export default function Home() {
             <div className="text-club-yellow text-3xl mb-3">🏪</div>
             <h3 className="text-white font-bold text-lg mb-2 group-hover:text-club-yellow transition">Proshop</h3>
             <p className="text-gray-400 text-sm">
-              Productos deportivos de primera calidad
+              Productos de primera calidad
             </p>
           </Link>
           <Link to="/torneos" className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center block hover:border-club-yellow/50 transition group">

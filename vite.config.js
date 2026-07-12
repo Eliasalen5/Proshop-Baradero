@@ -13,7 +13,7 @@ export default defineConfig({
       manifest: {
         name: 'Proshop Baradero',
         short_name: 'Proshop',
-        description: 'Club deportivo Proshop Baradero',
+        description: 'Proshop Baradero',
         theme_color: '#1a1a1a',
         background_color: '#1a1a1a',
         display: 'standalone',

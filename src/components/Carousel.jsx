@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from 'react'
 export default function Carousel({ images = [], interval = 10000, fullscreen = false }) {
   const [current, setCurrent] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [isFullscreen, setIsFullscreen] = useState(false)
+  const containerRef = useRef(null)
   const timerRef = useRef(null)
 
   useEffect(() => {
@@ -13,14 +15,50 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
     return () => clearInterval(timerRef.current)
   }, [images.length, interval, paused])
 
+  useEffect(() => {
+    const handler = () => setIsFullscreen(!!document.fullscreenElement)
+    document.addEventListener('fullscreenchange', handler)
+    return () => document.removeEventListener('fullscreenchange', handler)
+  }, [])
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      containerRef.current?.requestFullscreen()
+    } else {
+      document.exitFullscreen()
+    }
+  }
+
   if (images.length === 0) return null
+
+  const fullscreenActive = fullscreen || isFullscreen
+  const heightClass = fullscreenActive
+    ? 'h-full'
+    : 'h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px]'
 
   return (
     <div
-      className={`relative w-full overflow-hidden bg-gray-900 ${fullscreen ? 'h-full' : 'h-[220px] sm:h-[350px] md:h-[450px] lg:h-[500px]'}`}
+      ref={containerRef}
+      className={`relative w-full overflow-hidden bg-gray-900 ${heightClass}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
+      {isFullscreen && (
+        <>
+          <div className="absolute top-4 left-4 z-30">
+            <span className="text-club-yellow text-xl font-bold tracking-wider drop-shadow-lg">
+              PROSHOP BARADERO
+            </span>
+          </div>
+          <button
+            onClick={toggleFullscreen}
+            className="absolute top-4 right-4 z-30 bg-black/40 text-white px-3 py-1.5 rounded text-sm hover:bg-black/60 transition"
+          >
+            Salir
+          </button>
+        </>
+      )}
+
       <div
         className="flex h-full transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
@@ -29,13 +67,8 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
           <div key={i} className="min-w-full h-full relative flex-shrink-0">
             <img
               src={img.imageUrl}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover blur-xl opacity-40 scale-110"
-            />
-            <img
-              src={img.imageUrl}
               alt={img.title || ''}
-              className="relative w-full h-full object-contain"
+              className="absolute inset-0 w-full h-full object-cover"
             />
             {(img.title || img.description) && (
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 md:p-10">
@@ -59,6 +92,18 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
             />
           ))}
         </div>
+      )}
+
+      {!fullscreen && (
+        <button
+          onClick={toggleFullscreen}
+          className="absolute top-3 right-3 z-20 bg-black/40 text-white p-2 rounded hover:bg-black/60 transition"
+          title="Pantalla completa"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
+          </svg>
+        </button>
       )}
     </div>
   )

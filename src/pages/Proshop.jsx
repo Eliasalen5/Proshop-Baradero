@@ -35,7 +35,7 @@ export default function Proshop() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold text-club-yellow mb-2">Proshop</h1>
-      <p className="text-gray-400 mb-6">Productos deportivos</p>
+      <p className="text-gray-400 mb-6">Productos</p>
 
       {categories.length > 0 && (
         <div className="flex gap-2 mb-8 overflow-x-auto flex-nowrap whitespace-nowrap -mx-4 px-4 md:mx-0 md:px-0 pb-1">

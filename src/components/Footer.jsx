@@ -6,7 +6,7 @@ export default function Footer() {
           <div>
             <h3 className="text-club-yellow font-bold text-lg mb-2">Proshop Baradero</h3>
             <p className="text-gray-400 text-sm">
-              Tu club deportivo con los mejores productos, torneos y beneficios.
+              Los mejores productos, torneos y beneficios.
             </p>
           </div>
           <div>
