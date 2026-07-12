@@ -168,7 +168,7 @@ export default function ClubBeneficios() {
 
             <div className="bg-white rounded-xl p-4 inline-block mb-4">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://proshop-baradero.vercel.app/canjear/${redeemed.code}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${redeemed.code}`}
                 alt="QR de canje"
                 className="w-44 h-44 mx-auto"
               />
@@ -178,9 +178,10 @@ export default function ClubBeneficios() {
             <p className="text-white font-medium">{redeemed.benefit.name}</p>
             <p className="text-gray-500 text-sm mt-1">-{redeemed.benefit.pointsRequired} pts</p>
 
+            <p className="text-gray-500 text-xs mt-4">Mostrale este código al encargado para escanearlo desde el panel</p>
             <button
               onClick={() => setRedeemed(null)}
-              className="mt-6 bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition w-full"
+              className="mt-3 bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition w-full"
             >
               Cerrar
             </button>

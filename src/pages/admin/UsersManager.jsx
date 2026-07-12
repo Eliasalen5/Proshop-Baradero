@@ -43,13 +43,8 @@ export default function UsersManager() {
     setPointsInput({ ...pointsInput, [userId]: '' })
   }
 
-  const extractCode = (text) => {
-    const match = (text || '').match(/\/canjear\/(\w+)/i)
-    return match ? match[1].toUpperCase() : text.trim().toUpperCase()
-  }
-
   const handleConfirmRedemption = async (scannedCode) => {
-    const code = extractCode(scannedCode || codeInput)
+    const code = (scannedCode || codeInput).trim().toUpperCase()
     if (!code) return
     const match = redemptions.find((r) => r.code === code && r.status === 'pending')
     if (!match) {
@@ -225,7 +220,7 @@ export default function UsersManager() {
                   onClick={() => setQrModal(r)}>
                   <div className="flex items-center gap-4">
                     <div className="bg-yellow-900/30 border border-yellow-600/30 rounded-lg p-2">
-                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=https://proshop-baradero.vercel.app/canjear/${r.code}`} alt="" className="w-12 h-12" />
+                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${r.code}`} alt="" className="w-12 h-12" />
                     </div>
                     <div>
                       <p className="text-white font-medium">{r.benefitName}</p>
@@ -271,6 +266,7 @@ export default function UsersManager() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={stopScanner}>
           <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
             <h3 className="text-white font-semibold mb-4 text-center">Escaneá el código QR</h3>
+            <p className="text-gray-500 text-xs text-center mb-3">Apuntale al QR que te muestra el socio en su teléfono</p>
             <div id="qr-scanner" ref={scannerRef} className="w-full aspect-square bg-black rounded-lg overflow-hidden" />
             <button onClick={stopScanner} className="mt-4 bg-gray-700 text-white px-6 py-2 rounded hover:bg-gray-600 transition w-full">
               Cancelar
@@ -285,7 +281,7 @@ export default function UsersManager() {
           <div className="bg-gray-900 border border-yellow-600/30 rounded-2xl p-8 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
             <div className="bg-white rounded-xl p-4 inline-block mb-4">
               <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https://proshop-baradero.vercel.app/canjear/${qrModal.code}`}
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${qrModal.code}`}
                 alt="QR de canje"
                 className="w-60 h-60 mx-auto"
               />

@@ -22,7 +22,6 @@ const ProductsManager = lazy(() => import('./pages/admin/ProductsManager'))
 const TournamentsManager = lazy(() => import('./pages/admin/TournamentsManager'))
 const BenefitsManager = lazy(() => import('./pages/admin/BenefitsManager'))
 const UsersManager = lazy(() => import('./pages/admin/UsersManager'))
-const VerificarCanje = lazy(() => import('./pages/VerificarCanje'))
 
 export default function App() {
   return (
@@ -40,7 +39,6 @@ export default function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/canjear/:code" element={<VerificarCanje />} />
               <Route
                 path="/perfil"
                 element={
