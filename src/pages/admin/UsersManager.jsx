@@ -43,8 +43,8 @@ export default function UsersManager() {
     setPointsInput({ ...pointsInput, [userId]: '' })
   }
 
-  const handleConfirmRedemption = async () => {
-    const code = codeInput.trim().toUpperCase()
+  const handleConfirmRedemption = async (scannedCode) => {
+    const code = (scannedCode || codeInput).trim().toUpperCase()
     if (!code) return
     const match = redemptions.find((r) => r.code === code && r.status === 'pending')
     if (!match) {
@@ -73,10 +73,9 @@ export default function UsersManager() {
           { facingMode: 'environment' },
           { fps: 10, qrbox: { width: 250, height: 250 } },
           (decodedText) => {
-            setCodeInput(decodedText.toUpperCase())
             scanner.stop().catch(() => {})
             setScannerOpen(false)
-            setTimeout(() => handleConfirmRedemption(), 100)
+            handleConfirmRedemption(decodedText)
           },
           () => {}
         )
