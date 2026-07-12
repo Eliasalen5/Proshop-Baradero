@@ -8,6 +8,7 @@ export default function AdminLayout() {
     { path: '/admin/tournaments', label: 'Torneos', emoji: '🏆' },
     { path: '/admin/products', label: 'Productos', emoji: '📦' },
     { path: '/admin/benefits', label: 'Beneficios', emoji: '🎁' },
+    { path: '/admin/carousel', label: 'Carrusel', emoji: '🖼️' },
     { path: '/admin/users', label: 'Usuarios', emoji: '👥' },
   ]
 

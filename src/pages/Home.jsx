@@ -1,43 +1,54 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, query, orderBy, getDocs } from 'firebase/firestore'
 import { db } from '../services/firebase'
+import Carousel from '../components/Carousel'
 
 export default function Home() {
-  const [pageData, setPageData] = useState(null)
+  const [carouselImages, setCarouselImages] = useState(null)
 
   useEffect(() => {
-    getDoc(doc(db, 'pages', 'home')).then((snap) => {
-      if (snap.exists()) setPageData(snap.data())
+    const q = query(collection(db, 'carousel'), orderBy('order', 'asc'))
+    getDocs(q).then((snap) => {
+      const imgs = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+      setCarouselImages(imgs.length > 0 ? imgs : [])
     })
   }, [])
 
   return (
     <div>
-      <section className="relative bg-gradient-to-br from-black via-gray-900 to-black py-24 px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl md:text-6xl font-bold text-club-yellow mb-4">
-            {pageData?.heroTitle || 'Bienvenido a Proshop Baradero'}
-          </h1>
-          <p className="text-gray-400 text-lg md:text-xl mb-8">
-            {pageData?.heroSubtitle || 'Tu club deportivo de confianza'}
-          </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
-            <Link
-              to="/proshop"
-              className="bg-club-yellow text-black font-bold px-6 py-3 rounded hover:bg-yellow-400 transition text-center"
-            >
+      {carouselImages === null ? (
+        <section className="relative bg-gradient-to-br from-black via-gray-900 to-black py-24 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-club-yellow mb-4">
+              Bienvenido a Proshop Baradero
+            </h1>
+            <p className="text-gray-400 text-lg md:text-xl mb-8">
+              Tu club deportivo de confianza
+            </p>
+            <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
+              <Link to="/proshop" className="bg-club-yellow text-black font-bold px-6 py-3 rounded hover:bg-yellow-400 transition text-center">
+                Ver Productos
+              </Link>
+              <Link to="/torneos" className="border border-club-yellow text-club-yellow px-6 py-3 rounded hover:bg-club-yellow/10 transition text-center">
+                Torneos
+              </Link>
+            </div>
+          </div>
+        </section>
+      ) : (
+        <div className="relative">
+          <Carousel images={carouselImages} interval={10000} />
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 flex gap-3 sm:gap-4">
+            <Link to="/proshop" className="bg-club-yellow text-black font-bold px-5 py-2.5 sm:px-6 sm:py-3 rounded hover:bg-yellow-400 transition text-sm sm:text-base shadow-lg">
               Ver Productos
             </Link>
-            <Link
-              to="/torneos"
-              className="border border-club-yellow text-club-yellow px-6 py-3 rounded hover:bg-club-yellow/10 transition text-center"
-            >
+            <Link to="/torneos" className="border border-club-yellow text-club-yellow px-5 py-2.5 sm:px-6 sm:py-3 rounded hover:bg-club-yellow/10 transition text-sm sm:text-base shadow-lg">
               Torneos
             </Link>
           </div>
         </div>
-      </section>
+      )}
 
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8">

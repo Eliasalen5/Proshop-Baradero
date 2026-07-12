@@ -22,6 +22,7 @@ const ProductsManager = lazy(() => import('./pages/admin/ProductsManager'))
 const TournamentsManager = lazy(() => import('./pages/admin/TournamentsManager'))
 const BenefitsManager = lazy(() => import('./pages/admin/BenefitsManager'))
 const UsersManager = lazy(() => import('./pages/admin/UsersManager'))
+const CarouselManager = lazy(() => import('./pages/admin/CarouselManager'))
 const VerificarCanje = lazy(() => import('./pages/VerificarCanje'))
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
                 <Route path="products" element={<ProductsManager />} />
                 <Route path="benefits" element={<BenefitsManager />} />
                 <Route path="users" element={<UsersManager />} />
+                <Route path="carousel" element={<CarouselManager />} />
               </Route>
             </Route>
           </Routes>
