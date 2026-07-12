@@ -45,7 +45,8 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
     >
       {isFullscreen && (
         <>
-          <div className="absolute top-4 left-4 z-30">
+          <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
+            <img src="/logo.png" alt="Proshop Baradero" className="w-8 h-8 object-contain" />
             <span className="text-club-yellow text-xl font-bold tracking-wider drop-shadow-lg">
               PROSHOP BARADERO
             </span>
