@@ -22,6 +22,7 @@ const ProductsManager = lazy(() => import('./pages/admin/ProductsManager'))
 const TournamentsManager = lazy(() => import('./pages/admin/TournamentsManager'))
 const BenefitsManager = lazy(() => import('./pages/admin/BenefitsManager'))
 const UsersManager = lazy(() => import('./pages/admin/UsersManager'))
+const VerificarCanje = lazy(() => import('./pages/VerificarCanje'))
 
 export default function App() {
   return (
@@ -29,6 +30,7 @@ export default function App() {
       <AuthProvider>
         <Suspense fallback={<Loading />}>
           <Routes>
+            <Route path="/verificar/:code" element={<VerificarCanje />} />
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/proshop" element={<Proshop />} />
