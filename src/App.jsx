@@ -24,6 +24,7 @@ const BenefitsManager = lazy(() => import('./pages/admin/BenefitsManager'))
 const UsersManager = lazy(() => import('./pages/admin/UsersManager'))
 const CarouselManager = lazy(() => import('./pages/admin/CarouselManager'))
 const VerificarCanje = lazy(() => import('./pages/VerificarCanje'))
+const Pantalla = lazy(() => import('./pages/Pantalla'))
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
         <Suspense fallback={<Loading />}>
           <Routes>
             <Route path="/verificar/:code" element={<VerificarCanje />} />
+            <Route path="/pantalla" element={<Pantalla />} />
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/proshop" element={<Proshop />} />

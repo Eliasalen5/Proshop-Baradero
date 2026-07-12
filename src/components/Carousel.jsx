@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react'
 
-export default function Carousel({ images = [], interval = 10000 }) {
+export default function Carousel({ images = [], interval = 10000, fullscreen = false }) {
   const [current, setCurrent] = useState(0)
   const [paused, setPaused] = useState(false)
   const timerRef = useRef(null)
@@ -17,7 +17,7 @@ export default function Carousel({ images = [], interval = 10000 }) {
 
   return (
     <div
-      className="relative w-full overflow-hidden bg-gray-900 h-[220px] sm:h-[350px] md:h-[450px] lg:h-[500px]"
+      className={`relative w-full overflow-hidden bg-gray-900 ${fullscreen ? 'h-full' : 'h-[220px] sm:h-[350px] md:h-[450px] lg:h-[500px]'}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
