@@ -38,7 +38,7 @@ export default function Proshop() {
       <p className="text-gray-400 mb-6">Productos deportivos</p>
 
       {categories.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-8">
+        <div className="flex gap-2 mb-8 overflow-x-auto flex-nowrap whitespace-nowrap -mx-4 px-4 md:mx-0 md:px-0 pb-1">
           <button
             onClick={() => setSelected('')}
             className={`px-4 py-1.5 rounded text-sm transition ${

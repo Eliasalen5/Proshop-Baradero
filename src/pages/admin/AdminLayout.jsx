@@ -13,7 +13,7 @@ export default function AdminLayout() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <nav className="flex flex-wrap gap-2 mb-8 border-b border-gray-800 pb-4">
+      <nav className="flex gap-2 mb-8 border-b border-gray-800 pb-4 overflow-x-auto flex-nowrap whitespace-nowrap -mx-4 px-4 md:mx-0 md:px-0">
         {links.map((link) => (
           <Link
             key={link.path}

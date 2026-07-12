@@ -76,33 +76,36 @@ export default function Navbar() {
             )}
           </div>
 
-          <button className="md:hidden text-white" onClick={() => setOpen(!open)}>
+          <button className="md:hidden text-white p-2" onClick={() => setOpen(!open)}>
             {open ? <HiX size={24} /> : <HiMenu size={24} />}
           </button>
         </div>
       </div>
 
-      {open && (
-        <div className="md:hidden bg-club-black border-t border-yellow-600/30 px-4 pb-4">
-          <div className="flex flex-col gap-3 pt-3">
-            <Link to="/" onClick={() => setOpen(false)} className="text-gray-300">Home</Link>
-            <Link to="/proshop" onClick={() => setOpen(false)} className="text-gray-300">Proshop</Link>
-            <Link to="/torneos" onClick={() => setOpen(false)} className="text-gray-300">Torneos</Link>
-            <Link to="/club-beneficios" onClick={() => setOpen(false)} className="text-gray-300">Club Beneficios</Link>
-            {user ? (
-              <>
-                <Link to="/perfil" onClick={() => setOpen(false)} className="text-gray-300">Perfil ({userData?.points ?? 0} pts)</Link>
-                {userData?.role === 'admin' && (
-                  <Link to="/admin" onClick={() => setOpen(false)} className="text-club-yellow">Admin</Link>
+      <div className={`md:hidden bg-club-black border-t border-yellow-600/30 transition-all duration-200 ${open ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+        <div className="flex flex-col gap-1 px-4 pb-4 pt-3">
+          <Link to="/" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Home</Link>
+          <Link to="/proshop" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Proshop</Link>
+          <Link to="/torneos" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Torneos</Link>
+          <Link to="/club-beneficios" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Club Beneficios</Link>
+          {user ? (
+            <>
+              <Link to="/perfil" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800 flex items-center gap-2">
+                Perfil
+                {userData?.role !== 'admin' && (
+                  <span className="text-xs bg-club-yellow text-black px-2 py-0.5 rounded-full font-bold">{userData?.points ?? 0} pts</span>
                 )}
-                <button onClick={handleLogout} className="text-left text-red-400">Salir</button>
-              </>
-            ) : (
-              <Link to="/login" onClick={() => setOpen(false)} className="text-club-yellow">Ingresar</Link>
-            )}
-          </div>
+              </Link>
+              {userData?.role === 'admin' && (
+                <Link to="/admin" onClick={() => setOpen(false)} className="text-club-yellow font-semibold px-3 py-2 rounded hover:bg-gray-800 transition">Admin</Link>
+              )}
+              <button onClick={handleLogout} className="text-left text-red-400 hover:bg-gray-800 transition px-3 py-2 rounded">Salir</button>
+            </>
+          ) : (
+            <Link to="/login" onClick={() => setOpen(false)} className="bg-club-yellow text-black font-semibold text-center px-3 py-2 rounded hover:bg-yellow-400 transition">Ingresar</Link>
+          )}
         </div>
-      )}
+      </div>
     </nav>
   )
 }

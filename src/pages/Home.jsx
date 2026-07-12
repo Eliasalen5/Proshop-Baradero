@@ -22,16 +22,16 @@ export default function Home() {
           <p className="text-gray-400 text-lg md:text-xl mb-8">
             {pageData?.heroSubtitle || 'Tu club deportivo de confianza'}
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4">
             <Link
               to="/proshop"
-              className="bg-club-yellow text-black font-bold px-6 py-3 rounded hover:bg-yellow-400 transition"
+              className="bg-club-yellow text-black font-bold px-6 py-3 rounded hover:bg-yellow-400 transition text-center"
             >
               Ver Productos
             </Link>
             <Link
               to="/torneos"
-              className="border border-club-yellow text-club-yellow px-6 py-3 rounded hover:bg-club-yellow/10 transition"
+              className="border border-club-yellow text-club-yellow px-6 py-3 rounded hover:bg-club-yellow/10 transition text-center"
             >
               Torneos
             </Link>

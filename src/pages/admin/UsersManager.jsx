@@ -125,7 +125,7 @@ export default function UsersManager() {
 
   return (
     <div>
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-6 overflow-x-auto flex-nowrap whitespace-nowrap -mx-4 px-4 md:mx-0 md:px-0 pb-1">
         <button
           onClick={() => setView('users')}
           className={`px-4 py-2 rounded text-sm font-semibold transition ${view === 'users' ? 'bg-club-yellow text-black' : 'bg-gray-800 text-gray-400 hover:text-white'}`}
@@ -140,7 +140,7 @@ export default function UsersManager() {
         </button>
         <button
           onClick={() => setRefreshKey(k => k + 1)}
-          className="ml-auto px-3 py-2 rounded text-sm font-semibold bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition"
+          className="ml-auto px-3 py-2 rounded text-sm font-semibold bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition flex-shrink-0"
           title="Refrescar datos"
         >
           ↻
@@ -159,21 +159,21 @@ export default function UsersManager() {
               return !q || (u.displayName || '').toLowerCase().includes(q) || (u.email || '').toLowerCase().includes(q) || (u.documento || '').toLowerCase().includes(q)
             }).map((u) => (
               <div key={u.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <div>
-                    <p className="text-white font-medium">{u.displayName || 'Sin nombre'}</p>
-                    <p className="text-gray-400 text-sm">{u.email}</p>
+                <div className="flex items-start justify-between mb-2 gap-2">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-white font-medium truncate">{u.displayName || 'Sin nombre'}</p>
+                    <p className="text-gray-400 text-sm truncate">{u.email}</p>
                     <span className={`text-xs px-2 py-0.5 rounded ${u.role === 'admin' ? 'bg-club-yellow text-black' : 'bg-gray-800 text-gray-400'}`}>
                       {u.role || 'user'}
                     </span>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0">
                     <p className="text-gray-500 text-sm">Puntos</p>
                     <p className="text-club-yellow font-bold text-xl">{u.points ?? 0}</p>
                   </div>
                 </div>
                 {u.role !== 'admin' && (
-                  <div className="flex gap-2 items-center">
+                  <div className="flex gap-2 items-center mt-2">
                     <input
                       type="number"
                       placeholder="Sumar puntos"
@@ -213,7 +213,7 @@ export default function UsersManager() {
                 {confirmMsg}
               </div>
             )}
-            <div className="flex gap-2">
+            <div className="flex flex-col sm:flex-row gap-2">
               <input
                 placeholder="Ingresá el código de 6 caracteres"
                 value={codeInput}
@@ -221,23 +221,25 @@ export default function UsersManager() {
                 maxLength={6}
                 className="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white uppercase tracking-widest font-bold"
               />
-              <button
-                onClick={() => handleConfirmRedemption()}
-                disabled={!codeInput.trim()}
-                className="bg-green-600 text-white font-semibold px-6 py-2 rounded hover:bg-green-500 transition disabled:opacity-50"
-              >
-                Confirmar canje
-              </button>
-              <button
-                onClick={startScanner}
-                className="bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-500 transition flex items-center gap-2"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-                  <rect x="7" y="7" width="10" height="10" rx="2" />
-                </svg>
-                QR
-              </button>
+              <div className="flex gap-2">
+                <button
+                  onClick={() => handleConfirmRedemption()}
+                  disabled={!codeInput.trim()}
+                  className="flex-1 sm:flex-none bg-green-600 text-white font-semibold px-6 py-2 rounded hover:bg-green-500 transition disabled:opacity-50"
+                >
+                  Confirmar
+                </button>
+                <button
+                  onClick={startScanner}
+                  className="flex-1 sm:flex-none bg-blue-600 text-white font-semibold px-4 py-2 rounded hover:bg-blue-500 transition flex items-center justify-center gap-2"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2" /><path d="M17 3h2a2 2 0 0 1 2 2v2" /><path d="M21 17v2a2 2 0 0 1-2 2h-2" /><path d="M7 21H5a2 2 0 0 1-2-2v-2" />
+                    <rect x="7" y="7" width="10" height="10" rx="2" />
+                  </svg>
+                  QR
+                </button>
+              </div>
             </div>
           </div>
 
@@ -250,19 +252,19 @@ export default function UsersManager() {
           ) : (
             <div className="space-y-2 mb-8">
               {pending.map((r) => (
-                <div key={r.id} className="bg-gray-900 border border-yellow-600/20 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-gray-800/50 transition"
+                <div key={r.id} className="bg-gray-900 border border-yellow-600/20 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-gray-800/50 transition gap-3"
                   onClick={() => setQrModal(r)}>
-                  <div className="flex items-center gap-4">
-                    <div className="bg-yellow-900/30 border border-yellow-600/30 rounded-lg p-2">
-                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(`https://proshop-baradero.vercel.app/verificar/${r.code}`)}`} alt="" className="w-12 h-12" />
+                  <div className="flex items-center gap-3 min-w-0 flex-1">
+                    <div className="bg-yellow-900/30 border border-yellow-600/30 rounded-lg p-2 flex-shrink-0">
+                      <img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${encodeURIComponent(`https://proshop-baradero.vercel.app/verificar/${r.code}`)}`} alt="" className="w-10 h-10 sm:w-12 sm:h-12" />
                     </div>
-                    <div>
-                      <p className="text-white font-medium">{r.benefitName}</p>
-                      <p className="text-gray-400 text-sm">{r.userName || r.userId}</p>
+                    <div className="min-w-0">
+                      <p className="text-white font-medium truncate">{r.benefitName}</p>
+                      <p className="text-gray-400 text-sm truncate">{r.userName || r.userId}</p>
                       <p className="text-gray-500 text-xs">{new Date(r.date).toLocaleString('es-AR')}</p>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0">
                     <p className="text-club-yellow font-bold">-{r.pointsSpent} pts</p>
                     <p className="text-yellow-400 text-sm font-mono tracking-widest">{r.code}</p>
                   </div>
@@ -278,13 +280,13 @@ export default function UsersManager() {
           ) : (
             <div className="space-y-2">
               {completed.map((r) => (
-                <div key={r.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-white font-medium">{r.benefitName}</p>
-                    <p className="text-gray-400 text-sm">{r.userName || r.userId}</p>
+                <div key={r.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center justify-between gap-3">
+                  <div className="min-w-0 flex-1">
+                    <p className="text-white font-medium truncate">{r.benefitName}</p>
+                    <p className="text-gray-400 text-sm truncate">{r.userName || r.userId}</p>
                     <p className="text-gray-500 text-xs">{new Date(r.date).toLocaleString('es-AR')}</p>
                   </div>
-                  <div className="text-right">
+                  <div className="text-right flex-shrink-0">
                     <p className="text-club-yellow font-bold">-{r.pointsSpent} pts</p>
                     <span className="text-green-400 text-xs">Completado</span>
                   </div>
@@ -298,11 +300,11 @@ export default function UsersManager() {
       {/* Escáner QR */}
       {scannerOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={stopScanner}>
-          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-6 max-w-sm w-full" onClick={(e) => e.stopPropagation()}>
-            <h3 className="text-white font-semibold mb-4 text-center">Escaneá el código QR</h3>
+          <div className="bg-gray-900 border border-gray-800 rounded-2xl p-4 sm:p-6 max-w-sm w-full mx-2" onClick={(e) => e.stopPropagation()}>
+            <h3 className="text-white font-semibold mb-3 text-center">Escaneá el código QR</h3>
             <p className="text-gray-500 text-xs text-center mb-3">Apuntale al QR que te muestra el socio en su teléfono</p>
             <div id="qr-scanner" ref={scannerRef} className="w-full aspect-square bg-black rounded-lg overflow-hidden" />
-            <button onClick={stopScanner} className="mt-4 bg-gray-700 text-white px-6 py-2 rounded hover:bg-gray-600 transition w-full">
+            <button onClick={stopScanner} className="mt-4 bg-gray-700 text-white px-6 py-2.5 rounded hover:bg-gray-600 transition w-full text-sm">
               Cancelar
             </button>
           </div>

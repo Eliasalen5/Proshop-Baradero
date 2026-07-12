@@ -81,7 +81,7 @@ export default function Torneos() {
           <p className="text-lg">No hay torneos disponibles aún</p>
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {tournaments.map((t) => {
             const status = getStatus(t)
             const live = hasLiveMatch(t, now)

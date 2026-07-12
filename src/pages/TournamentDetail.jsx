@@ -183,30 +183,32 @@ export default function TournamentDetail() {
                   {zone.matches?.length > 0 ? (
                     <div className="space-y-2">
                       {zone.matches.map((m, mi) => (
-                        <div key={mi} className="flex items-center gap-3 bg-gray-800 rounded px-4 py-3 text-base">
-                          <span className="flex-1 text-white">
-                            {teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}
-                            <span className="text-gray-500 mx-2">vs</span>
-                            {teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}
+                        <div key={mi} className="flex flex-wrap items-center gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm">
+                          <span className="flex-1 text-white min-w-0">
+                            <span className="truncate">{teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}</span>
+                            <span className="text-gray-500 mx-1.5">vs</span>
+                            <span className="truncate">{teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}</span>
                           </span>
-                          {matchStatuses[`${zi}:${mi}`] === 'jugando' && (
-                            <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
-                          )}
-                          {matchStatuses[`${zi}:${mi}`] === 'finalizado' && (
-                            <span className="text-gray-500 text-xs font-medium">FINALIZADO</span>
-                          )}
-                          {renderScore(m) && (
-                            <span className="text-white text-sm font-semibold">{renderScore(m)}</span>
-                          )}
-                          {m.court && (
-                            <span className="text-gray-400 text-sm">{m.court}</span>
-                          )}
-                          {m.time && (
-                            <span className="text-club-yellow text-sm font-semibold">{m.time}</span>
-                          )}
-                          {!m.court && !m.time && (
-                            <span className="text-gray-600">—</span>
-                          )}
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {matchStatuses[`${zi}:${mi}`] === 'jugando' && (
+                              <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
+                            )}
+                            {matchStatuses[`${zi}:${mi}`] === 'finalizado' && (
+                              <span className="text-gray-500 text-xs font-medium">FINALIZADO</span>
+                            )}
+                            {renderScore(m) && (
+                              <span className="text-white text-xs sm:text-sm font-semibold">{renderScore(m)}</span>
+                            )}
+                            {m.court && (
+                              <span className="text-gray-400 text-xs">{m.court}</span>
+                            )}
+                            {m.time && (
+                              <span className="text-club-yellow text-xs sm:text-sm font-semibold">{m.time}</span>
+                            )}
+                            {!m.court && !m.time && (
+                              <span className="text-gray-600 text-xs">—</span>
+                            )}
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -230,23 +232,25 @@ export default function TournamentDetail() {
               {round.matches?.length > 0 ? (
                 <div className="space-y-2">
                   {round.matches.map((m, mi) => (
-                    <div key={mi} className="flex items-center gap-3 bg-gray-800 rounded px-4 py-3 text-base">
-                      <span className="flex-1 text-white">
-                        <span className={m.team1 ? 'text-white' : 'text-gray-500'}>{m.team1 || '—'}</span>
-                        <span className="text-gray-500 mx-2">vs</span>
-                        <span className={m.team2 ? 'text-white' : 'text-gray-500'}>{m.team2 || '—'}</span>
+                    <div key={mi} className="flex flex-wrap items-center gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm">
+                      <span className="flex-1 text-white min-w-0">
+                        <span className={`${m.team1 ? 'text-white truncate' : 'text-gray-500'}`}>{m.team1 || '—'}</span>
+                        <span className="text-gray-500 mx-1.5">vs</span>
+                        <span className={`${m.team2 ? 'text-white truncate' : 'text-gray-500'}`}>{m.team2 || '—'}</span>
                       </span>
-                      {matchStatuses[`e:${ri}:${mi}`] === 'jugando' && (
-                        <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
-                      )}
-                      {matchStatuses[`e:${ri}:${mi}`] === 'finalizado' && (
-                        <span className="text-gray-500 text-xs font-medium">FINALIZADO</span>
-                      )}
-                      {renderScore(m) && (
-                        <span className="text-white text-sm font-semibold">{renderScore(m)}</span>
-                      )}
-                      {m.court && <span className="text-gray-400 text-sm">{m.court}</span>}
-                      {m.time && <span className="text-club-yellow text-sm font-semibold">{m.time}</span>}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        {matchStatuses[`e:${ri}:${mi}`] === 'jugando' && (
+                          <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
+                        )}
+                        {matchStatuses[`e:${ri}:${mi}`] === 'finalizado' && (
+                          <span className="text-gray-500 text-xs font-medium">FINALIZADO</span>
+                        )}
+                        {renderScore(m) && (
+                          <span className="text-white text-xs sm:text-sm font-semibold">{renderScore(m)}</span>
+                        )}
+                        {m.court && <span className="text-gray-400 text-xs">{m.court}</span>}
+                        {m.time && <span className="text-club-yellow text-xs sm:text-sm font-semibold">{m.time}</span>}
+                      </div>
                     </div>
                   ))}
                 </div>

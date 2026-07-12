@@ -123,7 +123,7 @@ export default function ClubBeneficios() {
       )}
 
       {categories.filter(c => benefits.some(b => b.category === c.name)).length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-6">
+        <div className="flex gap-2 mb-6 overflow-x-auto flex-nowrap whitespace-nowrap -mx-4 px-4 md:mx-0 md:px-0 pb-1">
           <button onClick={() => setSelectedCategory('')}
             className={`px-4 py-1.5 rounded text-sm transition ${!selectedCategory ? 'bg-club-yellow text-black font-semibold' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
             Todas

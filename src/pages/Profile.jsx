@@ -132,9 +132,9 @@ export default function Profile() {
 
       {/* Info + Foto */}
       <div className="bg-gray-900 rounded-lg border border-gray-800 p-6 mb-6">
-        <div className="flex items-start gap-6">
-          <div className="flex-shrink-0 text-center">
-            <div className="w-24 h-24 rounded-full bg-gray-800 overflow-hidden border-2 border-club-yellow mx-auto">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+            <div className="flex-shrink-0 text-center">
+              <div className="w-24 h-24 rounded-full bg-gray-800 overflow-hidden border-2 border-club-yellow mx-auto">
               {userData?.photoURL ? (
                 <img src={userData.photoURL} alt="" className="w-full h-full object-cover" />
               ) : (
@@ -277,12 +277,12 @@ export default function Profile() {
           {redemptions.map((r) => (
             <div key={r.id} className={`bg-gray-900 border rounded-lg p-4 ${r.status === 'pending' && r.code ? 'border-yellow-600/20 cursor-pointer hover:bg-gray-800/50 transition' : 'border-gray-800'}`}
               onClick={() => { if (r.status === 'pending' && r.code) setQrModal(r) }}>
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-white font-medium">{r.benefitName}</p>
+              <div className="flex items-center justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <p className="text-white font-medium truncate">{r.benefitName}</p>
                   <p className="text-gray-500 text-sm">{new Date(r.date).toLocaleDateString('es-AR')}</p>
                 </div>
-                <div className="text-right">
+                <div className="text-right flex-shrink-0">
                   <p className="text-club-yellow font-bold">-{r.pointsSpent} pts</p>
                   <span className={`text-xs ${r.status === 'completed' ? 'text-green-400' : r.status === 'pending' ? 'text-yellow-400' : 'text-red-400'}`}>
                     {r.status === 'completed' ? 'Completado' : r.status === 'pending' ? 'Pendiente' : 'Cancelado'}
@@ -290,15 +290,15 @@ export default function Profile() {
                 </div>
               </div>
               {r.status === 'pending' && r.code && (
-                <div className="mt-3 pt-3 border-t border-gray-800 flex items-center gap-4">
+                <div className="mt-3 pt-3 border-t border-gray-800 flex items-center gap-3">
                   <img
                     src={`https://api.qrserver.com/v1/create-qr-code/?size=80x80&data=${encodeURIComponent(`https://proshop-baradero.vercel.app/verificar/${r.code}`)}`}
                     alt="QR"
-                    className="w-16 h-16 rounded"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded flex-shrink-0"
                   />
-                  <div>
+                  <div className="min-w-0">
                     <p className="text-xs text-gray-500">Código de verificación</p>
-                    <p className="text-lg font-bold tracking-widest text-club-yellow">{r.code}</p>
+                    <p className="text-base sm:text-lg font-bold tracking-widest text-club-yellow break-all">{r.code}</p>
                     <p className="text-xs text-gray-600 mt-1">Tocá para agrandar</p>
                   </div>
                 </div>
