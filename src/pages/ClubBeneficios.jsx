@@ -21,7 +21,7 @@ export default function ClubBeneficios() {
   const [message, setMessage] = useState('')
   const [redeemed, setRedeemed] = useState(null)
 
-  useEffect(() => {
+  const loadData = () => {
     Promise.all([
       getDocs(query(collection(db, 'benefits'), where('active', '!=', false))),
       getDocs(query(collection(db, 'categories'), orderBy('createdAt', 'desc'))),
@@ -30,6 +30,13 @@ export default function ClubBeneficios() {
       setCategories(cSnap.docs.map((d) => ({ id: d.id, ...d.data() })))
       setLoading(false)
     }).catch(() => setLoading(false))
+  }
+
+  useEffect(() => { loadData() }, [])
+
+  useEffect(() => {
+    const interval = setInterval(loadData, 15000)
+    return () => clearInterval(interval)
   }, [])
 
   const handleRedeem = async (benefit) => {

@@ -26,12 +26,20 @@ export default function Profile() {
   const [qrModal, setQrModal] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
 
-  useEffect(() => {
+  const loadRedemptions = () => {
     if (!user) return
     const q = query(collection(db, 'redemptions'), where('userId', '==', user.uid))
     getDocs(q).then((snap) => {
       setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
     })
+  }
+
+  useEffect(() => { loadRedemptions() }, [user])
+
+  useEffect(() => {
+    if (!user) return
+    const interval = setInterval(loadRedemptions, 15000)
+    return () => clearInterval(interval)
   }, [user])
 
   useEffect(() => {

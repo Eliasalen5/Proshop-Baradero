@@ -15,13 +15,13 @@ export default function UsersManager() {
   const scannerRef = useRef(null)
   const html5QrCodeRef = useRef(null)
 
-  useEffect(() => {
+  const loadUsers = () => {
     const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
     getDocs(q).then((snap) => {
       const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
       setUsers(list.filter(u => u.role !== 'admin'))
     })
-  }, [])
+  }
 
   const loadRedemptions = () => {
     const q = query(collection(db, 'redemptions'), orderBy('date', 'desc'))
@@ -30,8 +30,18 @@ export default function UsersManager() {
     })
   }
 
+  useEffect(() => { loadUsers() }, [])
+
   useEffect(() => {
-    if (view === 'redemptions') loadRedemptions()
+    const interval = setInterval(loadUsers, 15000)
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    if (view !== 'redemptions') return
+    loadRedemptions()
+    const interval = setInterval(loadRedemptions, 15000)
+    return () => clearInterval(interval)
   }, [view])
 
   const assignPoints = async (userId, currentPoints) => {
