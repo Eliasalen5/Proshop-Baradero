@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { collection, getDocs, query, where, orderBy, addDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore'
+import { collection, query, where, orderBy, addDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 
 function generateCode() {
@@ -22,14 +22,40 @@ export default function ClubBeneficios() {
   const [redeemed, setRedeemed] = useState(null)
 
   useEffect(() => {
-    const unsubBenefits = onSnapshot(query(collection(db, 'benefits'), where('active', '!=', false)), (snap) => {
-      setBenefits(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-      setLoading(false)
-    })
-    const unsubCategories = onSnapshot(query(collection(db, 'categories'), orderBy('createdAt', 'desc')), (snap) => {
-      setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-    })
-    return () => { unsubBenefits(); unsubCategories() }
+    let unsubBenefits, unsubCategories, retryB, retryC
+    const listenBenefits = () => {
+      unsubBenefits = onSnapshot(
+        query(collection(db, 'benefits'), where('active', '!=', false)),
+        (snap) => {
+          setBenefits(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+          setLoading(false)
+        },
+        (err) => {
+          console.error('Benefits onSnapshot:', err)
+          retryB = setTimeout(listenBenefits, 3000)
+        }
+      )
+    }
+    const listenCategories = () => {
+      unsubCategories = onSnapshot(
+        query(collection(db, 'categories'), orderBy('createdAt', 'desc')),
+        (snap) => {
+          setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+        },
+        (err) => {
+          console.error('Categories onSnapshot:', err)
+          retryC = setTimeout(listenCategories, 3000)
+        }
+      )
+    }
+    listenBenefits()
+    listenCategories()
+    return () => {
+      if (unsubBenefits) unsubBenefits()
+      if (unsubCategories) unsubCategories()
+      if (retryB) clearTimeout(retryB)
+      if (retryC) clearTimeout(retryC)
+    }
   }, [])
 
   const handleRedeem = async (benefit) => {

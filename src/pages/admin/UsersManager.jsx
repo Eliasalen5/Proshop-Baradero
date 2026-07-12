@@ -12,32 +12,56 @@ export default function UsersManager() {
   const [confirmMsg, setConfirmMsg] = useState('')
   const [qrModal, setQrModal] = useState(null)
   const [scannerOpen, setScannerOpen] = useState(false)
+  const [refreshKey, setRefreshKey] = useState(0)
   const scannerRef = useRef(null)
   const html5QrCodeRef = useRef(null)
 
   useEffect(() => {
-    const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
-    const unsub = onSnapshot(q, (snap) => {
-      const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
-      setUsers(list.filter(u => u.role !== 'admin'))
-    })
-    return () => unsub()
-  }, [])
+    let unsub, retry
+    const listen = () => {
+      const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
+      unsub = onSnapshot(
+        q,
+        (snap) => {
+          const list = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
+          setUsers(list.filter(u => u.role !== 'admin'))
+        },
+        (err) => {
+          console.error('Users onSnapshot:', err)
+          retry = setTimeout(listen, 3000)
+        }
+      )
+    }
+    listen()
+    return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
+  }, [refreshKey])
 
   useEffect(() => {
     if (view !== 'redemptions') return
-    const q = query(collection(db, 'redemptions'), orderBy('date', 'desc'))
-    const unsub = onSnapshot(q, (snap) => {
-      setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-    })
-    return () => unsub()
-  }, [view])
+    let unsub, retry
+    const listen = () => {
+      const q = query(collection(db, 'redemptions'), orderBy('date', 'desc'))
+      unsub = onSnapshot(
+        q,
+        (snap) => {
+          setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+        },
+        (err) => {
+          console.error('Redemptions onSnapshot:', err)
+          retry = setTimeout(listen, 3000)
+        }
+      )
+    }
+    listen()
+    return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
+  }, [view, refreshKey])
 
   const assignPoints = async (userId, currentPoints) => {
     const added = Number(pointsInput[userId])
     if (!added || added <= 0) return
     const newTotal = (currentPoints || 0) + added
     await updateDoc(doc(db, 'users', userId), { points: newTotal })
+    setUsers(users.map((u) => (u.id === userId ? { ...u, points: newTotal } : u)))
     setPointsInput({ ...pointsInput, [userId]: '' })
   }
 
@@ -56,6 +80,7 @@ export default function UsersManager() {
     }
     try {
       await updateDoc(doc(db, 'redemptions', match.id), { status: 'completed', completedAt: new Date().toISOString() })
+      setRedemptions(redemptions.map((r) => (r.id === match.id ? { ...r, status: 'completed' } : r)))
       setConfirmMsg(`Canje de "${match.benefitName}" confirmado`)
       setCodeInput('')
     } catch {
@@ -112,6 +137,13 @@ export default function UsersManager() {
           className={`px-4 py-2 rounded text-sm font-semibold transition ${view === 'redemptions' ? 'bg-club-yellow text-black' : 'bg-gray-800 text-gray-400 hover:text-white'}`}
         >
           Canjes Pendientes {pending.length > 0 && <span className="ml-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{pending.length}</span>}
+        </button>
+        <button
+          onClick={() => setRefreshKey(k => k + 1)}
+          className="ml-auto px-3 py-2 rounded text-sm font-semibold bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition"
+          title="Refrescar datos"
+        >
+          ↻
         </button>
       </div>
 
@@ -190,7 +222,7 @@ export default function UsersManager() {
                 className="flex-1 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white uppercase tracking-widest font-bold"
               />
               <button
-                onClick={handleConfirmRedemption}
+                onClick={() => handleConfirmRedemption()}
                 disabled={!codeInput.trim()}
                 className="bg-green-600 text-white font-semibold px-6 py-2 rounded hover:bg-green-500 transition disabled:opacity-50"
               >
