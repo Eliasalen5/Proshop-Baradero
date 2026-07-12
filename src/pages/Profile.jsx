@@ -23,6 +23,7 @@ export default function Profile() {
   const [confirmPass, setConfirmPass] = useState('')
   const [changingPass, setChangingPass] = useState(false)
 
+  const [qrModal, setQrModal] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
 
   useEffect(() => {
@@ -260,7 +261,8 @@ export default function Profile() {
       ) : (
         <div className="space-y-3">
           {redemptions.map((r) => (
-            <div key={r.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4">
+            <div key={r.id} className={`bg-gray-900 border rounded-lg p-4 ${r.status === 'pending' && r.code ? 'border-yellow-600/20 cursor-pointer hover:bg-gray-800/50 transition' : 'border-gray-800'}`}
+              onClick={() => { if (r.status === 'pending' && r.code) setQrModal(r) }}>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-white font-medium">{r.benefitName}</p>
@@ -283,11 +285,33 @@ export default function Profile() {
                   <div>
                     <p className="text-xs text-gray-500">Código de verificación</p>
                     <p className="text-lg font-bold tracking-widest text-club-yellow">{r.code}</p>
+                    <p className="text-xs text-gray-600 mt-1">Tocá para agrandar</p>
                   </div>
                 </div>
               )}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Modal QR grande */}
+      {qrModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={() => setQrModal(null)}>
+          <div className="bg-gray-900 border border-yellow-600/30 rounded-2xl p-8 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-white rounded-xl p-4 inline-block mb-4">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${qrModal.code}`}
+                alt="QR de canje"
+                className="w-60 h-60 mx-auto"
+              />
+            </div>
+            <p className="text-3xl font-bold tracking-widest text-club-yellow mb-2">{qrModal.code}</p>
+            <p className="text-white font-medium">{qrModal.benefitName}</p>
+            <p className="text-gray-500 text-sm mt-1">-{qrModal.pointsSpent} pts</p>
+            <button onClick={() => setQrModal(null)} className="mt-6 bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition w-full">
+              Cerrar
+            </button>
+          </div>
         </div>
       )}
     </div>

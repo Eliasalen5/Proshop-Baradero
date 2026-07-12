@@ -10,6 +10,7 @@ export default function UsersManager() {
   const [pointsInput, setPointsInput] = useState({})
   const [codeInput, setCodeInput] = useState('')
   const [confirmMsg, setConfirmMsg] = useState('')
+  const [qrModal, setQrModal] = useState(null)
 
   useEffect(() => {
     const q = query(collection(db, 'users'), orderBy('createdAt', 'desc'))
@@ -170,7 +171,8 @@ export default function UsersManager() {
           ) : (
             <div className="space-y-2 mb-8">
               {pending.map((r) => (
-                <div key={r.id} className="bg-gray-900 border border-yellow-600/20 rounded-lg p-4 flex items-center justify-between">
+                <div key={r.id} className="bg-gray-900 border border-yellow-600/20 rounded-lg p-4 flex items-center justify-between cursor-pointer hover:bg-gray-800/50 transition"
+                  onClick={() => setQrModal(r)}>
                   <div className="flex items-center gap-4">
                     <div className="bg-yellow-900/30 border border-yellow-600/30 rounded-lg p-2">
                       <img src={`https://api.qrserver.com/v1/create-qr-code/?size=60x60&data=${r.code}`} alt="" className="w-12 h-12" />
@@ -211,6 +213,28 @@ export default function UsersManager() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* Modal QR grande */}
+      {qrModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={() => setQrModal(null)}>
+          <div className="bg-gray-900 border border-yellow-600/30 rounded-2xl p-8 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
+            <div className="bg-white rounded-xl p-4 inline-block mb-4">
+              <img
+                src={`https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${qrModal.code}`}
+                alt="QR de canje"
+                className="w-60 h-60 mx-auto"
+              />
+            </div>
+            <p className="text-3xl font-bold tracking-widest text-club-yellow mb-2">{qrModal.code}</p>
+            <p className="text-white font-medium">{qrModal.benefitName}</p>
+            <p className="text-gray-400 text-sm">{qrModal.userName || qrModal.userId}</p>
+            <p className="text-gray-500 text-sm mt-1">-{qrModal.pointsSpent} pts</p>
+            <button onClick={() => setQrModal(null)} className="mt-6 bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition w-full">
+              Cerrar
+            </button>
+          </div>
         </div>
       )}
     </div>
