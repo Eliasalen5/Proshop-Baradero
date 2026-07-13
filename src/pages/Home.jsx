@@ -35,6 +35,21 @@ export default function Home() {
         <Carousel images={carouselImages} interval={5000} />
       )}
 
+      <div className="max-w-7xl mx-auto px-4 py-8 text-center text-gray-400 text-xs md:text-sm">
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6">
+          <div className="flex items-center gap-1.5">
+            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span className="font-semibold text-gray-300">Lun a Vie:</span>
+            <span>9:00 - 12:30 / 16:30 - 20:30</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span className="font-semibold text-gray-300">Sáb:</span>
+            <span>9:30 - 13:00 / 16:30 - 21:00</span>
+          </div>
+        </div>
+      </div>
+
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8">
           <Link to="/proshop" className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center block hover:border-club-yellow/50 transition group">
