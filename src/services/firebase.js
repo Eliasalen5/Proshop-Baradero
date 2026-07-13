@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore'
 import { getStorage } from 'firebase/storage'
 
 const firebaseConfig = {
-  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  apiKey: "AIzaSyCK-YHoLhs7I0LYtCJf2skF5jWpyd2HBAo",
+  authDomain: "proshop-baradero-3ea16.firebaseapp.com",
+  projectId: "proshop-baradero-3ea16",
+  storageBucket: "proshop-baradero-3ea16.firebasestorage.app",
+  messagingSenderId: "314425054470",
+  appId: "1:314425054470:web:7dc6c2ed7edc37543cfa87",
 }
 
 const app = initializeApp(firebaseConfig)
