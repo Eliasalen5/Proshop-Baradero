@@ -2,14 +2,14 @@ export default function Footer() {
   return (
     <footer className="bg-black border-t border-yellow-600/30 mt-auto">
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
           <div>
             <h3 className="text-club-yellow font-bold text-lg mb-2">Proshop Baradero</h3>
             <p className="text-gray-400 text-sm">
               Los mejores productos, torneos y beneficios.
             </p>
           </div>
-          <div>
+          <div className="hidden md:block">
             <h4 className="text-white font-semibold mb-2">Navegación</h4>
             <ul className="text-gray-400 text-sm space-y-1">
               <li>Proshop</li>
