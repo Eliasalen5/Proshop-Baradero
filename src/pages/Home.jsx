@@ -26,20 +26,16 @@ export default function Home() {
             <p className="text-gray-500 text-base md:text-lg">
               Todo en indumentaria deportiva
             </p>
-            <div className="mt-6 inline-block bg-green-700/20 border border-green-500 rounded-lg px-5 py-3 text-left">
-              <p className="text-green-400 font-bold text-sm mb-2">🟢 Abierto</p>
+            <div className="mt-6 mx-auto inline-block bg-yellow-500/10 border border-club-yellow rounded-lg px-6 py-3 text-center">
+              <p className="text-club-yellow font-bold text-sm mb-2">🟡 Abierto</p>
               <div className="flex flex-col gap-1 text-gray-300 text-sm md:text-base">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-200 w-20">Lun a Vie:</span>
-                  <span>9:00 a.m. - 12:30 p.m.</span>
-                  <span className="text-gray-500">/</span>
-                  <span>4:30 p.m. - 8:30 p.m.</span>
+                <div>
+                  <span className="font-semibold text-gray-200">Lun a Vie:</span>{' '}
+                  <span>9:00 a 12:30 / 16:30 a 20:30</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-200 w-20">Sábados:</span>
-                  <span>9:30 a.m. - 1:00 p.m.</span>
-                  <span className="text-gray-500">/</span>
-                  <span>4:30 p.m. - 9:00 p.m.</span>
+                <div>
+                  <span className="font-semibold text-gray-200">Sábados:</span>{' '}
+                  <span>9:30 a 13:00 / 16:30 a 21:00</span>
                 </div>
               </div>
             </div>
@@ -49,20 +45,16 @@ export default function Home() {
         <>
           <Carousel images={carouselImages} interval={5000} />
           <div className="max-w-7xl mx-auto px-4 pb-4 -mt-6 text-center">
-            <div className="inline-block bg-green-700/20 border border-green-500 rounded-lg px-5 py-3 text-left">
-              <p className="text-green-400 font-bold text-sm mb-2">🟢 Abierto</p>
+            <div className="mx-auto inline-block bg-yellow-500/10 border border-club-yellow rounded-lg px-6 py-3 text-center">
+              <p className="text-club-yellow font-bold text-sm mb-2">🟡 Abierto</p>
               <div className="flex flex-col gap-1 text-gray-300 text-sm md:text-base">
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-200 w-20">Lun a Vie:</span>
-                  <span>9:00 a.m. - 12:30 p.m.</span>
-                  <span className="text-gray-500">/</span>
-                  <span>4:30 p.m. - 8:30 p.m.</span>
+                <div>
+                  <span className="font-semibold text-gray-200">Lun a Vie:</span>{' '}
+                  <span>9:00 a 12:30 / 16:30 a 20:30</span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold text-gray-200 w-20">Sábados:</span>
-                  <span>9:30 a.m. - 1:00 p.m.</span>
-                  <span className="text-gray-500">/</span>
-                  <span>4:30 p.m. - 9:00 p.m.</span>
+                <div>
+                  <span className="font-semibold text-gray-200">Sábados:</span>{' '}
+                  <span>9:30 a 13:00 / 16:30 a 21:00</span>
                 </div>
               </div>
             </div>
