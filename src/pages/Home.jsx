@@ -21,7 +21,7 @@ export default function Home() {
         <section className="relative bg-gradient-to-br from-black via-gray-900 to-black py-24 px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h1 className="text-4xl md:text-6xl font-bold text-club-yellow mb-4">
-              Bienvenido a Proshop Baradero
+              Proshop Baradero
             </h1>
             <p className="text-gray-400 text-lg md:text-xl">
               Tu tienda de confianza

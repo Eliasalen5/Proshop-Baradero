@@ -20,7 +20,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <Logo />
-            <span className="text-club-yellow text-xl font-bold tracking-wider">
+            <span className="hidden md:inline text-club-yellow text-xl font-bold tracking-wider">
               PROSHOP BARADERO
             </span>
           </Link>
