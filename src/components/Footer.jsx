@@ -20,8 +20,16 @@ export default function Footer() {
           <div>
             <h4 className="text-white font-semibold mb-2">Contacto</h4>
             <ul className="text-gray-400 text-sm space-y-1">
-              <li>info@proshopbaradero.com</li>
-              <li>@proshopbaradero</li>
+              <li>
+                <a href="https://www.instagram.com/proshopbaradero/" target="_blank" rel="noopener noreferrer" className="hover:text-club-yellow transition">
+                  @proshopbaradero
+                </a>
+              </li>
+              <li>
+                <a href="https://wa.me/5433296164636" target="_blank" rel="noopener noreferrer" className="hover:text-club-yellow transition">
+                  3329 6164636
+                </a>
+              </li>
             </ul>
           </div>
         </div>
