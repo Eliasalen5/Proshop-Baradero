@@ -181,14 +181,14 @@ export default function TournamentDetail() {
                 <div>
                   <p className="text-gray-400 text-base mb-3">Partidos</p>
                   {zone.matches?.length > 0 ? (
-                    <div className="space-y-2">
+                    <div className="grid md:grid-cols-2 gap-2">
                       {zone.matches.map((m, mi) => (
-                        <div key={mi} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm">
-                          <span className="sm:flex-1 text-white">
-                            <span className="truncate">{teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}</span>
+                        <div key={mi} className="flex flex-col bg-gray-800 rounded px-3 py-2.5 text-sm">
+                          <div className="text-white mb-1 leading-tight">
+                            <span>{teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}</span>
                             <span className="text-gray-500 mx-1.5">vs</span>
-                            <span className="truncate">{teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}</span>
-                          </span>
+                            <span>{teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}</span>
+                          </div>
                           <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                             {matchStatuses[`${zi}:${mi}`] === 'jugando' && (
                               <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
@@ -230,14 +230,14 @@ export default function TournamentDetail() {
             <div key={ri} className="bg-gray-900 border border-gray-800 rounded-lg p-6">
               <h3 className="text-club-yellow font-semibold text-lg mb-4">{round.name || `Ronda ${ri + 1}`}</h3>
               {round.matches?.length > 0 ? (
-                <div className="space-y-2">
+                <div className="grid md:grid-cols-2 gap-2">
                   {round.matches.map((m, mi) => (
-                    <div key={mi} className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm">
-                      <span className="sm:flex-1 text-white">
+                    <div key={mi} className="flex flex-col bg-gray-800 rounded px-3 py-2.5 text-sm">
+                      <div className="text-white mb-1 leading-tight">
                         <span className={`${m.team1 ? 'text-white' : 'text-gray-500'}`}>{m.team1 || '—'}</span>
                         <span className="text-gray-500 mx-1.5">vs</span>
                         <span className={`${m.team2 ? 'text-white' : 'text-gray-500'}`}>{m.team2 || '—'}</span>
-                      </span>
+                      </div>
                       <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
                         {matchStatuses[`e:${ri}:${mi}`] === 'jugando' && (
                           <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
