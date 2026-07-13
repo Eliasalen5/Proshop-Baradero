@@ -4,9 +4,15 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 py-8">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 text-center">
           <div>
-            <h3 className="text-club-yellow font-bold text-lg mb-2">Proshop Baradero</h3>
+            <div className="flex items-center justify-center md:justify-start gap-2 mb-2">
+              <img src="/logo.png" alt="Proshop Baradero" className="w-8 h-8 object-contain" />
+              <h3 className="text-club-yellow font-bold text-lg">Proshop Baradero</h3>
+            </div>
             <p className="text-gray-400 text-sm">
               Los mejores productos, torneos y beneficios.
+            </p>
+            <p className="text-gray-500 text-xs mt-2">
+              Oro 630, Baradero
             </p>
           </div>
           <div className="hidden md:block">
