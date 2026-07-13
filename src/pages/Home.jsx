@@ -23,32 +23,52 @@ export default function Home() {
             <h1 className="text-4xl md:text-6xl font-bold text-club-yellow mb-4">
               Proshop Baradero
             </h1>
-            <p className="text-gray-400 text-lg md:text-xl">
-              Tu tienda de confianza
-            </p>
-            <p className="text-gray-500 text-base md:text-lg mt-1">
+            <p className="text-gray-500 text-base md:text-lg">
               Todo en indumentaria deportiva
             </p>
+            <div className="mt-6 inline-block bg-green-700/20 border border-green-500 rounded-lg px-5 py-3 text-left">
+              <p className="text-green-400 font-bold text-sm mb-2">🟢 Abierto</p>
+              <div className="flex flex-col gap-1 text-gray-300 text-sm md:text-base">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-200 w-20">Lun a Vie:</span>
+                  <span>9:00 a.m. - 12:30 p.m.</span>
+                  <span className="text-gray-500">/</span>
+                  <span>4:30 p.m. - 8:30 p.m.</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-200 w-20">Sábados:</span>
+                  <span>9:30 a.m. - 1:00 p.m.</span>
+                  <span className="text-gray-500">/</span>
+                  <span>4:30 p.m. - 9:00 p.m.</span>
+                </div>
+              </div>
+            </div>
           </div>
         </section>
       ) : (
-        <Carousel images={carouselImages} interval={5000} />
+        <>
+          <Carousel images={carouselImages} interval={5000} />
+          <div className="max-w-7xl mx-auto px-4 pb-4 -mt-6 text-center">
+            <div className="inline-block bg-green-700/20 border border-green-500 rounded-lg px-5 py-3 text-left">
+              <p className="text-green-400 font-bold text-sm mb-2">🟢 Abierto</p>
+              <div className="flex flex-col gap-1 text-gray-300 text-sm md:text-base">
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-200 w-20">Lun a Vie:</span>
+                  <span>9:00 a.m. - 12:30 p.m.</span>
+                  <span className="text-gray-500">/</span>
+                  <span>4:30 p.m. - 8:30 p.m.</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-gray-200 w-20">Sábados:</span>
+                  <span>9:30 a.m. - 1:00 p.m.</span>
+                  <span className="text-gray-500">/</span>
+                  <span>4:30 p.m. - 9:00 p.m.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </>
       )}
-
-      <div className="max-w-7xl mx-auto px-4 py-8 text-center text-gray-400 text-xs md:text-sm">
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-6">
-          <div className="flex items-center gap-1.5">
-            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span className="font-semibold text-gray-300">Lun a Vie:</span>
-            <span>9:00 - 12:30 / 16:30 - 20:30</span>
-          </div>
-          <div className="flex items-center gap-1.5">
-            <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-            <span className="font-semibold text-gray-300">Sáb:</span>
-            <span>9:30 - 13:00 / 16:30 - 21:00</span>
-          </div>
-        </div>
-      </div>
 
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8">
