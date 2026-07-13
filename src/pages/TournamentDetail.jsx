@@ -181,13 +181,13 @@ export default function TournamentDetail() {
                 <div>
                   <p className="text-gray-400 text-base mb-3">Partidos</p>
                   {zone.matches?.length > 0 ? (
-                    <div className="grid md:grid-cols-2 gap-2">
+                    <div className="space-y-2">
                       {zone.matches.map((m, mi) => (
-                        <div key={mi} className="flex gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm items-center">
-                          <div className="flex-1 text-white leading-tight min-w-0">
-                            <div className="truncate">{teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}</div>
+                        <div key={mi} className="flex gap-3 bg-gray-800 rounded px-3 py-2.5 text-sm items-center">
+                          <div className="flex-1 text-white leading-tight">
+                            <div>{teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}</div>
                             <div className="text-gray-500 text-xs">vs</div>
-                            <div className="truncate">{teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}</div>
+                            <div>{teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}</div>
                           </div>
                           <div className="flex flex-col items-end gap-0.5 shrink-0 text-xs">
                             {matchStatuses[`${zi}:${mi}`] === 'jugando' && (
@@ -230,13 +230,13 @@ export default function TournamentDetail() {
             <div key={ri} className="bg-gray-900 border border-gray-800 rounded-lg p-6">
               <h3 className="text-club-yellow font-semibold text-lg mb-4">{round.name || `Ronda ${ri + 1}`}</h3>
               {round.matches?.length > 0 ? (
-                <div className="grid md:grid-cols-2 gap-2">
+                <div className="space-y-2">
                   {round.matches.map((m, mi) => (
-                    <div key={mi} className="flex gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm items-center">
-                      <div className="flex-1 text-white leading-tight min-w-0">
-                        <div className={`truncate ${m.team1 ? 'text-white' : 'text-gray-500'}`}>{m.team1 || '—'}</div>
+                    <div key={mi} className="flex gap-3 bg-gray-800 rounded px-3 py-2.5 text-sm items-center">
+                      <div className="flex-1 text-white leading-tight">
+                        <div className={m.team1 ? 'text-white' : 'text-gray-500'}>{m.team1 || '—'}</div>
                         <div className="text-gray-500 text-xs">vs</div>
-                        <div className={`truncate ${m.team2 ? 'text-white' : 'text-gray-500'}`}>{m.team2 || '—'}</div>
+                        <div className={m.team2 ? 'text-white' : 'text-gray-500'}>{m.team2 || '—'}</div>
                       </div>
                       <div className="flex flex-col items-end gap-0.5 shrink-0 text-xs">
                         {matchStatuses[`e:${ri}:${mi}`] === 'jugando' && (
