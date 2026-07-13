@@ -20,7 +20,7 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-2">
             <Logo />
-            <span className="hidden md:inline text-white text-xl" style={{ fontFamily: "'Pacifico', cursive" }}>
+            <span className="hidden md:inline text-white text-xl" style={{ fontFamily: "'Milk Shake', cursive" }}>
               Proshop Baradero
             </span>
           </Link>
