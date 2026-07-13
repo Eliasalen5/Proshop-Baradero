@@ -24,7 +24,7 @@ export default function Home() {
               Proshop Baradero
             </h1>
             <p className="text-gray-400 text-lg md:text-xl">
-              Tu tienda de confianza
+              Todo en indumentaria deportiva
             </p>
           </div>
         </section>
