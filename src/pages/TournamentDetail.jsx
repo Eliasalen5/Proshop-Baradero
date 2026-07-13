@@ -183,30 +183,30 @@ export default function TournamentDetail() {
                   {zone.matches?.length > 0 ? (
                     <div className="grid md:grid-cols-2 gap-2">
                       {zone.matches.map((m, mi) => (
-                        <div key={mi} className="flex flex-col bg-gray-800 rounded px-3 py-2.5 text-sm">
-                          <div className="text-white mb-1 leading-tight">
-                            <span>{teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}</span>
-                            <span className="text-gray-500 mx-1.5">vs</span>
-                            <span>{teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}</span>
+                        <div key={mi} className="flex gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm items-center">
+                          <div className="flex-1 text-white leading-tight min-w-0">
+                            <div className="truncate">{teamName(zone.teams[m.team1Idx]) || `#${m.team1Idx + 1}`}</div>
+                            <div className="text-gray-500 text-xs">vs</div>
+                            <div className="truncate">{teamName(zone.teams[m.team2Idx]) || `#${m.team2Idx + 1}`}</div>
                           </div>
-                          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                          <div className="flex flex-col items-end gap-0.5 shrink-0 text-xs">
                             {matchStatuses[`${zi}:${mi}`] === 'jugando' && (
-                              <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
+                              <span className="text-green-400 font-bold animate-pulse">● JUGANDO</span>
                             )}
                             {matchStatuses[`${zi}:${mi}`] === 'finalizado' && (
-                              <span className="text-gray-500 text-xs">FINALIZADO</span>
+                              <span className="text-gray-500">FINALIZADO</span>
                             )}
                             {renderScore(m) && (
-                              <span className="text-white text-xs sm:text-sm font-semibold whitespace-nowrap">{renderScore(m)}</span>
+                              <span className="text-white font-semibold whitespace-nowrap">{renderScore(m)}</span>
                             )}
                             {m.court && (
-                              <span className="text-gray-400 text-xs whitespace-nowrap">{m.court}</span>
+                              <span className="text-gray-400 whitespace-nowrap">{m.court}</span>
                             )}
                             {m.time && (
-                              <span className="text-club-yellow text-xs sm:text-sm font-semibold whitespace-nowrap">{m.time}</span>
+                              <span className="text-club-yellow font-semibold whitespace-nowrap">{m.time}</span>
                             )}
                             {!m.court && !m.time && !matchStatuses[`${zi}:${mi}`] && !renderScore(m) && (
-                              <span className="text-gray-600 text-xs">—</span>
+                              <span className="text-gray-600">—</span>
                             )}
                           </div>
                         </div>
@@ -232,24 +232,24 @@ export default function TournamentDetail() {
               {round.matches?.length > 0 ? (
                 <div className="grid md:grid-cols-2 gap-2">
                   {round.matches.map((m, mi) => (
-                    <div key={mi} className="flex flex-col bg-gray-800 rounded px-3 py-2.5 text-sm">
-                      <div className="text-white mb-1 leading-tight">
-                        <span className={`${m.team1 ? 'text-white' : 'text-gray-500'}`}>{m.team1 || '—'}</span>
-                        <span className="text-gray-500 mx-1.5">vs</span>
-                        <span className={`${m.team2 ? 'text-white' : 'text-gray-500'}`}>{m.team2 || '—'}</span>
+                    <div key={mi} className="flex gap-2 bg-gray-800 rounded px-3 py-2.5 text-sm items-center">
+                      <div className="flex-1 text-white leading-tight min-w-0">
+                        <div className={`truncate ${m.team1 ? 'text-white' : 'text-gray-500'}`}>{m.team1 || '—'}</div>
+                        <div className="text-gray-500 text-xs">vs</div>
+                        <div className={`truncate ${m.team2 ? 'text-white' : 'text-gray-500'}`}>{m.team2 || '—'}</div>
                       </div>
-                      <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                      <div className="flex flex-col items-end gap-0.5 shrink-0 text-xs">
                         {matchStatuses[`e:${ri}:${mi}`] === 'jugando' && (
-                          <span className="text-green-400 text-xs font-bold animate-pulse">● JUGANDO</span>
+                          <span className="text-green-400 font-bold animate-pulse">● JUGANDO</span>
                         )}
                         {matchStatuses[`e:${ri}:${mi}`] === 'finalizado' && (
-                          <span className="text-gray-500 text-xs">FINALIZADO</span>
+                          <span className="text-gray-500">FINALIZADO</span>
                         )}
                         {renderScore(m) && (
-                          <span className="text-white text-xs sm:text-sm font-semibold whitespace-nowrap">{renderScore(m)}</span>
+                          <span className="text-white font-semibold whitespace-nowrap">{renderScore(m)}</span>
                         )}
-                        {m.court && <span className="text-gray-400 text-xs whitespace-nowrap">{m.court}</span>}
-                        {m.time && <span className="text-club-yellow text-xs sm:text-sm font-semibold whitespace-nowrap">{m.time}</span>}
+                        {m.court && <span className="text-gray-400 whitespace-nowrap">{m.court}</span>}
+                        {m.time && <span className="text-club-yellow font-semibold whitespace-nowrap">{m.time}</span>}
                       </div>
                     </div>
                   ))}
