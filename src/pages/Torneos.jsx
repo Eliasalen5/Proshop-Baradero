@@ -74,7 +74,7 @@ export default function Torneos() {
   return (
     <div className="max-w-7xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold text-club-yellow mb-2">Torneos</h1>
-      <p className="text-gray-400 mb-8">Torneos de pádel en parejas</p>
+      <p className="text-gray-400 mb-8">Torneos de pádel</p>
 
       {tournaments.length === 0 ? (
         <div className="text-center py-16 text-gray-500">

@@ -48,7 +48,7 @@ export default function Home() {
             <div className="text-club-yellow text-3xl mb-3">🏆</div>
             <h3 className="text-white font-bold text-lg mb-2 group-hover:text-club-yellow transition">Torneos</h3>
             <p className="text-gray-400 text-sm">
-              Torneos de pádel en parejas
+              Torneos de pádel
             </p>
           </Link>
           <Link to="/club-beneficios" className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center block hover:border-club-yellow/50 transition group">
