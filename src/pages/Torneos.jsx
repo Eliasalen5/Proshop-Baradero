@@ -1,16 +1,8 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { collection, getDocs, query, orderBy } from 'firebase/firestore'
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
-import { toArgentinaDate, nowArgentina } from '../utils/date'
-
-function getStatus(t) {
-  if (t.finished) return { label: 'Finalizado', color: 'bg-gray-800 text-gray-400' }
-  if (!t.dateTime) return { label: 'Próximo', color: 'bg-green-900 text-green-300' }
-  return new Date(t.dateTime) <= new Date()
-    ? { label: 'En curso', color: 'bg-blue-900 text-blue-300' }
-    : { label: 'Próximo', color: 'bg-green-900 text-green-300' }
-}
+import { toArgentinaDate, nowArgentina, getStatus } from '../utils/date'
 
 function hasLiveMatch(t, now) {
   if (!t.dateTime || t.finished) return false
@@ -45,21 +37,20 @@ export default function Torneos() {
   const [loading, setLoading] = useState(true)
   const [now, setNow] = useState(nowArgentina())
 
-  const load = () => {
+  useEffect(() => {
     const q = query(collection(db, 'tournaments'), orderBy('createdAt', 'desc'))
-    getDocs(q).then((snap) => {
+    const unsub = onSnapshot(q, (snap) => {
       setTournaments(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
       setLoading(false)
+    }, (err) => {
+      setLoading(false)
+      console.error(err)
     })
-  }
-
-  useEffect(() => { load() }, [])
+    return unsub
+  }, [])
 
   useEffect(() => {
-    const id = setInterval(() => {
-      setNow(nowArgentina())
-      load()
-    }, 30000)
+    const id = setInterval(() => setNow(nowArgentina()), 30000)
     return () => clearInterval(id)
   }, [])
 

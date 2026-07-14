@@ -12,6 +12,9 @@ export default function ProductDetail() {
     getDoc(doc(db, 'products', id)).then((snap) => {
       if (snap.exists()) setProduct({ id: snap.id, ...snap.data() })
       setLoading(false)
+    }).catch((err) => {
+      setLoading(false)
+      console.error(err)
     })
   }, [id])
 

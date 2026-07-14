@@ -8,6 +8,8 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   const containerRef = useRef(null)
   const timerRef = useRef(null)
   const touchStartX = useRef(null)
+  const isFullscreenRef = useRef(isFullscreen)
+  isFullscreenRef.current = isFullscreen
 
   useEffect(() => {
     if (slideCount <= 1 || paused) return
@@ -19,16 +21,16 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
 
   useEffect(() => {
     const handler = () => setIsFullscreen(!!(document.fullscreenElement || document.webkitFullscreenElement))
+    const escHandler = (e) => { if (e.key === 'Escape' && isFullscreenRef.current && !document.fullscreenElement) setIsFullscreen(false) }
     document.addEventListener('fullscreenchange', handler)
     document.addEventListener('webkitfullscreenchange', handler)
-    const escHandler = (e) => { if (e.key === 'Escape' && isFullscreen && !document.fullscreenElement) setIsFullscreen(false) }
     document.addEventListener('keydown', escHandler)
     return () => {
       document.removeEventListener('fullscreenchange', handler)
       document.removeEventListener('webkitfullscreenchange', handler)
       document.removeEventListener('keydown', escHandler)
     }
-  }, [isFullscreen])
+  }, [])
 
   const toggleFullscreen = () => {
     const el = containerRef.current

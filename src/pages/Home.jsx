@@ -12,6 +12,8 @@ export default function Home() {
     getDocs(q).then((snap) => {
       const imgs = snap.docs.map((d) => ({ id: d.id, ...d.data() }))
       setCarouselImages(imgs.length > 0 ? imgs : [])
+    }).catch((err) => {
+      console.error(err)
     })
   }, [])
 

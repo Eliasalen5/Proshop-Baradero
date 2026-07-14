@@ -11,7 +11,9 @@ export default function CategoriesManager() {
 
   const load = () => {
     const q = query(collection(db, 'categories'), orderBy('createdAt', 'desc'))
-    getDocs(q).then((snap) => setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
+    getDocs(q).then((snap) => setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() })))).catch((err) => {
+      console.error(err)
+    })
   }
   useEffect(load, [])
 

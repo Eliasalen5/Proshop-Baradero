@@ -16,6 +16,8 @@ export default function PagesEditor() {
     getDoc(doc(db, 'pages', selected)).then((snap) => {
       if (snap.exists()) setContent(snap.data())
       else setContent({})
+    }).catch((err) => {
+      console.error(err)
     })
   }, [selected])
 

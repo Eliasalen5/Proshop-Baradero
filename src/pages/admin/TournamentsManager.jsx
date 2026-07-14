@@ -2,16 +2,9 @@ import { useEffect, useState } from 'react'
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
+import { getStatus } from '../../utils/date'
 
 const emptyForm = { name: '', dateTime: '', description: '', zoneCount: '2', teamsPerZone: '3', flyer: '', matchDuration: '60' }
-
-function getStatus(t) {
-  if (t.finished) return { label: 'Finalizado', color: 'bg-gray-800 text-gray-400' }
-  if (!t.dateTime) return { label: 'Próximo', color: 'bg-green-900 text-green-300' }
-  return new Date(t.dateTime) <= new Date()
-    ? { label: 'En curso', color: 'bg-blue-900 text-blue-300' }
-    : { label: 'Próximo', color: 'bg-green-900 text-green-300' }
-}
 
 function generateMatches(count) {
   const matches = []
@@ -196,6 +189,9 @@ export default function TournamentsManager() {
     try {
       let flyerUrl = form.flyer
       if (file) {
+        if (editing && form.flyer) {
+          try { await deleteObject(ref(storage, form.flyer)) } catch {}
+        }
         const ref_st = ref(storage, `tournaments/${Date.now()}_${file.name}`)
         await uploadBytes(ref_st, file)
         flyerUrl = await getDownloadURL(ref_st)

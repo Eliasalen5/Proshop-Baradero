@@ -40,8 +40,9 @@ export default function Register() {
         )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-400 text-sm mb-1">Nombre</label>
+            <label htmlFor="reg-name" className="block text-gray-400 text-sm mb-1">Nombre</label>
             <input
+              id="reg-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -50,8 +51,9 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm mb-1">Teléfono</label>
+            <label htmlFor="reg-phone" className="block text-gray-400 text-sm mb-1">Teléfono</label>
             <input
+              id="reg-phone"
               type="tel"
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
@@ -60,8 +62,9 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm mb-1">Documento</label>
+            <label htmlFor="reg-doc" className="block text-gray-400 text-sm mb-1">Documento</label>
             <input
+              id="reg-doc"
               type="text"
               value={documento}
               onChange={(e) => setDocumento(e.target.value)}
@@ -71,8 +74,9 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm mb-1">Email</label>
+            <label htmlFor="reg-email" className="block text-gray-400 text-sm mb-1">Email</label>
             <input
+              id="reg-email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -81,8 +85,9 @@ export default function Register() {
             />
           </div>
           <div>
-            <label className="block text-gray-400 text-sm mb-1">Contraseña</label>
+            <label htmlFor="reg-password" className="block text-gray-400 text-sm mb-1">Contraseña</label>
             <input
+              id="reg-password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}

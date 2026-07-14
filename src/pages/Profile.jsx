@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/AuthContext'
@@ -25,6 +25,11 @@ export default function Profile() {
 
   const [qrModal, setQrModal] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
+  const msgTimer = useRef(null)
+
+  useEffect(() => {
+    return () => { if (msgTimer.current) clearTimeout(msgTimer.current) }
+  }, [])
 
   useEffect(() => {
     if (!user) return
@@ -58,8 +63,9 @@ export default function Profile() {
   }, [userData, user])
 
   const showMsg = (type, text) => {
+    if (msgTimer.current) clearTimeout(msgTimer.current)
     setMsg({ type, text })
-    setTimeout(() => setMsg({ type: '', text: '' }), 4000)
+    msgTimer.current = setTimeout(() => setMsg({ type: '', text: '' }), 4000)
   }
 
   const handleSaveProfile = async () => {
@@ -158,16 +164,18 @@ export default function Profile() {
 
           <div className="flex-1 grid md:grid-cols-2 gap-4">
             <div>
-              <label className="text-gray-500 text-sm">Nombre</label>
+              <label htmlFor="profile-name" className="text-gray-500 text-sm">Nombre</label>
               <input
+                id="profile-name"
                 value={editName}
                 onChange={(e) => setEditName(e.target.value)}
                 className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white mt-1"
               />
             </div>
             <div>
-              <label className="text-gray-500 text-sm">Teléfono</label>
+              <label htmlFor="profile-phone" className="text-gray-500 text-sm">Teléfono</label>
               <input
+                id="profile-phone"
                 value={editPhone}
                 onChange={(e) => setEditPhone(e.target.value)}
                 className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white mt-1"
@@ -175,8 +183,9 @@ export default function Profile() {
               />
             </div>
             <div>
-              <label className="text-gray-500 text-sm">Documento</label>
+              <label htmlFor="profile-doc" className="text-gray-500 text-sm">Documento</label>
               <input
+                id="profile-doc"
                 value={editDocumento}
                 onChange={(e) => setEditDocumento(e.target.value)}
                 className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white mt-1"
@@ -209,22 +218,30 @@ export default function Profile() {
       <div className="bg-gray-900 rounded-lg border border-gray-800 p-6 mb-6">
         <h2 className="text-white font-bold text-lg mb-4">Cambiar Email</h2>
         <form onSubmit={handleChangeEmail} className="space-y-3 max-w-md">
-          <input
-            type="email"
-            value={newEmail}
-            onChange={(e) => setNewEmail(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-            placeholder="Nuevo email"
-            required
-          />
-          <input
-            type="password"
-            value={emailPass}
-            onChange={(e) => setEmailPass(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-            placeholder="Contraseña actual (para confirmar)"
-            required
-          />
+          <div>
+            <label htmlFor="profile-new-email" className="text-gray-500 text-sm">Nuevo email</label>
+            <input
+              id="profile-new-email"
+              type="email"
+              value={newEmail}
+              onChange={(e) => setNewEmail(e.target.value)}
+              className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+              placeholder="Nuevo email"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="profile-email-pass" className="text-gray-500 text-sm">Contraseña actual (para confirmar)</label>
+            <input
+              id="profile-email-pass"
+              type="password"
+              value={emailPass}
+              onChange={(e) => setEmailPass(e.target.value)}
+              className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+              placeholder="Contraseña actual (para confirmar)"
+              required
+            />
+          </div>
           <button
             type="submit"
             disabled={changingEmail}
@@ -239,31 +256,43 @@ export default function Profile() {
       <div className="bg-gray-900 rounded-lg border border-gray-800 p-6 mb-6">
         <h2 className="text-white font-bold text-lg mb-4">Cambiar Contraseña</h2>
         <form onSubmit={handleChangePassword} className="space-y-3 max-w-md">
-          <input
-            type="password"
-            value={curPass}
-            onChange={(e) => setCurPass(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-            placeholder="Contraseña actual"
-            required
-          />
-          <input
-            type="password"
-            value={newPass}
-            onChange={(e) => setNewPass(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-            placeholder="Nueva contraseña (mín. 6 caracteres)"
-            required
-            minLength={6}
-          />
-          <input
-            type="password"
-            value={confirmPass}
-            onChange={(e) => setConfirmPass(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-            placeholder="Confirmar nueva contraseña"
-            required
-          />
+          <div>
+            <label htmlFor="profile-cur-pass" className="text-gray-500 text-sm">Contraseña actual</label>
+            <input
+              id="profile-cur-pass"
+              type="password"
+              value={curPass}
+              onChange={(e) => setCurPass(e.target.value)}
+              className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+              placeholder="Contraseña actual"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="profile-new-pass" className="text-gray-500 text-sm">Nueva contraseña (mín. 6 caracteres)</label>
+            <input
+              id="profile-new-pass"
+              type="password"
+              value={newPass}
+              onChange={(e) => setNewPass(e.target.value)}
+              className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+              placeholder="Nueva contraseña (mín. 6 caracteres)"
+              required
+              minLength={6}
+            />
+          </div>
+          <div>
+            <label htmlFor="profile-confirm-pass" className="text-gray-500 text-sm">Confirmar nueva contraseña</label>
+            <input
+              id="profile-confirm-pass"
+              type="password"
+              value={confirmPass}
+              onChange={(e) => setConfirmPass(e.target.value)}
+              className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
+              placeholder="Confirmar nueva contraseña"
+              required
+            />
+          </div>
           <button
             type="submit"
             disabled={changingPass}

@@ -2,15 +2,7 @@ import { useEffect, useState, useMemo } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../services/firebase'
-import { toArgentinaDate, nowArgentina } from '../utils/date'
-
-function getStatus(t) {
-  if (t.finished) return { label: 'Finalizado', color: 'text-gray-400' }
-  if (!t.dateTime) return { label: 'Próximo', color: 'text-green-400' }
-  return new Date(t.dateTime) <= new Date()
-    ? { label: 'En curso', color: 'text-blue-400' }
-    : { label: 'Próximo', color: 'text-green-400' }
-}
+import { toArgentinaDate, nowArgentina, getStatus } from '../utils/date'
 
 const medallas = { 1: '🥇', 2: '🥈', 3: '🥉', 4: '🏅' }
 const labels = { 1: '1° Puesto', 2: '2° Puesto', 3: '3° Puesto', 4: '4° Puesto' }
@@ -81,6 +73,9 @@ export default function TournamentDetail() {
     getDoc(doc(db, 'tournaments', id)).then((snap) => {
       if (snap.exists()) setTournament({ id: snap.id, ...snap.data() })
       setLoading(false)
+    }).catch((err) => {
+      setLoading(false)
+      console.error(err)
     })
   }, [id])
 

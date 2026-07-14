@@ -11,7 +11,7 @@ import {
   EmailAuthProvider,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore'
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { auth, db, storage } from '../services/firebase'
 
 const AuthContext = createContext()
@@ -87,6 +87,9 @@ export function AuthProvider({ children }) {
 
   const uploadProfilePhoto = async (file) => {
     if (!user) throw new Error('No user')
+    if (userData?.photoURL) {
+      try { await deleteObject(ref(storage, userData.photoURL)) } catch {}
+    }
     const storageRef = ref(storage, `profiles/${user.uid}_${Date.now()}_${file.name}`)
     await uploadBytes(storageRef, file)
     const url = await getDownloadURL(storageRef)

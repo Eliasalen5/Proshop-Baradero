@@ -17,6 +17,9 @@ export default function Proshop() {
       setProducts(pSnap.docs.map((d) => ({ id: d.id, ...d.data() })))
       setCategories(cSnap.docs.map((d) => ({ id: d.id, ...d.data() })))
       setLoading(false)
+    }).catch((err) => {
+      setLoading(false)
+      console.error(err)
     })
   }, [])
 

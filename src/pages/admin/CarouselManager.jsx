@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, writeBatch } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
 
@@ -13,7 +13,9 @@ export default function CarouselManager() {
 
   const load = () => {
     const q = query(collection(db, 'carousel'), orderBy('order', 'asc'))
-    getDocs(q).then((snap) => setImages(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
+    getDocs(q).then((snap) => setImages(snap.docs.map((d) => ({ id: d.id, ...d.data() })))).catch((err) => {
+      console.error(err)
+    })
   }
   useEffect(load, [])
 
@@ -46,18 +48,30 @@ export default function CarouselManager() {
 
   const moveUp = async (i) => {
     if (i === 0) return
-    const a = images[i], b = images[i - 1]
-    await updateDoc(doc(db, 'carousel', a.id), { order: b.order })
-    await updateDoc(doc(db, 'carousel', b.id), { order: a.order })
-    load()
+    try {
+      const a = images[i], b = images[i - 1]
+      const batch = writeBatch(db)
+      batch.update(doc(db, 'carousel', a.id), { order: b.order })
+      batch.update(doc(db, 'carousel', b.id), { order: a.order })
+      await batch.commit()
+      load()
+    } catch (err) {
+      setError('Error: ' + err.message)
+    }
   }
 
   const moveDown = async (i) => {
     if (i === images.length - 1) return
-    const a = images[i], b = images[i + 1]
-    await updateDoc(doc(db, 'carousel', a.id), { order: b.order })
-    await updateDoc(doc(db, 'carousel', b.id), { order: a.order })
-    load()
+    try {
+      const a = images[i], b = images[i + 1]
+      const batch = writeBatch(db)
+      batch.update(doc(db, 'carousel', a.id), { order: b.order })
+      batch.update(doc(db, 'carousel', b.id), { order: a.order })
+      await batch.commit()
+      load()
+    } catch (err) {
+      setError('Error: ' + err.message)
+    }
   }
 
   const handleDelete = async (id, imageUrl) => {

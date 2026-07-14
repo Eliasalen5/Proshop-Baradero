@@ -39,8 +39,9 @@ export default function ResetPassword() {
             )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <label className="block text-gray-400 text-sm mb-1">Email</label>
+                <label htmlFor="reset-email" className="block text-gray-400 text-sm mb-1">Email</label>
                 <input
+                  id="reset-email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

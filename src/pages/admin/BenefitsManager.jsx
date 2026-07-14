@@ -44,6 +44,9 @@ export default function BenefitsManager() {
     try {
       let imageUrl = form.image
       if (file) {
+        if (editing && form.image) {
+          try { await deleteObject(ref(storage, form.image)) } catch {}
+        }
         const storageRef = ref(storage, `benefits/${Date.now()}_${file.name}`)
         await uploadBytes(storageRef, file)
         imageUrl = await getDownloadURL(storageRef)

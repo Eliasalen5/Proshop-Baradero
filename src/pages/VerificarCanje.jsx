@@ -82,6 +82,8 @@ export default function VerificarCanje() {
                 </button>
                 {error && <p className="text-red-400 text-sm mt-2">{error}</p>}
               </>
+            ) : userData ? (
+              <p className="text-red-400 text-sm mt-6">No tenés permisos de administrador para confirmar este canje.</p>
             ) : (
               <p className="text-gray-500 text-sm mt-6">Necesitás iniciar sesión como administrador para confirmar este canje.</p>
             )}
