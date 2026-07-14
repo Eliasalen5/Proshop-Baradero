@@ -1,13 +1,25 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { HiMenu, HiX } from 'react-icons/hi'
-import { useState } from 'react'
+import { HiMenu, HiX, HiChevronDown } from 'react-icons/hi'
+import { useState, useRef, useEffect } from 'react'
 import Logo from './Logo'
 
 export default function Navbar() {
   const { user, userData, logout } = useAuth()
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const [userMenu, setUserMenu] = useState(false)
+  const menuRef = useRef(null)
+
+  useEffect(() => {
+    const handleClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) {
+        setUserMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [])
 
   const handleLogout = async () => {
     await logout()
@@ -26,45 +38,50 @@ export default function Navbar() {
           </Link>
 
           <div className="hidden md:flex items-center gap-6">
-            <Link to="/" className="text-gray-300 hover:text-club-yellow transition">
-              Home
-            </Link>
-            <Link to="/proshop" className="text-gray-300 hover:text-club-yellow transition">
-              Proshop
-            </Link>
-            <Link to="/torneos" className="text-gray-300 hover:text-club-yellow transition">
-              Torneos
-            </Link>
-            <Link to="/club-beneficios" className="text-gray-300 hover:text-club-yellow transition">
-              Club Beneficios
-            </Link>
+            <Link to="/" className="text-gray-300 hover:text-club-yellow transition">Home</Link>
+            <Link to="/proshop" className="text-gray-300 hover:text-club-yellow transition">Proshop</Link>
+            <Link to="/torneos" className="text-gray-300 hover:text-club-yellow transition">Torneos</Link>
+            <Link to="/club-beneficios" className="text-gray-300 hover:text-club-yellow transition">Club Beneficios</Link>
             {user ? (
-              <div className="flex items-center gap-4">
-                <Link
-                  to="/perfil"
-                  className="flex items-center gap-1 text-gray-300 hover:text-club-yellow transition"
+              <div className="relative" ref={menuRef}>
+                <button
+                  onClick={() => setUserMenu(!userMenu)}
+                  className="flex items-center gap-1.5 text-gray-300 hover:text-club-yellow transition"
                 >
-                  <span>{userData?.displayName}</span>
+                  <span className="max-w-[120px] truncate">{userData?.displayName}</span>
                   {userData?.role !== 'admin' && (
                     <span className="text-xs bg-club-yellow text-black px-2 py-0.5 rounded-full font-bold">
-                      {userData?.points ?? 0} pts
+                      {userData?.points ?? 0}
                     </span>
                   )}
-                </Link>
-                {userData?.role === 'admin' && (
-                  <Link
-                    to="/admin"
-                    className="text-club-yellow hover:text-yellow-300 transition font-semibold"
-                  >
-                    Admin
-                  </Link>
-                )}
-                <button
-                  onClick={handleLogout}
-                  className="text-gray-400 hover:text-red-400 transition text-sm"
-                >
-                  Salir
+                  <HiChevronDown className={`w-4 h-4 transition ${userMenu ? 'rotate-180' : ''}`} />
                 </button>
+                {userMenu && (
+                  <div className="absolute right-0 mt-2 w-44 bg-gray-900 border border-gray-700 rounded-lg shadow-lg py-1">
+                    <Link
+                      to="/perfil"
+                      onClick={() => setUserMenu(false)}
+                      className="block px-4 py-2 text-sm text-gray-300 hover:text-club-yellow hover:bg-gray-800 transition"
+                    >
+                      Perfil
+                    </Link>
+                    {userData?.role === 'admin' && (
+                      <Link
+                        to="/admin"
+                        onClick={() => setUserMenu(false)}
+                        className="block px-4 py-2 text-sm text-club-yellow hover:bg-gray-800 transition"
+                      >
+                        Admin
+                      </Link>
+                    )}
+                    <button
+                      onClick={() => { setUserMenu(false); handleLogout() }}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-gray-800 transition"
+                    >
+                      Salir
+                    </button>
+                  </div>
+                )}
               </div>
             ) : (
               <Link
