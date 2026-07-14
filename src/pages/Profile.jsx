@@ -2,11 +2,9 @@ import { useEffect, useState, useRef } from 'react'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/AuthContext'
-import { sendEmailVerification } from 'firebase/auth'
-import { auth } from '../services/firebase'
 
 export default function Profile() {
-  const { user, userData, updateUserProfile, uploadProfilePhoto, changeEmail, changePassword, emailVerified } = useAuth()
+  const { user, userData, updateUserProfile, uploadProfilePhoto, changeEmail, changePassword } = useAuth()
   const [redemptions, setRedemptions] = useState([])
 
   const [editName, setEditName] = useState('')
@@ -28,7 +26,6 @@ export default function Profile() {
   const [qrModal, setQrModal] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
   const msgTimer = useRef(null)
-  const [sendingVerification, setSendingVerification] = useState(false)
 
   useEffect(() => {
     return () => { if (msgTimer.current) clearTimeout(msgTimer.current) }
@@ -143,17 +140,6 @@ export default function Profile() {
     setChangingPass(false)
   }
 
-  const handleResendVerification = async () => {
-    setSendingVerification(true)
-    try {
-      await sendEmailVerification(auth.currentUser)
-      showMsg('success', 'Email de verificación enviado. Revisá tu bandeja de entrada.')
-    } catch {
-      showMsg('error', 'Error al enviar el email')
-    }
-    setSendingVerification(false)
-  }
-
   return (
     <div className="max-w-4xl mx-auto px-4 py-12">
       <h1 className="text-3xl font-bold text-club-yellow mb-6">Mi Perfil</h1>
@@ -222,14 +208,7 @@ export default function Profile() {
             )}
             <div>
               <label className="text-gray-500 text-sm">Email</label>
-              <div className="flex items-center gap-2 mt-1">
-                <p className="text-white">{user?.email}</p>
-                {emailVerified ? (
-                  <span className="text-green-400 text-xs bg-green-900/50 px-1.5 py-0.5 rounded">Verificado</span>
-                ) : (
-                  <span className="text-yellow-400 text-xs bg-yellow-900/50 px-1.5 py-0.5 rounded">No verificado</span>
-                )}
-              </div>
+              <p className="text-white mt-1">{user?.email}</p>
             </div>
             <div>
               <label className="text-gray-500 text-sm">Rol</label>
@@ -246,15 +225,6 @@ export default function Profile() {
           >
             {uploading ? 'Subiendo foto...' : saving ? 'Guardando...' : 'Guardar cambios'}
           </button>
-          {!emailVerified && (
-            <button
-              onClick={handleResendVerification}
-              disabled={sendingVerification}
-              className="bg-gray-800 text-club-yellow font-semibold px-4 py-2 rounded hover:bg-gray-700 transition text-sm disabled:opacity-50"
-            >
-              {sendingVerification ? 'Enviando...' : 'Reenviar verificación'}
-            </button>
-          )}
         </div>
       </div>
 

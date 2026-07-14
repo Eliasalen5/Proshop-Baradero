@@ -1,8 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { sendEmailVerification } from 'firebase/auth'
-import { auth } from '../services/firebase'
 
 export default function Register() {
   const [name, setName] = useState('')
@@ -13,8 +11,6 @@ export default function Register() {
   const [error, setError] = useState('')
   const { register } = useAuth()
   const navigate = useNavigate()
-  const [registered, setRegistered] = useState(false)
-  const [sending, setSending] = useState(false)
 
   const validatePassword = (pass) => {
     const errors = []
@@ -34,9 +30,8 @@ export default function Register() {
       return
     }
     try {
-      const cred = await register(email, password, name, phone, documento)
-      await sendEmailVerification(cred.user)
-      setRegistered(true)
+      await register(email, password, name, phone, documento)
+      navigate('/login')
     } catch (err) {
       if (err.code === 'auth/email-already-in-use') {
         setError('Este email ya está registrado')
@@ -44,42 +39,6 @@ export default function Register() {
         setError('Error al registrarse. Intentá de nuevo.')
       }
     }
-  }
-
-  const handleResend = async () => {
-    setSending(true)
-    try {
-      await sendEmailVerification(auth.currentUser)
-    } catch {}
-    setSending(false)
-  }
-
-  if (registered) {
-    return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <div className="bg-gray-900 p-8 rounded-lg w-full max-w-md border border-gray-800 text-center">
-          <div className="text-5xl mb-4">📧</div>
-          <h1 className="text-2xl font-bold text-club-yellow mb-4">Verificá tu email</h1>
-          <p className="text-gray-400 mb-6">
-            Te enviamos un email de verificación a <strong className="text-white">{email}</strong>.
-            Hacé clic en el enlace para activar tu cuenta, luego iniciá sesión.
-          </p>
-          <button
-            onClick={handleResend}
-            disabled={sending}
-            className="text-club-yellow hover:underline text-sm mb-4 block w-full"
-          >
-            {sending ? 'Enviando...' : 'Reenviar email de verificación'}
-          </button>
-          <Link
-            to="/login"
-            className="block w-full bg-club-yellow text-black font-bold py-2 rounded hover:bg-yellow-400 transition"
-          >
-            Ir a iniciar sesión
-          </Link>
-        </div>
-      </div>
-    )
   }
 
   return (

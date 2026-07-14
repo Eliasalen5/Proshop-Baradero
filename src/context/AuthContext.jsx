@@ -5,7 +5,6 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
-  sendEmailVerification,
   updateEmail,
   updatePassword,
   reauthenticateWithCredential,
@@ -73,10 +72,6 @@ export function AuthProvider({ children }) {
 
   const resetPassword = (email) => sendPasswordResetEmail(auth, email)
 
-  const verifyEmail = async () => {
-    if (user) await sendEmailVerification(user)
-  }
-
   const refreshUserData = async () => {
     if (user) {
       const docSnap = await getDoc(doc(db, 'users', user.uid))
@@ -126,12 +121,10 @@ export function AuthProvider({ children }) {
         user,
         userData,
         loading,
-        emailVerified: user?.emailVerified || false,
         register,
         login,
         logout,
         resetPassword,
-        verifyEmail,
         refreshUserData,
         updateUserProfile,
         uploadProfilePhoto,

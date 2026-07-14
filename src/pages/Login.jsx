@@ -1,8 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { sendEmailVerification } from 'firebase/auth'
-import { auth } from '../services/firebase'
 
 const ATTEMPT_KEY = 'proshop_login_attempts'
 const MAX_ATTEMPTS = 5
@@ -54,11 +52,7 @@ export default function Login() {
     }
 
     try {
-      const cred = await login(email, password)
-      if (!cred.user.emailVerified) {
-        setError('Verificá tu email antes de ingresar. Revisá tu bandeja de entrada.')
-        return
-      }
+      await login(email, password)
       clearAttempts()
       navigate('/')
     } catch (err) {
@@ -70,22 +64,6 @@ export default function Login() {
       } else {
         setError('Error al iniciar sesión')
       }
-    }
-  }
-
-  const handleResendVerification = async () => {
-    if (auth.currentUser) {
-      await sendEmailVerification(auth.currentUser)
-      setError('')
-    } else {
-      setError('')
-      try {
-        const cred = await login(email, password)
-        if (!cred.user.emailVerified) {
-          await sendEmailVerification(cred.user)
-          setError('Email de verificación reenviado. Revisá tu bandeja de entrada.')
-        }
-      } catch {}
     }
   }
 
@@ -104,14 +82,7 @@ export default function Login() {
         ) : (
           <>
             {error && (
-              <div className="bg-red-900/50 text-red-300 p-3 rounded mb-4 text-sm">
-                {error}
-                {error.includes('Verificá tu email') && (
-                  <button onClick={handleResendVerification} className="block text-club-yellow hover:underline mt-1">
-                    Reenviar email de verificación
-                  </button>
-                )}
-              </div>
+              <div className="bg-red-900/50 text-red-300 p-3 rounded mb-4 text-sm">{error}</div>
             )}
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
