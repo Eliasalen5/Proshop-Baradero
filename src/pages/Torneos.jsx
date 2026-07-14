@@ -93,7 +93,7 @@ export default function Torneos() {
               >
                 <div className="aspect-video bg-gray-800 flex items-center justify-center overflow-hidden">
                   {t.flyer ? (
-                    <img src={t.flyer} alt={t.name} className="w-full h-full object-cover group-hover:scale-105 transition" />
+                    <img src={t.flyer} alt={t.name} className="w-full h-full object-contain bg-gray-800 group-hover:scale-105 transition" />
                   ) : (
                     <span className="text-gray-600 text-5xl">🏆</span>
                   )}

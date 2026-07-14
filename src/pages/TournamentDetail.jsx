@@ -124,7 +124,7 @@ export default function TournamentDetail() {
       <div className="grid md:grid-cols-2 gap-8 mb-10">
         <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
           {tournament.flyer ? (
-            <img src={tournament.flyer} alt={tournament.name} className="w-full h-full object-cover" />
+            <img src={tournament.flyer} alt={tournament.name} className="w-full h-full object-contain bg-gray-800" />
           ) : (
             <span className="text-gray-600 text-6xl">🏆</span>
           )}
@@ -279,7 +279,7 @@ export default function TournamentDetail() {
                   <div className="text-3xl mb-2">{medallas[pos]}</div>
                   <div className="w-full aspect-square bg-gray-800 rounded mb-3 overflow-hidden">
                     {r.flyer ? (
-                      <img src={r.flyer} alt={r.team} className="w-full h-full object-cover" />
+                      <img src={r.flyer} alt={r.team} className="w-full h-full object-contain bg-gray-800" />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-600 text-2xl">{medallas[pos]}</div>
                     )}

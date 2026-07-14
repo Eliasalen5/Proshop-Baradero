@@ -715,7 +715,7 @@ export default function TournamentsManager() {
           return (
             <div key={t.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
               <div className="w-20 h-14 bg-gray-800 rounded overflow-hidden flex-shrink-0">
-                {t.flyer ? <img src={t.flyer} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">🏆</div>}
+                {t.flyer ? <img src={t.flyer} alt="" className="w-full h-full object-contain bg-gray-800" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">🏆</div>}
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-white font-medium">{t.name}</p>
