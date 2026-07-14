@@ -121,6 +121,24 @@ export default function TournamentsManager() {
     const conflicts = []
     const dur = Number(form.matchDuration) || 60
     const matchesAll = []
+
+    if (form.dateTime) {
+      const tournamentStart = new Date(form.dateTime)
+      const tournMin = tournamentStart.getHours() * 60 + tournamentStart.getMinutes()
+      const early = []
+      formZones.forEach((zone) => zone.matches?.forEach((m, mi) => {
+        if (m.time && parseTime(m.time) < tournMin) early.push(`Zona ${zone.name} #${mi + 1} (${m.time})`)
+      }))
+      elimination.forEach((round, ri) => round.matches?.forEach((m, mi) => {
+        if (m.time && parseTime(m.time) < tournMin) early.push(`${round.name || `Ronda ${ri + 1}`} #${mi + 1} (${m.time})`)
+      }))
+      if (early.length > 0) {
+        setError('Horarios anteriores al inicio del torneo:\n' + early.join('\n'))
+        setUploading(false)
+        return
+      }
+    }
+
     formZones.forEach((zone) => zone.matches?.forEach((m, mi) => {
       if (m.court && m.time) matchesAll.push({ court: m.court, time: parseTime(m.time), key: `Zona ${zone.name} #${mi + 1}` })
     }))
