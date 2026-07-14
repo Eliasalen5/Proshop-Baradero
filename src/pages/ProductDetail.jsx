@@ -61,11 +61,6 @@ export default function ProductDetail() {
             ${product.price?.toLocaleString('es-AR')}
           </p>
           <p className="text-gray-400 mt-4">{product.description || 'Sin descripción'}</p>
-          {product.stock !== undefined && (
-            <p className="text-sm text-gray-500 mt-4">
-              Stock: {product.stock > 0 ? product.stock : 'No disponible'}
-            </p>
-          )}
         </div>
       </div>
     </div>

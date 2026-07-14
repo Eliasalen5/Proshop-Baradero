@@ -3,7 +3,7 @@ import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy,
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
 
-const emptyForm = { name: '', description: '', price: '', category: '', stock: '', image: '' }
+const emptyForm = { name: '', description: '', price: '', category: '', image: '' }
 
 export default function ProductsManager() {
   const [products, setProducts] = useState([])
@@ -54,7 +54,7 @@ export default function ProductsManager() {
       await ensureCategory(form.category)
 
       if (editing) {
-        const data = { name: form.name, description: form.description, price: Number(form.price), category: form.category, stock: form.stock ? Number(form.stock) : 0 }
+        const data = { name: form.name, description: form.description, price: Number(form.price), category: form.category }
         if (imageUrl) data.image = imageUrl
         await updateDoc(doc(db, 'products', editing), data)
       } else {
@@ -63,7 +63,6 @@ export default function ProductsManager() {
           description: form.description,
           price: Number(form.price),
           category: form.category,
-          stock: form.stock ? Number(form.stock) : 0,
           image: imageUrl,
           createdAt: new Date().toISOString(),
         })
@@ -79,7 +78,7 @@ export default function ProductsManager() {
   }
 
   const handleEdit = (p) => {
-    setForm({ name: p.name, description: p.description || '', price: String(p.price), category: p.category || '', stock: String(p.stock || ''), image: p.image })
+    setForm({ name: p.name, description: p.description || '', price: String(p.price), category: p.category || '', image: p.image })
     setEditing(p.id)
   }
 
@@ -124,7 +123,6 @@ export default function ProductsManager() {
               ))}
             </datalist>
           </div>
-          <input placeholder="Stock" type="number" value={form.stock} onChange={(e) => setForm({ ...form, stock: e.target.value })} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
         </div>
         <textarea placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" rows={2} />
         <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm" />
@@ -149,7 +147,7 @@ export default function ProductsManager() {
             <div className="flex-1 min-w-0">
               <p className="text-white font-medium truncate">{p.name}</p>
               <p className="text-club-yellow text-sm font-bold">${p.price?.toLocaleString('es-AR')}</p>
-              <p className="text-gray-500 text-xs uppercase">{p.category} · Stock: {p.stock ?? 0}</p>
+              <p className="text-gray-500 text-xs uppercase">{p.category}</p>
             </div>
             <div className="flex gap-2 flex-shrink-0">
               <button onClick={() => handleEdit(p)} className="text-blue-400 hover:text-blue-300 text-sm">Editar</button>

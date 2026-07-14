@@ -2,9 +2,11 @@ import { useEffect, useState, useRef } from 'react'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/AuthContext'
+import { sendEmailVerification } from 'firebase/auth'
+import { auth } from '../services/firebase'
 
 export default function Profile() {
-  const { user, userData, updateUserProfile, uploadProfilePhoto, changeEmail, changePassword } = useAuth()
+  const { user, userData, updateUserProfile, uploadProfilePhoto, changeEmail, changePassword, emailVerified } = useAuth()
   const [redemptions, setRedemptions] = useState([])
 
   const [editName, setEditName] = useState('')
@@ -26,6 +28,7 @@ export default function Profile() {
   const [qrModal, setQrModal] = useState(null)
   const [msg, setMsg] = useState({ type: '', text: '' })
   const msgTimer = useRef(null)
+  const [sendingVerification, setSendingVerification] = useState(false)
 
   useEffect(() => {
     return () => { if (msgTimer.current) clearTimeout(msgTimer.current) }
@@ -50,8 +53,6 @@ export default function Profile() {
     listenRedemptions()
     return () => { if (unsub2) unsub2(); if (retry) clearTimeout(retry) }
   }, [user])
-
-
 
   useEffect(() => {
     if (userData) {
@@ -109,14 +110,24 @@ export default function Profile() {
     setChangingEmail(false)
   }
 
+  const validatePassword = (pass) => {
+    const errors = []
+    if (pass.length < 8) errors.push('Mínimo 8 caracteres')
+    if (!/[A-Z]/.test(pass)) errors.push('Al menos una mayúscula')
+    if (!/[0-9]/.test(pass)) errors.push('Al menos un número')
+    if (!/[!@#$%^&*(),.?":{}|<>_\-]/.test(pass)) errors.push('Al menos un carácter especial')
+    return errors
+  }
+
   const handleChangePassword = async (e) => {
     e.preventDefault()
     if (newPass !== confirmPass) {
       showMsg('error', 'Las contraseñas no coinciden')
       return
     }
-    if (newPass.length < 6) {
-      showMsg('error', 'Mínimo 6 caracteres')
+    const pwdErrors = validatePassword(newPass)
+    if (pwdErrors.length > 0) {
+      showMsg('error', 'La contraseña debe tener: ' + pwdErrors.join(', '))
       return
     }
     setChangingPass(true)
@@ -130,6 +141,17 @@ export default function Profile() {
       showMsg('error', err.code === 'auth/wrong-password' ? 'Contraseña actual incorrecta' : 'Error al cambiar contraseña')
     }
     setChangingPass(false)
+  }
+
+  const handleResendVerification = async () => {
+    setSendingVerification(true)
+    try {
+      await sendEmailVerification(auth.currentUser)
+      showMsg('success', 'Email de verificación enviado. Revisá tu bandeja de entrada.')
+    } catch {
+      showMsg('error', 'Error al enviar el email')
+    }
+    setSendingVerification(false)
   }
 
   return (
@@ -199,19 +221,41 @@ export default function Profile() {
               </div>
             )}
             <div>
+              <label className="text-gray-500 text-sm">Email</label>
+              <div className="flex items-center gap-2 mt-1">
+                <p className="text-white">{user?.email}</p>
+                {emailVerified ? (
+                  <span className="text-green-400 text-xs bg-green-900/50 px-1.5 py-0.5 rounded">Verificado</span>
+                ) : (
+                  <span className="text-yellow-400 text-xs bg-yellow-900/50 px-1.5 py-0.5 rounded">No verificado</span>
+                )}
+              </div>
+            </div>
+            <div>
               <label className="text-gray-500 text-sm">Rol</label>
               <p className="text-white capitalize mt-1">{userData?.role === 'admin' ? 'Administrador' : 'Usuario'}</p>
             </div>
           </div>
         </div>
 
-        <button
-          onClick={handleSaveProfile}
-          disabled={saving || uploading}
-          className="mt-6 bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition disabled:opacity-50"
-        >
-          {uploading ? 'Subiendo foto...' : saving ? 'Guardando...' : 'Guardar cambios'}
-        </button>
+        <div className="flex flex-wrap items-center gap-3 mt-4">
+          <button
+            onClick={handleSaveProfile}
+            disabled={saving || uploading}
+            className="bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition disabled:opacity-50"
+          >
+            {uploading ? 'Subiendo foto...' : saving ? 'Guardando...' : 'Guardar cambios'}
+          </button>
+          {!emailVerified && (
+            <button
+              onClick={handleResendVerification}
+              disabled={sendingVerification}
+              className="bg-gray-800 text-club-yellow font-semibold px-4 py-2 rounded hover:bg-gray-700 transition text-sm disabled:opacity-50"
+            >
+              {sendingVerification ? 'Enviando...' : 'Reenviar verificación'}
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Email */}
@@ -269,16 +313,16 @@ export default function Profile() {
             />
           </div>
           <div>
-            <label htmlFor="profile-new-pass" className="text-gray-500 text-sm">Nueva contraseña (mín. 6 caracteres)</label>
+            <label htmlFor="profile-new-pass" className="text-gray-500 text-sm">Nueva contraseña</label>
             <input
               id="profile-new-pass"
               type="password"
               value={newPass}
               onChange={(e) => setNewPass(e.target.value)}
               className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white"
-              placeholder="Nueva contraseña (mín. 6 caracteres)"
+              placeholder="Mín. 8 caracteres, 1 mayúscula, 1 número, 1 especial"
               required
-              minLength={6}
+              minLength={8}
             />
           </div>
           <div>
