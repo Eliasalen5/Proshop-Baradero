@@ -175,7 +175,7 @@ export default function UsersManager() {
                 {u.role !== 'admin' && (
                   <div className="flex gap-2 items-center mt-2">
                     <input
-                      type="number"
+                      type="number" min={0}
                       placeholder="Sumar puntos"
                       value={pointsInput[u.id] || ''}
                       onChange={(e) => setPointsInput({ ...pointsInput, [u.id]: e.target.value })}
