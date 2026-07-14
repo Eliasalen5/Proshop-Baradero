@@ -49,11 +49,6 @@ export default function Navbar() {
                   className="flex items-center gap-1.5 text-gray-300 hover:text-club-yellow transition"
                 >
                   <span className="max-w-[120px] truncate">{userData?.displayName}</span>
-                  {userData?.role !== 'admin' && (
-                    <span className="text-xs bg-club-yellow text-black px-2 py-0.5 rounded-full font-bold">
-                      {userData?.points ?? 0}
-                    </span>
-                  )}
                   <HiChevronDown className={`w-4 h-4 transition ${userMenu ? 'rotate-180' : ''}`} />
                 </button>
                 {userMenu && (
@@ -107,11 +102,8 @@ export default function Navbar() {
           <Link to="/club-beneficios" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Club Beneficios</Link>
           {user ? (
             <>
-              <Link to="/perfil" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800 flex items-center gap-2">
+              <Link to="/perfil" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">
                 Perfil
-                {userData?.role !== 'admin' && (
-                  <span className="text-xs bg-club-yellow text-black px-2 py-0.5 rounded-full font-bold">{userData?.points ?? 0} pts</span>
-                )}
               </Link>
               {userData?.role === 'admin' && (
                 <Link to="/admin" onClick={() => setOpen(false)} className="text-club-yellow font-semibold px-3 py-2 rounded hover:bg-gray-800 transition">Admin</Link>
