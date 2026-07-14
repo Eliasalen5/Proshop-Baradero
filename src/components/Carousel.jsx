@@ -33,7 +33,9 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   const toggleFullscreen = () => {
     const el = containerRef.current
     if (!el) return
-    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+    if (isFullscreen && !document.fullscreenElement && !document.webkitFullscreenElement) {
+      setIsFullscreen(false)
+    } else if (!document.fullscreenElement && !document.webkitFullscreenElement) {
       const req = el.requestFullscreen?.() || el.webkitRequestFullscreen?.()
       if (!req) {
         setIsFullscreen(true)
