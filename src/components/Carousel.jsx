@@ -17,16 +17,22 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   }, [slideCount, interval, paused])
 
   useEffect(() => {
-    const handler = () => setIsFullscreen(!!document.fullscreenElement)
+    const handler = () => setIsFullscreen(!!(document.fullscreenElement || document.webkitFullscreenElement))
     document.addEventListener('fullscreenchange', handler)
-    return () => document.removeEventListener('fullscreenchange', handler)
+    document.addEventListener('webkitfullscreenchange', handler)
+    return () => {
+      document.removeEventListener('fullscreenchange', handler)
+      document.removeEventListener('webkitfullscreenchange', handler)
+    }
   }, [])
 
   const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      containerRef.current?.requestFullscreen()
+    const el = containerRef.current
+    if (!el) return
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      el.requestFullscreen?.() || el.webkitRequestFullscreen?.()
     } else {
-      document.exitFullscreen()
+      document.exitFullscreen?.() || document.webkitExitFullscreen?.()
     }
   }
 
