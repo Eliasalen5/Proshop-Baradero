@@ -118,7 +118,7 @@ export default function Torneos() {
                       : 'Fecha a confirmar'}
                   </p>
                   {t.zones && (
-                    <p className="text-gray-500 text-xs mt-1">{t.zones.length} zonas · {t.zones.reduce((s, z) => s + z.teams.length, 0)} parejas</p>
+                    <p className="text-gray-500 text-xs mt-1">{t.zones.length} zona{t.zones.length !== 1 ? 's' : ''} de {t.teamsPerZone || t.zones[0]?.teams?.filter(Boolean).length || '?'} parejas</p>
                   )}
                 </div>
               </Link>

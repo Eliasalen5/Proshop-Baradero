@@ -143,8 +143,10 @@ export default function TournamentDetail() {
             </p>
             {tournament.zones && (
               <p>
-                <span className="text-gray-500">Zonas:</span> {tournament.zones.length} ·{' '}
-                {tournament.zones.reduce((s, z) => s + (z.teams?.filter(Boolean).length || 0), 0)} parejas
+                <span className="text-gray-500">
+                  {tournament.zones.length} zona{tournament.zones.length !== 1 ? 's' : ''} de{' '}
+                  {tournament.teamsPerZone || tournament.zones[0]?.teams?.filter(Boolean).length || '?'} parejas
+                </span>
               </p>
             )}
           </div>
