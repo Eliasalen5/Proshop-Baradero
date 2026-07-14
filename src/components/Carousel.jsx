@@ -90,20 +90,12 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
       onMouseLeave={() => setPaused(false)}
     >
       {isFullscreen && (
-        <>
-          <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
-            <img src="/logo.png" alt="Proshop Baradero" className="w-8 h-8 object-contain" />
-            <span className="text-club-yellow text-xl font-bold tracking-wider drop-shadow-lg">
-              PROSHOP BARADERO
-            </span>
-          </div>
-          <button
-            onClick={toggleFullscreen}
-            className="absolute top-4 right-4 z-30 bg-black/40 text-white px-3 py-1.5 rounded text-sm hover:bg-black/60 transition"
-          >
-            Salir
-          </button>
-        </>
+        <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
+          <img src="/logo.png" alt="Proshop Baradero" className="w-8 h-8 object-contain" />
+          <span className="text-club-yellow text-xl font-bold tracking-wider drop-shadow-lg">
+            PROSHOP BARADERO
+          </span>
+        </div>
       )}
 
       <div
@@ -125,17 +117,19 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
         </div>
       )}
 
-      {!fullscreen && (
-        <button
-          onClick={toggleFullscreen}
-          className="absolute top-3 right-3 z-20 bg-black/40 text-white p-2 rounded hover:bg-black/60 transition"
-          title="Pantalla completa"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <button
+        onClick={toggleFullscreen}
+        className="absolute top-3 right-3 z-20 bg-black/40 text-white p-2 rounded hover:bg-black/60 transition"
+        title={isFullscreen ? "Salir de pantalla completa" : "Pantalla completa"}
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+          {isFullscreen ? (
+            <path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3" />
+          ) : (
             <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3" />
-          </svg>
-        </button>
-      )}
+          )}
+        </svg>
+      </button>
     </div>
   )
 }
