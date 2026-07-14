@@ -40,7 +40,7 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   const renderSlide = (index) => {
     if (hero && index === 0) {
       return (
-        <div className="min-w-full h-full relative flex-shrink-0 overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-6 py-8">
+        <div key={index} className="min-w-full h-full relative flex-shrink-0 overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-6 py-8">
           <div className="text-center max-w-3xl">
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-club-yellow mb-3 drop-shadow-lg">
               {hero.title || 'Proshop Baradero'}
@@ -59,7 +59,7 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
     const img = images[imgIndex]
     if (!img) return null
     return (
-      <div className="min-w-full h-full relative flex-shrink-0 overflow-hidden">
+      <div key={index} className="min-w-full h-full relative flex-shrink-0 overflow-hidden">
         <img
           src={img.imageUrl}
           alt=""
@@ -110,9 +110,7 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
         className="flex h-full transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
-        {Array.from({ length: slideCount }).map((_, i) => (
-          <div key={i}>{renderSlide(i)}</div>
-        ))}
+        {Array.from({ length: slideCount }).map((_, i) => renderSlide(i))}
       </div>
 
       {slideCount > 1 && (
