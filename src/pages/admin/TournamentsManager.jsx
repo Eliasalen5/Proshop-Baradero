@@ -74,6 +74,31 @@ export default function TournamentsManager() {
     setFormZones(generateZones(zoneCount, teamsPerZone))
   }, [form.zoneCount, form.teamsPerZone])
 
+  const teamOptions = formZones.flatMap(z => z.teams.map(t => t.name)).filter(Boolean)
+
+  useEffect(() => {
+    if (teamOptions.length === 0) return
+    setElimination((prev) => {
+      const updated = prev.map((round) => ({
+        ...round,
+        matches: round.matches.map((m) => ({
+          ...m,
+          team1: teamOptions.includes(m.team1) ? m.team1 : '',
+          team2: teamOptions.includes(m.team2) ? m.team2 : '',
+        })),
+      }))
+      return updated
+    })
+    setResults((prev) => {
+      if (!prev) return prev
+      const r = { ...prev }
+      for (const pos of ['1', '2', '3', '4']) {
+        if (r[pos] && !teamOptions.includes(r[pos].team)) r[pos] = { ...r[pos], team: '' }
+      }
+      return r
+    })
+  }, [teamOptions])
+
   const toggleScore = (key) => {
     setExpandedScores((prev) => ({ ...prev, [key]: !prev[key] }))
   }
@@ -281,8 +306,6 @@ export default function TournamentsManager() {
     copy[zi].matches[mi][field] = value
     setFormZones(copy)
   }
-
-  const teamOptions = formZones.flatMap(z => z.teams.map(t => t.name)).filter(Boolean)
 
   const addRound = () => {
     setElimination([...elimination, { name: '', matches: [{ team1: '', team2: '', court: '', time: '', sets: [{ s1: '', s2: '' }] }] }])
@@ -652,20 +675,10 @@ export default function TournamentsManager() {
         ) : (
           <div className="bg-gray-900 border border-gray-800 rounded-lg p-6">
             {(() => {
-              const finalTeams = elimination
-                .find(r => {
-                  const n = r.name?.toLowerCase() || ''
-                  return n.includes('final') && !n.includes('semi')
-                })
-                ?.matches?.flatMap(m => [m.team1, m.team2].filter(Boolean)) || []
-              const tercerTeams = elimination
-                .find(r => r.name?.toLowerCase().includes('tercer'))
-                ?.matches?.flatMap(m => [m.team1, m.team2].filter(Boolean)) || []
+              const labels = { 1: '1° Puesto', 2: '2° Puesto', 3: '3° Puesto', 4: '4° Puesto' }
               return (
                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                   {['1', '2', '3', '4'].map((pos) => {
-                    const labels = { 1: '1° Puesto', 2: '2° Puesto', 3: '3° Puesto', 4: '4° Puesto' }
-                    const opts = ['1', '2'].includes(pos) ? finalTeams : tercerTeams
                     return (
                       <div key={pos} className="bg-gray-800 rounded p-3">
                         <p className="text-club-yellow font-semibold text-sm mb-2">{labels[pos]}</p>
@@ -673,7 +686,7 @@ export default function TournamentsManager() {
                           onChange={(e) => setResults({ ...results, [pos]: { ...results[pos], team: e.target.value } })}
                           className="w-full bg-gray-700 border border-gray-600 rounded px-3 py-1.5 text-white text-sm mb-2">
                           <option value="">Seleccionar pareja</option>
-                          {opts.map(name => <option key={name} value={name}>{name}</option>)}
+                          {teamOptions.map(name => <option key={name} value={name}>{name}</option>)}
                         </select>
                         <div>
                           <p className="text-gray-500 text-xs mb-1">Flyer del puesto</p>
