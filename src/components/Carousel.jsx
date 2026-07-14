@@ -35,18 +35,18 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   const fullscreenActive = fullscreen || isFullscreen
   const heightClass = fullscreenActive
     ? 'h-full'
-    : 'h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px]'
+    : 'h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]'
 
   const renderSlide = (index) => {
     if (hero && index === 0) {
       return (
-        <div className="min-w-full h-full relative flex-shrink-0 overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-club-yellow mb-4 drop-shadow-lg">
+        <div className="min-w-full h-full relative flex-shrink-0 overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-6 py-8">
+          <div className="text-center max-w-3xl">
+            <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold text-club-yellow mb-3 drop-shadow-lg">
               {hero.title || 'Proshop Baradero'}
             </h1>
             {hero.subtitle && (
-              <p className="text-gray-300 text-sm md:text-lg mb-4 drop-shadow">
+              <p className="text-gray-300 text-sm md:text-base lg:text-lg mb-4 drop-shadow">
                 {hero.subtitle}
               </p>
             )}
@@ -63,12 +63,12 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
         <img
           src={img.imageUrl}
           alt=""
-          className="absolute inset-0 w-full h-full object-cover blur-md opacity-60 scale-110"
+          className="absolute inset-0 w-full h-full object-cover blur-md opacity-50 scale-110"
         />
         <img
           src={img.imageUrl}
           alt={img.title || ''}
-          className="absolute inset-0 w-full h-full object-contain z-10"
+          className="absolute inset-0 w-full h-full object-cover z-10"
         />
         {(img.title || img.description) && (
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 md:p-10 z-20">
