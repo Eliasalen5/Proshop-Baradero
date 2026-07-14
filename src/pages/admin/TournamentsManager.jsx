@@ -124,13 +124,19 @@ export default function TournamentsManager() {
 
     if (form.dateTime) {
       const tournamentStart = new Date(form.dateTime)
-      const tournMin = tournamentStart.getHours() * 60 + tournamentStart.getMinutes()
       const early = []
+      const toFullDate = (timeStr) => {
+        const [h, m] = timeStr.split(':').map(Number)
+        const d = new Date(tournamentStart)
+        d.setHours(h, m, 0, 0)
+        if (h < 7) d.setDate(d.getDate() + 1)
+        return d
+      }
       formZones.forEach((zone) => zone.matches?.forEach((m, mi) => {
-        if (m.time && parseTime(m.time) < tournMin) early.push(`Zona ${zone.name} #${mi + 1} (${m.time})`)
+        if (m.time && toFullDate(m.time) < tournamentStart) early.push(`Zona ${zone.name} #${mi + 1} (${m.time})`)
       }))
       elimination.forEach((round, ri) => round.matches?.forEach((m, mi) => {
-        if (m.time && parseTime(m.time) < tournMin) early.push(`${round.name || `Ronda ${ri + 1}`} #${mi + 1} (${m.time})`)
+        if (m.time && toFullDate(m.time) < tournamentStart) early.push(`${round.name || `Ronda ${ri + 1}`} #${mi + 1} (${m.time})`)
       }))
       if (early.length > 0) {
         setError('Horarios anteriores al inicio del torneo:\n' + early.join('\n'))

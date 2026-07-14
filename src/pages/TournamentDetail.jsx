@@ -34,7 +34,7 @@ function computeStartDate(tournamentDate, timeStr) {
   const [h, m] = timeStr.split(':').map(Number)
   const d = toArgentinaDate(tournamentDate)
   d.setHours(h, m, 0, 0)
-  if (h < 6) d.setDate(d.getDate() + 1)
+  if (h < 7) d.setDate(d.getDate() + 1)
   return d
 }
 
