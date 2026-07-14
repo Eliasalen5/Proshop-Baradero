@@ -42,7 +42,23 @@ export default function Home() {
           </div>
         </section>
       ) : (
-        <Carousel images={carouselImages} interval={5000} />
+        <Carousel
+          images={carouselImages}
+          interval={5000}
+          hero={{
+            title: 'Proshop Baradero',
+            subtitle: 'Todo en indumentaria deportiva',
+            children: (
+              <div className="mx-auto inline-block bg-yellow-500/20 border border-club-yellow rounded-lg px-5 py-2.5 text-center backdrop-blur-sm">
+                <p className="text-club-yellow font-bold text-xs mb-1">🟡 Abierto</p>
+                <div className="text-gray-200 text-xs md:text-sm leading-relaxed">
+                  <div>Lun a Vie: 9:00 a 12:30 / 16:30 a 20:30</div>
+                  <div>Sábados: 9:30 a 13:00 / 16:30 a 21:00</div>
+                </div>
+              </div>
+            ),
+          }}
+        />
       )}
 
       <section className="max-w-7xl mx-auto px-4 py-16">

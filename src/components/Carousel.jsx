@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 
-export default function Carousel({ images = [], interval = 10000, fullscreen = false }) {
+export default function Carousel({ images = [], interval = 10000, fullscreen = false, hero = null }) {
+  const slideCount = images.length + (hero ? 1 : 0)
   const [current, setCurrent] = useState(0)
   const [paused, setPaused] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
@@ -8,12 +9,12 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   const timerRef = useRef(null)
 
   useEffect(() => {
-    if (images.length <= 1 || paused) return
+    if (slideCount <= 1 || paused) return
     timerRef.current = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % images.length)
+      setCurrent((prev) => (prev + 1) % slideCount)
     }, interval)
     return () => clearInterval(timerRef.current)
-  }, [images.length, interval, paused])
+  }, [slideCount, interval, paused])
 
   useEffect(() => {
     const handler = () => setIsFullscreen(!!document.fullscreenElement)
@@ -29,12 +30,57 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
     }
   }
 
-  if (images.length === 0) return null
+  if (slideCount === 0) return null
 
   const fullscreenActive = fullscreen || isFullscreen
   const heightClass = fullscreenActive
     ? 'h-full'
     : 'h-[250px] sm:h-[350px] md:h-[450px] lg:h-[550px]'
+
+  const renderSlide = (index) => {
+    if (hero && index === 0) {
+      return (
+        <div className="min-w-full h-full relative flex-shrink-0 overflow-hidden bg-gradient-to-br from-black via-gray-900 to-black flex items-center justify-center px-4">
+          <div className="text-center">
+            <h1 className="text-4xl md:text-6xl font-bold text-club-yellow mb-4 drop-shadow-lg">
+              {hero.title || 'Proshop Baradero'}
+            </h1>
+            {hero.subtitle && (
+              <p className="text-gray-300 text-sm md:text-lg mb-4 drop-shadow">
+                {hero.subtitle}
+              </p>
+            )}
+            {hero.children}
+          </div>
+        </div>
+      )
+    }
+    const imgIndex = hero ? index - 1 : index
+    const img = images[imgIndex]
+    if (!img) return null
+    return (
+      <div className="min-w-full h-full relative flex-shrink-0 overflow-hidden">
+        <img
+          src={img.imageUrl}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover blur-md opacity-60 scale-110"
+        />
+        <img
+          src={img.imageUrl}
+          alt={img.title || ''}
+          className="absolute inset-0 w-full h-full object-contain z-10"
+        />
+        {(img.title || img.description) && (
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 md:p-10 z-20">
+            <div>
+              {img.title && <h2 className="text-white text-xl md:text-4xl font-bold drop-shadow-lg">{img.title}</h2>}
+              {img.description && <p className="text-gray-200 text-sm md:text-lg mt-1 drop-shadow">{img.description}</p>}
+            </div>
+          </div>
+        )}
+      </div>
+    )
+  }
 
   return (
     <div
@@ -64,51 +110,14 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
         className="flex h-full transition-transform duration-700 ease-in-out"
         style={{ transform: `translateX(-${current * 100}%)` }}
       >
-        {images.map((img, i) => (
-          <div key={i} className="min-w-full h-full relative flex-shrink-0 overflow-hidden">
-            <img
-              src={img.imageUrl}
-              alt=""
-              className="absolute inset-0 w-full h-full object-cover blur-md opacity-60 scale-110"
-            />
-            <img
-              src={img.imageUrl}
-              alt={img.title || ''}
-              className="absolute inset-0 w-full h-full object-contain z-10"
-            />
-            {(img.title || img.description) && (
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-6 md:p-10 z-20">
-                <div>
-                  {img.title && <h2 className="text-white text-xl md:text-4xl font-bold drop-shadow-lg">{img.title}</h2>}
-                  {img.description && <p className="text-gray-200 text-sm md:text-lg mt-1 drop-shadow">{img.description}</p>}
-                </div>
-              </div>
-            )}
-          </div>
+        {Array.from({ length: slideCount }).map((_, i) => (
+          <div key={i}>{renderSlide(i)}</div>
         ))}
       </div>
 
-      {!fullscreen && (
-        <div className="absolute inset-0 flex flex-col items-center justify-start pt-4 sm:pt-8 md:pt-12 z-20 pointer-events-none">
-          <h1 className="text-3xl md:text-5xl font-bold text-club-yellow drop-shadow-lg">
-            Proshop Baradero
-          </h1>
-          <p className="text-gray-300 text-sm md:text-base mt-1 drop-shadow">
-            Todo en indumentaria deportiva
-          </p>
-          <div className="mt-3 inline-block bg-yellow-500/20 border border-club-yellow rounded-lg px-4 py-2 text-center backdrop-blur-sm">
-            <p className="text-club-yellow font-bold text-xs mb-1">🟡 Abierto</p>
-            <div className="text-gray-200 text-xs md:text-sm leading-relaxed">
-              <div>Lun a Vie: 9:00 a 12:30 / 16:30 a 20:30</div>
-              <div>Sábados: 9:30 a 13:00 / 16:30 a 21:00</div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {images.length > 1 && (
+      {slideCount > 1 && (
         <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
-          {images.map((_, i) => (
+          {Array.from({ length: slideCount }).map((_, i) => (
             <button
               key={i}
               onClick={() => setCurrent(i)}
