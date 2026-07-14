@@ -104,37 +104,37 @@ export default function TournamentsManager() {
   }
 
   const addZoneSet = (zi, mi) => {
-    const copy = [...formZones]
+    const copy = structuredClone(formZones)
     copy[zi].matches[mi].sets.push({ s1: '', s2: '' })
     setFormZones(copy)
   }
 
   const removeZoneSet = (zi, mi, si) => {
-    const copy = [...formZones]
+    const copy = structuredClone(formZones)
     copy[zi].matches[mi].sets = copy[zi].matches[mi].sets.filter((_, i) => i !== si)
     setFormZones(copy)
   }
 
   const updateZoneSet = (zi, mi, si, field, value) => {
-    const copy = [...formZones]
+    const copy = structuredClone(formZones)
     copy[zi].matches[mi].sets[si][field] = value
     setFormZones(copy)
   }
 
   const addElimSet = (ri, mi) => {
-    const copy = [...elimination]
+    const copy = structuredClone(elimination)
     copy[ri].matches[mi].sets.push({ s1: '', s2: '' })
     setElimination(copy)
   }
 
   const removeElimSet = (ri, mi, si) => {
-    const copy = [...elimination]
+    const copy = structuredClone(elimination)
     copy[ri].matches[mi].sets = copy[ri].matches[mi].sets.filter((_, i) => i !== si)
     setElimination(copy)
   }
 
   const updateElimSet = (ri, mi, si, field, value) => {
-    const copy = [...elimination]
+    const copy = structuredClone(elimination)
     copy[ri].matches[mi].sets[si][field] = value
     setElimination(copy)
   }
@@ -291,7 +291,7 @@ export default function TournamentsManager() {
   }
 
   const updatePlayer = (zi, ti, playerIdx, value) => {
-    const copy = [...formZones]
+    const copy = structuredClone(formZones)
     const field = playerIdx === 0 ? 'player1' : 'player2'
     const matched = users.find((u) => (u.displayName || u.name) === value)
     copy[zi].teams[ti][field] = matched ? { uid: matched.uid, name: value } : { uid: '', name: value }
@@ -302,7 +302,7 @@ export default function TournamentsManager() {
   }
 
   const updateMatchField = (zi, mi, field, value) => {
-    const copy = [...formZones]
+    const copy = structuredClone(formZones)
     copy[zi].matches[mi][field] = value
     setFormZones(copy)
   }
@@ -316,25 +316,25 @@ export default function TournamentsManager() {
   }
 
   const updateRoundName = (ri, value) => {
-    const copy = [...elimination]
+    const copy = structuredClone(elimination)
     copy[ri].name = value
     setElimination(copy)
   }
 
   const addElimMatch = (ri) => {
-    const copy = [...elimination]
+    const copy = structuredClone(elimination)
     copy[ri].matches.push({ team1: '', team2: '', court: '', time: '', sets: [{ s1: '', s2: '' }] })
     setElimination(copy)
   }
 
   const removeElimMatch = (ri, mi) => {
-    const copy = [...elimination]
+    const copy = structuredClone(elimination)
     copy[ri].matches = copy[ri].matches.filter((_, i) => i !== mi)
     setElimination(copy)
   }
 
   const updateElimMatch = (ri, mi, field, value) => {
-    const copy = [...elimination]
+    const copy = structuredClone(elimination)
     copy[ri].matches[mi][field] = value
     setElimination(copy)
   }
@@ -401,7 +401,6 @@ export default function TournamentsManager() {
           </div>
         </div>
         <textarea placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" rows={2} />
-      </form>
 
       {/* Zonas y partidos */}
       <div className="mb-8 space-y-6">
@@ -709,7 +708,7 @@ export default function TournamentsManager() {
 
       {/* Botones de acción */}
       <div className="flex gap-3 mb-8">
-        <button onClick={handleSubmit} disabled={uploading}
+        <button type="submit" disabled={uploading}
           className="bg-club-yellow text-black font-semibold px-8 py-3 rounded hover:bg-yellow-400 transition disabled:opacity-50 text-lg">
           {uploading ? 'Guardando...' : editing ? 'Guardar cambios' : 'Crear torneo'}
         </button>
@@ -720,6 +719,7 @@ export default function TournamentsManager() {
           </button>
         )}
       </div>
+      </form>
 
       {/* Lista de torneos */}
       <div className="grid gap-3">

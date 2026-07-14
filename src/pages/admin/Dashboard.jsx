@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getCountFromServer } from 'firebase/firestore'
 import { db } from '../../services/firebase'
 import { Link } from 'react-router-dom'
 
@@ -8,12 +8,12 @@ export default function Dashboard() {
 
   useEffect(() => {
     Promise.all([
-      getDocs(collection(db, 'products')),
-      getDocs(collection(db, 'tournaments')),
-      getDocs(collection(db, 'benefits')),
-      getDocs(collection(db, 'users')),
+      getCountFromServer(collection(db, 'products')),
+      getCountFromServer(collection(db, 'tournaments')),
+      getCountFromServer(collection(db, 'benefits')),
+      getCountFromServer(collection(db, 'users')),
     ]).then(([p, t, b, u]) => {
-      setCounts({ products: p.size, tournaments: t.size, benefits: b.size, users: u.size })
+      setCounts({ products: p.data().count, tournaments: t.data().count, benefits: b.data().count, users: u.data().count })
     })
   }, [])
 
