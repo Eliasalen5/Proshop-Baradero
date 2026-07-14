@@ -87,6 +87,7 @@ export function AuthProvider({ children }) {
 
   const uploadProfilePhoto = async (file) => {
     if (!user) throw new Error('No user')
+    if (file.size > 5 * 1024 * 1024) throw new Error('La imagen no puede superar los 5MB')
     if (userData?.photoURL) {
       try { await deleteObject(ref(storage, userData.photoURL)) } catch {}
     }
@@ -136,4 +137,8 @@ export function AuthProvider({ children }) {
   )
 }
 
-export const useAuth = () => useContext(AuthContext)
+export const useAuth = () => {
+  const ctx = useContext(AuthContext)
+  if (!ctx) throw new Error('useAuth debe usarse dentro de un AuthProvider')
+  return ctx
+}

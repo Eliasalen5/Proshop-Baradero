@@ -94,7 +94,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div className={`md:hidden bg-club-black border-t border-yellow-600/30 transition-all duration-200 ${open ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+      <div aria-hidden={!open} className={`md:hidden bg-club-black border-t border-yellow-600/30 transition-all duration-200 ${open ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="flex flex-col gap-1 px-4 pb-4 pt-3">
           <Link to="/" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Home</Link>
           <Link to="/proshop" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Proshop</Link>
