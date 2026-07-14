@@ -420,8 +420,23 @@ export default function TournamentsManager() {
                           <option value="Cancha 1">Cancha 1</option>
                           <option value="Cancha 2">Cancha 2</option>
                         </select>
-                        <input type="time" value={m.time} onChange={(e) => updateMatchField(zi, mi, 'time', e.target.value)}
-                          className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm" />
+                        <div className="flex items-center gap-1">
+                          <input type="number" min={0} max={23} placeholder="00"
+                            value={m.time?.split(':')[0] ?? ''}
+                            onChange={(e) => {
+                              const min = m.time?.split(':')[1] ?? '00'
+                              updateMatchField(zi, mi, 'time', `${e.target.value.padStart(2, '0')}:${min}`)
+                            }}
+                            className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                          <span className="text-gray-500">:</span>
+                          <input type="number" min={0} max={59} placeholder="00"
+                            value={m.time?.split(':')[1] ?? ''}
+                            onChange={(e) => {
+                              const hr = m.time?.split(':')[0] ?? '00'
+                              updateMatchField(zi, mi, 'time', `${hr}:${e.target.value.padStart(2, '0')}`)
+                            }}
+                            className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                        </div>
                         <button type="button" onClick={() => toggleScore(zkey)}
                           className="text-club-yellow hover:text-yellow-400 text-sm transition whitespace-nowrap">
                           {open ? '▼' : m.sets?.some(s => s.s1 !== '' || s.s2 !== '') ? '✎ Resultado' : '+ Resultado'}
@@ -540,8 +555,23 @@ export default function TournamentsManager() {
                         <option value="Cancha 1">Cancha 1</option>
                         <option value="Cancha 2">Cancha 2</option>
                       </select>
-                      <input type="time" value={m.time} onChange={(e) => updateElimMatch(ri, mi, 'time', e.target.value)}
-                        className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm" />
+                      <div className="flex items-center gap-1">
+                        <input type="number" min={0} max={23} placeholder="00"
+                          value={m.time?.split(':')[0] ?? ''}
+                          onChange={(e) => {
+                            const min = m.time?.split(':')[1] ?? '00'
+                            updateElimMatch(ri, mi, 'time', `${e.target.value.padStart(2, '0')}:${min}`)
+                          }}
+                          className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                        <span className="text-gray-500">:</span>
+                        <input type="number" min={0} max={59} placeholder="00"
+                          value={m.time?.split(':')[1] ?? ''}
+                          onChange={(e) => {
+                            const hr = m.time?.split(':')[0] ?? '00'
+                            updateElimMatch(ri, mi, 'time', `${hr}:${e.target.value.padStart(2, '0')}`)
+                          }}
+                          className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                      </div>
                       <button type="button" onClick={() => toggleScore(ekey)}
                         className="text-club-yellow hover:text-yellow-400 text-sm transition whitespace-nowrap">
                         {open ? '▼' : m.sets?.some(s => s.s1 !== '' || s.s2 !== '') ? '✎ Resultado' : '+ Resultado'}
