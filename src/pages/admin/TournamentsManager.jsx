@@ -326,6 +326,7 @@ export default function TournamentsManager() {
 
       <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8 space-y-4">
         <h3 className="text-club-yellow font-semibold text-lg">{editing ? 'Editar' : 'Nuevo'} Torneo</h3>
+        <input placeholder="Nombre del torneo" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" required />
         <div className="grid md:grid-cols-3 gap-4 items-end">
           <input type="date" value={form.dateTime?.split('T')[0] ?? ''} onChange={(e) => {
             const time = form.dateTime?.split('T')[1] ?? '12:00'
@@ -376,7 +377,6 @@ export default function TournamentsManager() {
             {form.flyer && !file && <p className="text-gray-600 text-xs mt-1">Tiene flyer actual</p>}
           </div>
         </div>
-        <input placeholder="Nombre del torneo" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" required />
         <textarea placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" rows={2} />
       </form>
 
