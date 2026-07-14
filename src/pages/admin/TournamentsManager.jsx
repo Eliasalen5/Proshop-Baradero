@@ -328,7 +328,30 @@ export default function TournamentsManager() {
         <h3 className="text-club-yellow font-semibold text-lg">{editing ? 'Editar' : 'Nuevo'} Torneo</h3>
         <div className="grid md:grid-cols-2 gap-4">
           <input placeholder="Nombre del torneo" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" required />
-          <input placeholder="Fecha y hora" type="datetime-local" value={form.dateTime} onChange={(e) => setForm({ ...form, dateTime: e.target.value })} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
+          <input type="date" value={form.dateTime?.split('T')[0] ?? ''} onChange={(e) => {
+            const time = form.dateTime?.split('T')[1] ?? '12:00'
+            setForm({ ...form, dateTime: `${e.target.value}T${time}` })
+          }} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
+          <div className="flex items-center gap-2">
+            <span className="text-gray-400 text-sm">Hora:</span>
+            <input type="number" min={0} max={23} placeholder="00"
+              value={form.dateTime?.split('T')[1]?.split(':')[0] ?? ''}
+              onChange={(e) => {
+                const date = form.dateTime?.split('T')[0] ?? ''
+                const min = form.dateTime?.split('T')[1]?.split(':')[1] ?? '00'
+                setForm({ ...form, dateTime: `${date}T${e.target.value.padStart(2, '0')}:${min}` })
+              }}
+              className="w-14 bg-gray-800 border border-gray-700 rounded px-1.5 py-2 text-white text-sm text-center" />
+            <span className="text-gray-500">:</span>
+            <input type="number" min={0} max={59} placeholder="00"
+              value={form.dateTime?.split('T')[1]?.split(':')[1] ?? ''}
+              onChange={(e) => {
+                const date = form.dateTime?.split('T')[0] ?? ''
+                const hr = form.dateTime?.split('T')[1]?.split(':')[0] ?? '12'
+                setForm({ ...form, dateTime: `${date}T${hr}:${e.target.value.padStart(2, '0')}` })
+              }}
+              className="w-14 bg-gray-800 border border-gray-700 rounded px-1.5 py-2 text-white text-sm text-center" />
+          </div>
           <select value={form.zoneCount} onChange={(e) => setForm({ ...form, zoneCount: e.target.value })} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" required>
             <option value="">Cant. zonas</option>
             {[2, 3, 4, 5, 6, 7, 8].map((n) => (
