@@ -122,9 +122,12 @@ export default function TournamentDetail() {
       </Link>
 
       <div className="grid md:grid-cols-2 gap-8 mb-10">
-        <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
+        <div className="aspect-video bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden relative">
           {tournament.flyer ? (
-            <img src={tournament.flyer} alt={tournament.name} className="w-full h-full object-contain bg-gray-800" />
+            <>
+              <img src={tournament.flyer} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-60 scale-110" />
+              <img src={tournament.flyer} alt={tournament.name} className="relative w-full h-full object-contain" />
+            </>
           ) : (
             <span className="text-gray-600 text-6xl">🏆</span>
           )}
@@ -277,9 +280,12 @@ export default function TournamentDetail() {
                   pos === '1' ? 'border-yellow-600' : pos === '2' ? 'border-gray-500' : pos === '3' ? 'border-amber-800' : 'border-gray-800'
                 }`}>
                   <div className="text-3xl mb-2">{medallas[pos]}</div>
-                  <div className="w-full aspect-square bg-gray-800 rounded mb-3 overflow-hidden">
+                  <div className="w-full aspect-square bg-gray-800 rounded mb-3 overflow-hidden relative">
                     {r.flyer ? (
-                      <img src={r.flyer} alt={r.team} className="w-full h-full object-contain bg-gray-800" />
+                      <>
+                        <img src={r.flyer} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-60 scale-110" />
+                        <img src={r.flyer} alt={r.team} className="relative w-full h-full object-contain" />
+                      </>
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-gray-600 text-2xl">{medallas[pos]}</div>
                     )}
