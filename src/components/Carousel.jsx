@@ -21,17 +21,23 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
     const handler = () => setIsFullscreen(!!(document.fullscreenElement || document.webkitFullscreenElement))
     document.addEventListener('fullscreenchange', handler)
     document.addEventListener('webkitfullscreenchange', handler)
+    const escHandler = (e) => { if (e.key === 'Escape' && isFullscreen && !document.fullscreenElement) setIsFullscreen(false) }
+    document.addEventListener('keydown', escHandler)
     return () => {
       document.removeEventListener('fullscreenchange', handler)
       document.removeEventListener('webkitfullscreenchange', handler)
+      document.removeEventListener('keydown', escHandler)
     }
-  }, [])
+  }, [isFullscreen])
 
   const toggleFullscreen = () => {
     const el = containerRef.current
     if (!el) return
     if (!document.fullscreenElement && !document.webkitFullscreenElement) {
-      el.requestFullscreen?.() || el.webkitRequestFullscreen?.()
+      const req = el.requestFullscreen?.() || el.webkitRequestFullscreen?.()
+      if (!req) {
+        setIsFullscreen(true)
+      }
     } else {
       document.exitFullscreen?.() || document.webkitExitFullscreen?.()
     }
@@ -39,10 +45,7 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
 
   if (slideCount === 0) return null
 
-  const fullscreenActive = fullscreen || isFullscreen
-  const heightClass = fullscreenActive
-    ? 'h-full'
-    : 'h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]'
+  const isFixed = isFullscreen && !fullscreen
 
   const renderSlide = (index) => {
     if (hero && index === 0) {
@@ -92,7 +95,7 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   return (
     <div
       ref={containerRef}
-      className={`relative w-full overflow-hidden bg-gray-900 ${heightClass}`}
+      className={`${isFixed ? 'fixed inset-0 z-[9999]' : 'relative w-full h-[300px] sm:h-[400px] md:h-[500px] lg:h-[600px]'} overflow-hidden bg-gray-900`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
       onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; setPaused(true) }}
