@@ -42,24 +42,7 @@ export default function Home() {
           </div>
         </section>
       ) : (
-        <>
-          <Carousel images={carouselImages} interval={5000} />
-          <div className="max-w-7xl mx-auto px-4 pb-4 -mt-6 text-center">
-            <div className="mx-auto inline-block bg-yellow-500/10 border border-club-yellow rounded-lg px-6 py-3 text-center">
-              <p className="text-club-yellow font-bold text-sm mb-2">🟡 Abierto</p>
-              <div className="flex flex-col gap-1 text-gray-300 text-sm md:text-base">
-                <div>
-                  <span className="font-semibold text-gray-200">Lun a Vie:</span>{' '}
-                  <span>9:00 a 12:30 / 16:30 a 20:30</span>
-                </div>
-                <div>
-                  <span className="font-semibold text-gray-200">Sábados:</span>{' '}
-                  <span>9:30 a 13:00 / 16:30 a 21:00</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </>
+        <Carousel images={carouselImages} interval={5000} />
       )}
 
       <section className="max-w-7xl mx-auto px-4 py-16">

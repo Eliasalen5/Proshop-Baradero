@@ -88,6 +88,24 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
         ))}
       </div>
 
+      {!fullscreen && (
+        <div className="absolute inset-0 flex flex-col items-center justify-start pt-4 sm:pt-8 md:pt-12 z-20 pointer-events-none">
+          <h1 className="text-3xl md:text-5xl font-bold text-club-yellow drop-shadow-lg">
+            Proshop Baradero
+          </h1>
+          <p className="text-gray-300 text-sm md:text-base mt-1 drop-shadow">
+            Todo en indumentaria deportiva
+          </p>
+          <div className="mt-3 inline-block bg-yellow-500/20 border border-club-yellow rounded-lg px-4 py-2 text-center backdrop-blur-sm">
+            <p className="text-club-yellow font-bold text-xs mb-1">🟡 Abierto</p>
+            <div className="text-gray-200 text-xs md:text-sm leading-relaxed">
+              <div>Lun a Vie: 9:00 a 12:30 / 16:30 a 20:30</div>
+              <div>Sábados: 9:30 a 13:00 / 16:30 a 21:00</div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {images.length > 1 && (
         <div className="absolute bottom-3 md:bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
           {images.map((_, i) => (
