@@ -91,9 +91,12 @@ export default function Torneos() {
                 to={`/torneos/${t.id}`}
                 className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden hover:border-club-yellow/50 transition group"
               >
-                <div className="aspect-video bg-gray-800 flex items-center justify-center overflow-hidden">
+                <div className="aspect-video bg-gray-800 flex items-center justify-center overflow-hidden relative">
                   {t.flyer ? (
-                    <img src={t.flyer} alt={t.name} className="w-full h-full object-contain bg-gray-800 group-hover:scale-105 transition" />
+                    <>
+                      <img src={t.flyer} alt="" className="absolute inset-0 w-full h-full object-cover blur-xl opacity-60 scale-110 group-hover:scale-105 transition" />
+                      <img src={t.flyer} alt={t.name} className="relative w-full h-full object-contain group-hover:scale-105 transition" />
+                    </>
                   ) : (
                     <span className="text-gray-600 text-5xl">🏆</span>
                   )}
