@@ -7,6 +7,7 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
   const [isFullscreen, setIsFullscreen] = useState(false)
   const containerRef = useRef(null)
   const timerRef = useRef(null)
+  const touchStartX = useRef(null)
 
   useEffect(() => {
     if (slideCount <= 1 || paused) return
@@ -94,6 +95,17 @@ export default function Carousel({ images = [], interval = 10000, fullscreen = f
       className={`relative w-full overflow-hidden bg-gray-900 ${heightClass}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
+      onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; setPaused(true) }}
+      onTouchMove={(e) => {
+        if (touchStartX.current === null) return
+        const diff = touchStartX.current - e.touches[0].clientX
+        if (Math.abs(diff) > 50) {
+          if (diff > 0 && current < slideCount - 1) setCurrent(c => c + 1)
+          else if (diff < 0 && current > 0) setCurrent(c => c - 1)
+          touchStartX.current = null
+        }
+      }}
+      onTouchEnd={() => { touchStartX.current = null; setPaused(false) }}
     >
       {isFullscreen && (
         <div className="absolute top-4 left-4 z-30 flex items-center gap-2">
