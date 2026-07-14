@@ -326,14 +326,13 @@ export default function TournamentsManager() {
 
       <form onSubmit={handleSubmit} className="bg-gray-900 border border-gray-800 rounded-lg p-6 mb-8 space-y-4">
         <h3 className="text-club-yellow font-semibold text-lg">{editing ? 'Editar' : 'Nuevo'} Torneo</h3>
-        <div className="grid md:grid-cols-2 gap-4">
-          <input placeholder="Nombre del torneo" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" required />
+        <div className="grid md:grid-cols-3 gap-4 items-end">
           <input type="date" value={form.dateTime?.split('T')[0] ?? ''} onChange={(e) => {
             const time = form.dateTime?.split('T')[1] ?? '12:00'
             setForm({ ...form, dateTime: `${e.target.value}T${time}` })
           }} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
-          <div className="flex items-center gap-2">
-            <span className="text-gray-400 text-sm">Hora:</span>
+          <div className="flex items-center gap-1">
+            <span className="text-gray-400 text-sm mr-1">Hora:</span>
             <input type="number" min={0} max={23} placeholder="00"
               value={form.dateTime?.split('T')[1]?.split(':')[0] ?? ''}
               onChange={(e) => {
@@ -352,6 +351,13 @@ export default function TournamentsManager() {
               }}
               className="w-14 bg-gray-800 border border-gray-700 rounded px-1.5 py-2 text-white text-sm text-center" />
           </div>
+          <div className="flex items-center gap-2">
+            <label className="text-gray-400 text-sm whitespace-nowrap">Duración</label>
+            <input type="number" min={15} max={180} step={5} value={form.matchDuration}
+              onChange={(e) => setForm({ ...form, matchDuration: e.target.value })}
+              className="w-16 bg-gray-800 border border-gray-700 rounded px-2 py-2 text-white text-center" />
+            <span className="text-gray-500 text-sm">min</span>
+          </div>
           <select value={form.zoneCount} onChange={(e) => setForm({ ...form, zoneCount: e.target.value })} className="bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" required>
             <option value="">Cant. zonas</option>
             {[2, 3, 4, 5, 6, 7, 8].map((n) => (
@@ -364,20 +370,14 @@ export default function TournamentsManager() {
               <option key={n} value={n}>{n} parejas</option>
             ))}
           </select>
-          <div className="flex items-center gap-3">
-            <label className="text-gray-400 text-sm whitespace-nowrap">Duración x partido</label>
-            <input type="number" min={15} max={180} step={5} value={form.matchDuration}
-              onChange={(e) => setForm({ ...form, matchDuration: e.target.value })}
-              className="w-24 bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white text-center" />
-            <span className="text-gray-500 text-sm">min</span>
+          <div>
+            <p className="text-gray-500 text-xs mb-1">Flyer del torneo</p>
+            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm w-full" />
+            {form.flyer && !file && <p className="text-gray-600 text-xs mt-1">Tiene flyer actual</p>}
           </div>
         </div>
+        <input placeholder="Nombre del torneo" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" required />
         <textarea placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" rows={2} />
-        <div>
-          <p className="text-gray-500 text-sm mb-1">Flyer del torneo</p>
-          <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm" />
-          {form.flyer && !file && <p className="text-gray-600 text-xs mt-1">Tiene flyer actual</p>}
-        </div>
       </form>
 
       {/* Zonas y partidos */}
