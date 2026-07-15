@@ -445,8 +445,8 @@ export default function TournamentsManager() {
                   const open = expandedScores[zkey]
                   return (
                     <div key={mi} className="bg-gray-800 rounded">
-                      <div className="flex items-center gap-3 px-4 py-2">
-                        <span className="text-white text-sm flex-1">
+                      <div className="flex flex-wrap items-center gap-2 px-4 py-2">
+                        <span className="text-white text-sm w-full md:flex-1 md:w-auto">
                           <span className={zone.teams[m.team1Idx]?.name ? 'text-white' : 'text-gray-500'}>
                             {zone.teams[m.team1Idx]?.name || `Pareja ${m.team1Idx + 1}`}
                           </span>
@@ -456,7 +456,7 @@ export default function TournamentsManager() {
                           </span>
                         </span>
                         <select value={m.court} onChange={(e) => updateMatchField(zi, mi, 'court', e.target.value)}
-                          className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm">
+                          className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm min-w-0">
                           <option value="">Cancha</option>
                           <option value="Cancha 1">Cancha 1</option>
                           <option value="Cancha 2">Cancha 2</option>
@@ -468,7 +468,7 @@ export default function TournamentsManager() {
                               const min = m.time?.split(':')[1] ?? '00'
                               updateMatchField(zi, mi, 'time', `${e.target.value.padStart(2, '0')}:${min}`)
                             }}
-                            className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                            className="w-12 md:w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
                           <span className="text-gray-500">:</span>
                           <input type="number" min={0} max={59} placeholder="00"
                             value={m.time?.split(':')[1] ?? ''}
@@ -476,7 +476,7 @@ export default function TournamentsManager() {
                               const hr = m.time?.split(':')[0] ?? '00'
                               updateMatchField(zi, mi, 'time', `${hr}:${e.target.value.padStart(2, '0')}`)
                             }}
-                            className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                            className="w-12 md:w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
                         </div>
                         <button type="button" onClick={() => toggleScore(zkey)}
                           className="text-club-yellow hover:text-yellow-400 text-sm transition whitespace-nowrap">
@@ -571,19 +571,19 @@ export default function TournamentsManager() {
                 })()
                 return (
                   <div key={mi} className="bg-gray-800 rounded">
-                    <div className="flex items-center gap-3 px-4 py-2">
+                    <div className="flex flex-wrap items-center gap-2 px-4 py-2">
                       {(() => {
                         const isTercer = round.name?.toLowerCase().includes('tercer')
                         return (
                           <>
                             <select value={m.team1} onChange={(e) => updateElimMatch(ri, mi, 'team1', e.target.value)}
-                              className="flex-1 bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-white text-sm">
+                              className="min-w-[120px] flex-1 bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-white text-sm">
                               <option value="" disabled>{isTercer ? 'Perdedor' : 'Clasificado'}</option>
                               {eligibleTeams.map(name => <option key={name} value={name}>{name}</option>)}
                             </select>
                             <span className="text-gray-500 text-sm">vs</span>
                             <select value={m.team2} onChange={(e) => updateElimMatch(ri, mi, 'team2', e.target.value)}
-                              className="flex-1 bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-white text-sm">
+                              className="min-w-[120px] flex-1 bg-gray-700 border border-gray-600 rounded px-2 py-1.5 text-white text-sm">
                               <option value="" disabled>{isTercer ? 'Perdedor' : 'Clasificado'}</option>
                               {eligibleTeams.map(name => <option key={name} value={name}>{name}</option>)}
                             </select>
@@ -591,7 +591,7 @@ export default function TournamentsManager() {
                         )
                       })()}
                       <select value={m.court} onChange={(e) => updateElimMatch(ri, mi, 'court', e.target.value)}
-                        className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm">
+                        className="bg-gray-700 border border-gray-600 rounded px-2 py-1 text-white text-sm min-w-0">
                         <option value="">Cancha</option>
                         <option value="Cancha 1">Cancha 1</option>
                         <option value="Cancha 2">Cancha 2</option>
@@ -603,7 +603,7 @@ export default function TournamentsManager() {
                             const min = m.time?.split(':')[1] ?? '00'
                             updateElimMatch(ri, mi, 'time', `${e.target.value.padStart(2, '0')}:${min}`)
                           }}
-                          className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                          className="w-12 md:w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
                         <span className="text-gray-500">:</span>
                         <input type="number" min={0} max={59} placeholder="00"
                           value={m.time?.split(':')[1] ?? ''}
@@ -611,7 +611,7 @@ export default function TournamentsManager() {
                             const hr = m.time?.split(':')[0] ?? '00'
                             updateElimMatch(ri, mi, 'time', `${hr}:${e.target.value.padStart(2, '0')}`)
                           }}
-                          className="w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
+                          className="w-12 md:w-14 bg-gray-700 border border-gray-600 rounded px-1.5 py-1 text-white text-sm text-center" />
                       </div>
                       <button type="button" onClick={() => toggleScore(ekey)}
                         className="text-club-yellow hover:text-yellow-400 text-sm transition whitespace-nowrap">
