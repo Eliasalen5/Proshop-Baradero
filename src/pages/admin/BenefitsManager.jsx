@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy, where } from 'firebase/firestore'
+import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
 
@@ -7,7 +7,6 @@ const emptyForm = { name: '', description: '', pointsRequired: '', price: '', di
 
 export default function BenefitsManager() {
   const [benefits, setBenefits] = useState([])
-  const [categories, setCategories] = useState([])
   const [form, setForm] = useState(emptyForm)
   const [editing, setEditing] = useState(null)
   const [file, setFile] = useState(null)
@@ -15,38 +14,14 @@ export default function BenefitsManager() {
   const [error, setError] = useState('')
   const [search, setSearch] = useState('')
 
+  const uniqueCategories = [...new Set(benefits.map(b => b.category).filter(Boolean))]
+
   const load = () => {
     const q = query(collection(db, 'benefits'), orderBy('createdAt', 'desc'))
     getDocs(q).then((snap) => setBenefits(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
   }
 
-  const loadCategories = () => {
-    getDocs(query(collection(db, 'categories'), orderBy('createdAt', 'desc'))).then((snap) =>
-      setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-    )
-  }
-
-  useEffect(() => { load(); loadCategories() }, [])
-
-  const ensureCategory = async (name) => {
-    if (!name) return
-    const q = query(collection(db, 'categories'), where('name', '==', name))
-    const snap = await getDocs(q)
-    if (snap.empty) {
-      await addDoc(collection(db, 'categories'), { name, createdAt: new Date().toISOString() })
-      loadCategories()
-    }
-  }
-
-  const handleDeleteCategory = async (id, name) => {
-    if (!confirm(`Eliminar categoría "${name}"?`)) return
-    try {
-      await deleteDoc(doc(db, 'categories', id))
-      loadCategories()
-    } catch (err) {
-      setError('Error al eliminar categoría: ' + err.message)
-    }
-  }
+  useEffect(() => { load() }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -62,8 +37,6 @@ export default function BenefitsManager() {
         await uploadBytes(storageRef, file)
         imageUrl = await getDownloadURL(storageRef)
       }
-
-      await ensureCategory(form.category)
 
       const data = {
         name: form.name,
@@ -148,34 +121,17 @@ export default function BenefitsManager() {
               onChange={(e) => setForm({ ...form, category: e.target.value })}
               className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
             <datalist id="category-list">
-              {categories.map((c) => <option key={c.id} value={c.name} />)}
+              {uniqueCategories.map((cat) => <option key={cat} value={cat} />)}
             </datalist>
-            {categories.length > 0 && (
+            {uniqueCategories.length > 0 && (
               <div className="mt-3">
                 <p className="text-xs text-gray-500 mb-1.5">Categorías existentes:</p>
                 <div className="flex flex-wrap gap-2">
-                  {(() => {
-                    const used = {}
-                    benefits.forEach(b => { used[b.category] = (used[b.category] || 0) + 1 })
-                    return categories.map((c) => {
-                      const count = used[c.name] || 0
-                      return (
-                        <div key={c.id} className="flex items-center gap-1 bg-gray-800 rounded px-2 py-1 text-xs text-white">
-                          <span>{c.name} ({count})</span>
-                          {count === 0 && (
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteCategory(c.id, c.name)}
-                              className="text-red-400 hover:text-red-300 ml-0.5"
-                              title="Eliminar categoría"
-                            >
-                              ✕
-                            </button>
-                          )}
-                        </div>
-                      )
-                    })
-                  })()}
+                  {uniqueCategories.map((cat) => (
+                    <span key={cat} className="inline-block bg-gray-800 rounded px-2 py-1 text-xs text-white">
+                      {cat} ({benefits.filter(b => b.category === cat).length})
+                    </span>
+                  ))}
                 </div>
               </div>
             )}
