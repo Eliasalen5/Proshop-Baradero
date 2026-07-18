@@ -36,6 +36,16 @@ export default function ProductsManager() {
     }
   }
 
+  const handleDeleteCategory = async (id, name) => {
+    if (!confirm(`Eliminar categoría "${name}"?`)) return
+    try {
+      await deleteDoc(doc(db, 'categories', id))
+      loadCategories()
+    } catch (err) {
+      setError('Error al eliminar categoría: ' + err.message)
+    }
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError('')
@@ -122,6 +132,35 @@ export default function ProductsManager() {
                 <option key={c.id} value={c.name} />
               ))}
             </datalist>
+            {categories.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500 mb-1.5">Categorías existentes:</p>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                    const used = {}
+                    products.forEach(p => { used[p.category] = (used[p.category] || 0) + 1 })
+                    return categories.map((c) => {
+                      const count = used[c.name] || 0
+                      return (
+                        <div key={c.id} className="flex items-center gap-1 bg-gray-800 rounded px-2 py-1 text-xs text-white">
+                          <span>{c.name} ({count})</span>
+                          {count === 0 && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteCategory(c.id, c.name)}
+                              className="text-red-400 hover:text-red-300 ml-0.5"
+                              title="Eliminar categoría"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      )
+                    })
+                  })()}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <textarea placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" rows={2} />
