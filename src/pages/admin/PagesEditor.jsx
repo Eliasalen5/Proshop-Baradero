@@ -90,7 +90,15 @@ export default function PagesEditor() {
 
         <div>
           <p className="text-gray-500 text-sm mb-1">Imagen de banner</p>
-          <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm" />
+          <div className="flex flex-wrap items-center gap-3">
+            <label className="inline-flex items-center gap-1.5 bg-club-yellow text-black font-semibold px-4 py-2 rounded hover:bg-yellow-400 transition cursor-pointer text-sm">
+              <span className="text-lg leading-none">+</span>
+              Elegir imagen
+              <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="hidden" />
+            </label>
+            {file && <span className="text-gray-400 text-sm">{file.name}</span>}
+            {!file && content.heroImage && <span className="text-gray-500 text-sm">Tiene banner actual</span>}
+          </div>
         </div>
 
         {message && <p className="text-green-400 text-sm">{message}</p>}

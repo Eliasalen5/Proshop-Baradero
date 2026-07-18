@@ -4,7 +4,7 @@ export default function AdminLayout() {
   const location = useLocation()
 
   const links = [
-    { path: '/admin', label: 'Dashboard', emoji: '📊' },
+    { path: '/admin', label: 'Estadísticas', emoji: '📊' },
     { path: '/admin/tournaments', label: 'Torneos', emoji: '🏆' },
     { path: '/admin/products', label: 'Productos', emoji: '📦' },
     { path: '/admin/benefits', label: 'Beneficios', emoji: '🎁' },

@@ -101,7 +101,14 @@ export default function CarouselManager() {
           <h3 className="text-club-yellow font-semibold">Agregar imagen ({images.length}/5)</h3>
           <div>
             <p className="text-gray-500 text-sm mb-1">Imagen (recomendado 1920x820 o 21:9)</p>
-            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm" required />
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="inline-flex items-center gap-1.5 bg-club-yellow text-black font-semibold px-4 py-2 rounded hover:bg-yellow-400 transition cursor-pointer text-sm">
+                <span className="text-lg leading-none">+</span>
+                Elegir imagen
+                <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="hidden" required />
+              </label>
+              {file && <span className="text-gray-400 text-sm">{file.name}</span>}
+            </div>
           </div>
           <input placeholder="Título (opcional)" value={title} onChange={(e) => setTitle(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
           <input placeholder="Descripción (opcional)" value={description} onChange={(e) => setDescription(e.target.value)} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />

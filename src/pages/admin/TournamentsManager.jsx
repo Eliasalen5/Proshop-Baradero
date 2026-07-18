@@ -392,8 +392,15 @@ export default function TournamentsManager() {
           </select>
           <div>
             <p className="text-gray-500 text-xs mb-1">Flyer del torneo</p>
-            <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="text-gray-400 text-sm w-full" />
-            {form.flyer && !file && <p className="text-gray-600 text-xs mt-1">Tiene flyer actual</p>}
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="inline-flex items-center gap-1.5 bg-club-yellow text-black font-semibold px-4 py-2 rounded hover:bg-yellow-400 transition cursor-pointer text-sm">
+                <span className="text-lg leading-none">+</span>
+                Elegir flyer
+                <input type="file" accept="image/*" onChange={(e) => setFile(e.target.files[0])} className="hidden" />
+              </label>
+              {file && <span className="text-gray-400 text-sm">{file.name}</span>}
+              {!file && form.flyer && <span className="text-gray-500 text-sm">Tiene flyer actual</span>}
+            </div>
           </div>
         </div>
         <textarea placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" rows={2} />
@@ -685,7 +692,11 @@ export default function TournamentsManager() {
                         </select>
                         <div>
                           <p className="text-gray-500 text-xs mb-1">Flyer del puesto</p>
-                          <input type="file" accept="image/*" onChange={(e) => setResultFiles({ ...resultFiles, [pos]: e.target.files[0] })} className="text-gray-400 text-xs" />
+                          <label className="inline-flex items-center gap-1 bg-club-yellow text-black font-semibold px-3 py-1.5 rounded hover:bg-yellow-400 transition cursor-pointer text-xs">
+                            <span className="text-base leading-none">+</span>
+                            Flyer
+                            <input type="file" accept="image/*" onChange={(e) => setResultFiles({ ...resultFiles, [pos]: e.target.files[0] })} className="hidden" />
+                          </label>
                           {results[pos]?.flyer && !resultFiles[pos] && <p className="text-gray-600 text-xs mt-1">Tiene flyer</p>}
                         </div>
                       </div>
