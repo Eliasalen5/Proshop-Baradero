@@ -186,41 +186,48 @@ export default function ProductsManager() {
         </div>
       </form>
 
-      <div className="mb-4">
-        <input placeholder="Buscar por nombre o categoría..." value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
-      </div>
+      <>
+        <div className="mb-4">
+          <input placeholder="Buscar por nombre o categoría..." value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
+        </div>
 
-      <div className="grid gap-3">
-        {(() => {
-          const term = search.toLowerCase()
-          const filtered = products.filter((p) =>
-            (p.name?.toLowerCase() || '').includes(term) ||
-            (p.category?.toLowerCase() || '').includes(term)
-          )
-          if (search && filtered.length === 0) {
-            return <p className="text-gray-500 text-center py-8">No se encontraron productos</p>
-          }
-          return filtered.map((p) => (
-          <div key={p.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
-            <div className="w-16 h-16 bg-gray-800 rounded overflow-hidden flex-shrink-0">
-              {p.image ? <img src={p.image} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">📦</div>}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white font-medium truncate">{p.name}</p>
-              <p className="text-club-yellow text-sm font-bold">${p.price?.toLocaleString('es-AR')}</p>
-              <p className="text-gray-500 text-xs uppercase">{p.category}</p>
-            </div>
-            <div className="flex gap-2 flex-shrink-0">
-              <button onClick={() => handleEdit(p)} className="text-blue-400 hover:text-blue-300 text-sm">Editar</button>
-              <button onClick={() => handleDelete(p.id, p.image)} className="text-red-400 hover:text-red-300 text-sm">Eliminar</button>
-            </div>
+        {!search ? (
+          <p className="text-gray-500 text-center py-8">
+            {products.length === 0 ? 'No hay productos. Creá el primero.' : 'Buscá un producto por nombre o categoría'}
+          </p>
+        ) : (
+          <div className="grid gap-3">
+            {(() => {
+              const term = search.toLowerCase()
+              const filtered = products.filter((p) =>
+                (p.name?.toLowerCase() || '').includes(term) ||
+                (p.category?.toLowerCase() || '').includes(term)
+              )
+              if (filtered.length === 0) {
+                return <p className="text-gray-500 text-center py-8">No se encontraron productos</p>
+              }
+              return filtered.map((p) => (
+              <div key={p.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
+                <div className="w-16 h-16 bg-gray-800 rounded overflow-hidden flex-shrink-0">
+                  {p.image ? <img src={p.image} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">📦</div>}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium truncate">{p.name}</p>
+                  <p className="text-club-yellow text-sm font-bold">${p.price?.toLocaleString('es-AR')}</p>
+                  <p className="text-gray-500 text-xs uppercase">{p.category}</p>
+                </div>
+                <div className="flex gap-2 flex-shrink-0">
+                  <button onClick={() => handleEdit(p)} className="text-blue-400 hover:text-blue-300 text-sm">Editar</button>
+                  <button onClick={() => handleDelete(p.id, p.image)} className="text-red-400 hover:text-red-300 text-sm">Eliminar</button>
+                </div>
+              </div>
+              ))
+            })()}
           </div>
-          ))
-        })()}
-        {products.length === 0 && <p className="text-gray-500 text-center py-8">No hay productos. Creá el primero.</p>}
-      </div>
+        )}
+      </>
     </div>
   )
 }
