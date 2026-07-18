@@ -13,6 +13,7 @@ export default function ProductsManager() {
   const [file, setFile] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
+  const [search, setSearch] = useState('')
 
   const loadProducts = () => {
     const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
@@ -185,8 +186,23 @@ export default function ProductsManager() {
         </div>
       </form>
 
+      <div className="mb-4">
+        <input placeholder="Buscar por nombre o categoría..." value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
+      </div>
+
       <div className="grid gap-3">
-        {products.map((p) => (
+        {(() => {
+          const term = search.toLowerCase()
+          const filtered = products.filter((p) =>
+            (p.name?.toLowerCase() || '').includes(term) ||
+            (p.category?.toLowerCase() || '').includes(term)
+          )
+          if (search && filtered.length === 0) {
+            return <p className="text-gray-500 text-center py-8">No se encontraron productos</p>
+          }
+          return filtered.map((p) => (
           <div key={p.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
             <div className="w-16 h-16 bg-gray-800 rounded overflow-hidden flex-shrink-0">
               {p.image ? <img src={p.image} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">📦</div>}
@@ -201,7 +217,8 @@ export default function ProductsManager() {
               <button onClick={() => handleDelete(p.id, p.image)} className="text-red-400 hover:text-red-300 text-sm">Eliminar</button>
             </div>
           </div>
-        ))}
+          ))
+        })()}
         {products.length === 0 && <p className="text-gray-500 text-center py-8">No hay productos. Creá el primero.</p>}
       </div>
     </div>
