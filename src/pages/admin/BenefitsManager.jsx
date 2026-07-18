@@ -13,6 +13,7 @@ export default function BenefitsManager() {
   const [file, setFile] = useState(null)
   const [uploading, setUploading] = useState(false)
   const [error, setError] = useState('')
+  const [search, setSearch] = useState('')
 
   const load = () => {
     const q = query(collection(db, 'benefits'), orderBy('createdAt', 'desc'))
@@ -34,6 +35,16 @@ export default function BenefitsManager() {
     if (snap.empty) {
       await addDoc(collection(db, 'categories'), { name, createdAt: new Date().toISOString() })
       loadCategories()
+    }
+  }
+
+  const handleDeleteCategory = async (id, name) => {
+    if (!confirm(`Eliminar categoría "${name}"?`)) return
+    try {
+      await deleteDoc(doc(db, 'categories', id))
+      loadCategories()
+    } catch (err) {
+      setError('Error al eliminar categoría: ' + err.message)
     }
   }
 
@@ -139,6 +150,35 @@ export default function BenefitsManager() {
             <datalist id="category-list">
               {categories.map((c) => <option key={c.id} value={c.name} />)}
             </datalist>
+            {categories.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs text-gray-500 mb-1.5">Categorías existentes:</p>
+                <div className="flex flex-wrap gap-2">
+                  {(() => {
+                    const used = {}
+                    benefits.forEach(b => { used[b.category] = (used[b.category] || 0) + 1 })
+                    return categories.map((c) => {
+                      const count = used[c.name] || 0
+                      return (
+                        <div key={c.id} className="flex items-center gap-1 bg-gray-800 rounded px-2 py-1 text-xs text-white">
+                          <span>{c.name} ({count})</span>
+                          {count === 0 && (
+                            <button
+                              type="button"
+                              onClick={() => handleDeleteCategory(c.id, c.name)}
+                              className="text-red-400 hover:text-red-300 ml-0.5"
+                              title="Eliminar categoría"
+                            >
+                              ✕
+                            </button>
+                          )}
+                        </div>
+                      )
+                    })
+                  })()}
+                </div>
+              </div>
+            )}
           </div>
         </div>
         <textarea placeholder="Descripción" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" rows={2} />
@@ -168,29 +208,52 @@ export default function BenefitsManager() {
         </div>
       </form>
 
-      <div className="grid gap-3">
-        {benefits.map((b) => (
-          <div key={b.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
-            <div className="w-16 h-16 bg-gray-800 rounded overflow-hidden flex-shrink-0">
-              {b.image ? <img src={b.image} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">🎁</div>}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-white font-medium">{b.name} {!b.active && <span className="text-gray-500 text-xs">(oculto)</span>}</p>
-              <div className="flex flex-wrap gap-2 mt-1">
-                {b.pointsRequired && <span className="text-club-yellow text-sm font-bold">{b.pointsRequired} pts</span>}
-                {b.price && <span className="text-green-400 text-sm font-bold">${b.price?.toLocaleString('es-AR')}</span>}
-                {b.discount && <span className="text-green-400 text-xs bg-green-900/50 px-1.5 py-0.5 rounded">-{b.discount}%</span>}
-                {b.category && <span className="text-gray-500 text-xs uppercase">{b.category}</span>}
+      <>
+        <div className="mb-4">
+          <input placeholder="Buscar por nombre o categoría..." value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
+        </div>
+
+        {!search ? (
+          <p className="text-gray-500 text-center py-8">
+            {benefits.length === 0 ? 'No hay beneficios. Creá el primero.' : 'Buscá un beneficio por nombre o categoría'}
+          </p>
+        ) : (
+          <div className="grid gap-3">
+            {(() => {
+              const term = search.toLowerCase()
+              const filtered = benefits.filter((b) =>
+                (b.name?.toLowerCase() || '').includes(term) ||
+                (b.category?.toLowerCase() || '').includes(term)
+              )
+              if (filtered.length === 0) {
+                return <p className="text-gray-500 text-center py-8">No se encontraron beneficios</p>
+              }
+              return filtered.map((b) => (
+              <div key={b.id} className="bg-gray-900 border border-gray-800 rounded-lg p-4 flex items-center gap-4">
+                <div className="w-16 h-16 bg-gray-800 rounded overflow-hidden flex-shrink-0">
+                  {b.image ? <img src={b.image} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-gray-600">🎁</div>}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-white font-medium">{b.name} {!b.active && <span className="text-gray-500 text-xs">(oculto)</span>}</p>
+                  <div className="flex flex-wrap gap-2 mt-1">
+                    {b.pointsRequired && <span className="text-club-yellow text-sm font-bold">{b.pointsRequired} pts</span>}
+                    {b.price && <span className="text-green-400 text-sm font-bold">${b.price?.toLocaleString('es-AR')}</span>}
+                    {b.discount && <span className="text-green-400 text-xs bg-green-900/50 px-1.5 py-0.5 rounded">-{b.discount}%</span>}
+                    {b.category && <span className="text-gray-500 text-xs uppercase">{b.category}</span>}
+                  </div>
+                </div>
+                <div className="flex gap-2 flex-shrink-0">
+                  <button onClick={() => handleEdit(b)} className="text-blue-400 hover:text-blue-300 text-sm">Editar</button>
+                  <button onClick={() => handleDelete(b.id, b.image)} className="text-red-400 hover:text-red-300 text-sm">Eliminar</button>
+                </div>
               </div>
-            </div>
-            <div className="flex gap-2 flex-shrink-0">
-              <button onClick={() => handleEdit(b)} className="text-blue-400 hover:text-blue-300 text-sm">Editar</button>
-              <button onClick={() => handleDelete(b.id, b.image)} className="text-red-400 hover:text-red-300 text-sm">Eliminar</button>
-            </div>
+              ))
+            })()}
           </div>
-        ))}
-        {benefits.length === 0 && <p className="text-gray-500 text-center py-8">No hay beneficios. Creá el primero.</p>}
-      </div>
+        )}
+      </>
     </div>
   )
 }
