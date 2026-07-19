@@ -5,17 +5,14 @@ import { db } from '../services/firebase'
 
 export default function Proshop() {
   const [products, setProducts] = useState([])
-  const [categories, setCategories] = useState([])
   const [selected, setSelected] = useState('')
   const [loading, setLoading] = useState(true)
 
+  const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))]
+
   useEffect(() => {
-    Promise.all([
-      getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc'))),
-      getDocs(query(collection(db, 'categories'), orderBy('createdAt', 'desc'))),
-    ]).then(([pSnap, cSnap]) => {
-      setProducts(pSnap.docs.map((d) => ({ id: d.id, ...d.data() })))
-      setCategories(cSnap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc'))).then((snap) => {
+      setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
       setLoading(false)
     }).catch((err) => {
       setLoading(false)
@@ -40,7 +37,7 @@ export default function Proshop() {
       <h1 className="text-3xl font-bold text-club-yellow mb-2">Proshop</h1>
       <p className="text-gray-400 mb-6">Productos</p>
 
-      {categories.length > 0 && (
+      {uniqueCategories.length > 0 && (
         <div className="flex gap-2 mb-8 overflow-x-auto flex-nowrap whitespace-nowrap -mx-4 px-4 md:mx-0 md:px-0 pb-1">
           <button
             onClick={() => setSelected('')}
@@ -50,15 +47,15 @@ export default function Proshop() {
           >
             Todas
           </button>
-          {categories.map((c) => (
+          {uniqueCategories.map((cat) => (
             <button
-              key={c.id}
-              onClick={() => setSelected(c.name)}
+              key={cat}
+              onClick={() => setSelected(cat)}
               className={`px-4 py-1.5 rounded text-sm transition ${
-                selected === c.name ? 'bg-club-yellow text-black font-semibold' : 'bg-gray-800 text-gray-400 hover:text-white'
+                selected === cat ? 'bg-club-yellow text-black font-semibold' : 'bg-gray-800 text-gray-400 hover:text-white'
               }`}
             >
-              {c.name}
+              {cat}
             </button>
           ))}
         </div>

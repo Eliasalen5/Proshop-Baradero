@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { collection, query, where, orderBy, addDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore'
+import { collection, query, where, addDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 
 function generateCode() {
@@ -13,14 +13,15 @@ function generateCode() {
 export default function ClubBeneficios() {
   const { user, userData } = useAuth()
   const [benefits, setBenefits] = useState([])
-  const [categories, setCategories] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [loading, setLoading] = useState(true)
   const [message, setMessage] = useState('')
   const [redeemed, setRedeemed] = useState(null)
 
+  const uniqueCategories = [...new Set(benefits.map(b => b.category).filter(Boolean))]
+
   useEffect(() => {
-    let unsubBenefits, unsubCategories, retryB, retryC
+    let unsubBenefits, retryB
     const listenBenefits = () => {
       unsubBenefits = onSnapshot(
         query(collection(db, 'benefits'), where('active', '!=', false)),
@@ -34,25 +35,10 @@ export default function ClubBeneficios() {
         }
       )
     }
-    const listenCategories = () => {
-      unsubCategories = onSnapshot(
-        query(collection(db, 'categories'), orderBy('createdAt', 'desc')),
-        (snap) => {
-          setCategories(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-        },
-        (err) => {
-          console.error('Categories onSnapshot:', err)
-          retryC = setTimeout(listenCategories, 3000)
-        }
-      )
-    }
     listenBenefits()
-    listenCategories()
     return () => {
       if (unsubBenefits) unsubBenefits()
-      if (unsubCategories) unsubCategories()
       if (retryB) clearTimeout(retryB)
-      if (retryC) clearTimeout(retryC)
     }
   }, [])
 
@@ -119,16 +105,16 @@ export default function ClubBeneficios() {
         </div>
       )}
 
-      {categories.filter(c => benefits.some(b => b.category === c.name)).length > 0 && (
+      {uniqueCategories.length > 0 && (
         <div className="flex gap-2 mb-6 overflow-x-auto flex-nowrap whitespace-nowrap -mx-4 px-4 md:mx-0 md:px-0 pb-1">
           <button onClick={() => setSelectedCategory('')}
             className={`px-4 py-1.5 rounded text-sm transition ${!selectedCategory ? 'bg-club-yellow text-black font-semibold' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
             Todas
           </button>
-          {categories.filter(c => benefits.some(b => b.category === c.name)).map((c) => (
-            <button key={c.id} onClick={() => setSelectedCategory(c.name)}
-              className={`px-4 py-1.5 rounded text-sm transition ${selectedCategory === c.name ? 'bg-club-yellow text-black font-semibold' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
-              {c.name}
+          {uniqueCategories.map((cat) => (
+            <button key={cat} onClick={() => setSelectedCategory(cat)}
+              className={`px-4 py-1.5 rounded text-sm transition ${selectedCategory === cat ? 'bg-club-yellow text-black font-semibold' : 'bg-gray-800 text-gray-400 hover:text-white'}`}>
+              {cat}
             </button>
           ))}
         </div>
