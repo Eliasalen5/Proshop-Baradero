@@ -32,6 +32,7 @@ export default function ClubBeneficios() {
         },
         (err) => {
           console.error('Benefits onSnapshot:', err)
+          setLoading(false)
           retryB = setTimeout(listenBenefits, 3000)
         }
       )

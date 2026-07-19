@@ -38,6 +38,7 @@ export function AuthProvider({ children }) {
         setLoading(false)
       }, (err) => {
         console.error('User doc onSnapshot:', err)
+        setLoading(false)
         retry = setTimeout(listen, 3000)
       })
     }
