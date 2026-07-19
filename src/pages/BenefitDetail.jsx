@@ -16,7 +16,6 @@ export default function BenefitDetail() {
   const { user, userData } = useAuth()
   const [benefit, setBenefit] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [showConsult, setShowConsult] = useState(false)
   const [message, setMessage] = useState('')
   const [redeemed, setRedeemed] = useState(null)
 
@@ -59,8 +58,6 @@ export default function BenefitDetail() {
       } catch {
         setMessage('Error al canjear. Intentá de nuevo.')
       }
-    } else {
-      setShowConsult(true)
     }
   }
 
@@ -128,28 +125,25 @@ export default function BenefitDetail() {
             )}
           </div>
 
-          <button
-            onClick={handleRedeem}
-            disabled={!user || (benefit.pointsRequired && (userData?.points || 0) < benefit.pointsRequired)}
-            className="w-full mt-6 bg-club-yellow text-black font-bold py-3 rounded hover:bg-yellow-400 transition disabled:opacity-50 disabled:cursor-not-allowed text-lg"
-          >
-            {!user ? 'Ingresá para canjear' : benefit.pointsRequired ? 'Canjear' : 'Consultar'}
-          </button>
+          {!user ? (
+            <button disabled className="w-full mt-6 bg-gray-700 text-gray-400 font-bold py-3 rounded cursor-not-allowed text-lg">
+              Ingresá para canjear
+            </button>
+          ) : benefit.pointsRequired ? (
+            <button
+              onClick={handleRedeem}
+              disabled={(userData?.points || 0) < benefit.pointsRequired}
+              className="w-full mt-6 bg-club-yellow text-black font-bold py-3 rounded hover:bg-yellow-400 transition disabled:opacity-50 disabled:cursor-not-allowed text-lg"
+            >
+              Canjear
+            </button>
+          ) : (
+            <div className="mt-6 p-4 bg-gray-800 rounded-lg text-center">
+              <p className="text-gray-400">Consultá en el club por este beneficio</p>
+            </div>
+          )}
         </div>
       </div>
-
-      {showConsult && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={() => setShowConsult(false)}>
-          <div className="bg-gray-900 border border-gray-700 rounded-2xl p-8 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
-            <div className="text-club-yellow text-5xl mb-3">📞</div>
-            <h2 className="text-white text-xl font-bold mb-1">Consultá en el club</h2>
-            <p className="text-gray-400 text-sm mb-6">Acercate a nuestro local para más información sobre este beneficio</p>
-            <button onClick={() => setShowConsult(false)} className="bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition w-full">
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
 
       {redeemed && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={() => setRedeemed(null)}>
