@@ -5,13 +5,8 @@ import {
   signInWithEmailAndPassword,
   signOut,
   sendPasswordResetEmail,
-  updateEmail,
-  updatePassword,
-  reauthenticateWithCredential,
-  EmailAuthProvider,
 } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, onSnapshot } from 'firebase/firestore'
-import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { auth, db, storage } from '../services/firebase'
 
 const AuthContext = createContext()
@@ -88,6 +83,7 @@ export function AuthProvider({ children }) {
   const uploadProfilePhoto = async (file) => {
     if (!user) throw new Error('No user')
     if (file.size > 5 * 1024 * 1024) throw new Error('La imagen no puede superar los 5MB')
+    const { ref, deleteObject, uploadBytes, getDownloadURL } = await import('firebase/storage')
     if (userData?.photoURL) {
       try { await deleteObject(ref(storage, userData.photoURL)) } catch {}
     }
@@ -101,6 +97,7 @@ export function AuthProvider({ children }) {
 
   const changeEmail = async (newEmail, currentPassword) => {
     if (!user || !user.email) throw new Error('No user')
+    const { EmailAuthProvider, reauthenticateWithCredential, updateEmail } = await import('firebase/auth')
     const credential = EmailAuthProvider.credential(user.email, currentPassword)
     await reauthenticateWithCredential(user, credential)
     await updateEmail(user, newEmail)
@@ -110,6 +107,7 @@ export function AuthProvider({ children }) {
 
   const changePassword = async (currentPassword, newPassword) => {
     if (!user || !user.email) throw new Error('No user')
+    const { EmailAuthProvider, reauthenticateWithCredential, updatePassword } = await import('firebase/auth')
     const credential = EmailAuthProvider.credential(user.email, currentPassword)
     await reauthenticateWithCredential(user, credential)
     await updatePassword(user, newPassword)
