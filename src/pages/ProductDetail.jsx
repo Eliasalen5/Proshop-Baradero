@@ -45,7 +45,7 @@ export default function ProductDetail() {
       <div className="grid md:grid-cols-2 gap-8">
         <div className="aspect-square bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
           {product.image ? (
-            <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
+            <img src={product.image} alt={product.name} className="w-full h-full object-contain" />
           ) : (
             <span className="text-gray-600 text-6xl">📦</span>
           )}

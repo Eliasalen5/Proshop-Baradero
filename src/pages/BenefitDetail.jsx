@@ -99,7 +99,7 @@ export default function BenefitDetail() {
       <div className="grid md:grid-cols-2 gap-8">
         <div className="aspect-square bg-gray-800 rounded-lg flex items-center justify-center overflow-hidden">
           {benefit.image ? (
-            <img src={benefit.image} alt={benefit.name} className="w-full h-full object-cover" />
+            <img src={benefit.image} alt={benefit.name} className="w-full h-full object-contain" />
           ) : (
             <span className="text-gray-600 text-6xl">🎁</span>
           )}
