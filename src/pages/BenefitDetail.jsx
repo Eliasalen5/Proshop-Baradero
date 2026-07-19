@@ -139,7 +139,7 @@ export default function BenefitDetail() {
             </button>
           ) : (
             <div className="mt-6 p-4 bg-gray-800 rounded-lg text-center">
-              <p className="text-gray-400">Consultá en el club por este beneficio</p>
+              <p className="text-gray-400">Consultá en el local por este beneficio</p>
             </div>
           )}
         </div>
