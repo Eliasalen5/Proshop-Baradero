@@ -68,6 +68,7 @@ export default function TournamentDetail() {
   const [tournament, setTournament] = useState(null)
   const [loading, setLoading] = useState(true)
   const [now, setNow] = useState(nowArgentina())
+  const [lightbox, setLightbox] = useState(null)
 
   useEffect(() => {
     getDoc(doc(db, 'tournaments', id)).then((snap) => {
@@ -275,7 +276,10 @@ export default function TournamentDetail() {
                   pos === '1' ? 'border-yellow-600' : pos === '2' ? 'border-gray-500' : pos === '3' ? 'border-amber-800' : 'border-gray-800'
                 }`}>
                   <div className="text-3xl mb-2">{medallas[pos]}</div>
-                  <div className="w-full aspect-square bg-gray-800 rounded mb-3 overflow-hidden relative">
+                  <div
+                    className={`w-full aspect-square bg-gray-800 rounded mb-3 overflow-hidden relative ${r.flyer ? 'cursor-pointer' : ''}`}
+                    onClick={() => r.flyer && setLightbox(r.flyer)}
+                  >
                     {r.flyer ? (
                       <>
                         <img src={r.flyer} alt="" className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-60 scale-110" />
@@ -291,6 +295,13 @@ export default function TournamentDetail() {
               )
             })}
           </div>
+        </div>
+      )}
+
+      {/* Lightbox */}
+      {lightbox && (
+        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
+          <img src={lightbox} alt="Flyer" className="max-w-full max-h-full object-contain rounded-lg" />
         </div>
       )}
     </div>
