@@ -12,7 +12,6 @@ export default function UsersManager() {
   const [confirmMsg, setConfirmMsg] = useState('')
   const [qrModal, setQrModal] = useState(null)
   const [scannerOpen, setScannerOpen] = useState(false)
-  const [refreshKey, setRefreshKey] = useState(0)
   const scannerRef = useRef(null)
   const html5QrCodeRef = useRef(null)
 
@@ -34,7 +33,7 @@ export default function UsersManager() {
     }
     listen()
     return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
-  }, [refreshKey])
+  }, [])
 
   useEffect(() => {
     let unsub, retry
@@ -51,7 +50,7 @@ export default function UsersManager() {
     }
     listen()
     return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
-  }, [refreshKey])
+  }, [])
 
   const assignPoints = async (userId, currentPoints) => {
     const added = Number(pointsInput[userId])
@@ -135,13 +134,7 @@ export default function UsersManager() {
         >
           Canjes Pendientes {pending.length > 0 && <span className="ml-1 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">{pending.length}</span>}
         </button>
-        <button
-          onClick={() => setRefreshKey(k => k + 1)}
-          className="ml-auto px-3 py-2 rounded text-sm font-semibold bg-gray-800 text-gray-400 hover:text-white hover:bg-gray-700 transition flex-shrink-0"
-          title="Refrescar datos"
-        >
-          ↻
-        </button>
+
       </div>
 
       {view === 'users' && (
