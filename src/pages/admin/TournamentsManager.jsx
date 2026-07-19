@@ -46,7 +46,7 @@ export default function TournamentsManager() {
 
   const load = () => {
     const q = query(collection(db, 'tournaments'), orderBy('createdAt', 'desc'))
-    getDocs(q).then((snap) => setTournaments(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
+    getDocs(q).then((snap) => setTournaments(snap.docs.map((d) => ({ id: d.id, ...d.data() })))).catch((err) => setError('Error al cargar: ' + err.message))
   }
   useEffect(load, [])
 

@@ -18,7 +18,7 @@ export default function BenefitsManager() {
 
   const load = () => {
     const q = query(collection(db, 'benefits'), orderBy('createdAt', 'desc'))
-    getDocs(q).then((snap) => setBenefits(snap.docs.map((d) => ({ id: d.id, ...d.data() }))))
+    getDocs(q).then((snap) => setBenefits(snap.docs.map((d) => ({ id: d.id, ...d.data() })))).catch((err) => setError('Error al cargar: ' + err.message))
   }
 
   useEffect(() => { load() }, [])
@@ -30,12 +30,12 @@ export default function BenefitsManager() {
     try {
       let imageUrl = form.image
       if (file) {
-        if (editing && form.image) {
-          try { await deleteObject(ref(storage, form.image)) } catch {}
-        }
         const storageRef = ref(storage, `benefits/${Date.now()}_${file.name}`)
         await uploadBytes(storageRef, file)
         imageUrl = await getDownloadURL(storageRef)
+        if (editing && form.image) {
+          try { await deleteObject(ref(storage, form.image)) } catch {}
+        }
       }
 
       const data = {

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { collection, query, where, addDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore'
+import { collection, query, where, doc, runTransaction, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
 
 function generateCode() {
@@ -56,18 +56,25 @@ export default function ClubBeneficios() {
       }
       const code = generateCode()
       try {
-        await addDoc(collection(db, 'redemptions'), {
-          userId: user.uid,
-          userName: userData?.displayName || user.email,
-          benefitId: benefit.id,
-          benefitName: benefit.name,
-          pointsSpent: benefit.pointsRequired,
-          code,
-          date: new Date().toISOString(),
-          status: 'pending',
+        await runTransaction(db, async (transaction) => {
+          const userRef = doc(db, 'users', user.uid)
+          const userSnap = await transaction.get(userRef)
+          if (!userSnap.exists()) throw new Error('Usuario no encontrado')
+          const currentPoints = userSnap.data().points || 0
+          if (currentPoints < benefit.pointsRequired) throw new Error('No tenés suficientes puntos')
+          transaction.update(userRef, { points: currentPoints - benefit.pointsRequired })
+          const redemptionRef = doc(collection(db, 'redemptions'))
+          transaction.set(redemptionRef, {
+            userId: user.uid,
+            userName: userData?.displayName || user.email,
+            benefitId: benefit.id,
+            benefitName: benefit.name,
+            pointsSpent: benefit.pointsRequired,
+            code,
+            date: new Date().toISOString(),
+            status: 'pending',
+          })
         })
-        const newPoints = (userData?.points || 0) - benefit.pointsRequired
-        await updateDoc(doc(db, 'users', user.uid), { points: newPoints })
         setRedeemed({ benefit, code })
       } catch {
         setMessage('Error al canjear. Intentá de nuevo.')
@@ -147,7 +154,13 @@ export default function ClubBeneficios() {
                   </div>
                 </div>
               </Link>
-              {user && b.pointsRequired && (
+              {!user ? (
+                <div className="px-4 pb-4 pt-3">
+                  <Link to="/login" className="block w-full bg-gray-700 text-gray-400 font-semibold py-2 rounded text-center text-sm hover:bg-gray-600 transition">
+                    Ingresá para canjear
+                  </Link>
+                </div>
+              ) : b.pointsRequired ? (
                 <div className="px-4 pb-4 pt-3">
                   <button
                     onClick={() => handleRedeem(b)}
@@ -157,7 +170,7 @@ export default function ClubBeneficios() {
                     Canjear
                   </button>
                 </div>
-              )}
+              ) : null}
             </div>
           ))}
         </div>
