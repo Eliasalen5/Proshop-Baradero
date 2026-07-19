@@ -37,15 +37,12 @@ export default function UsersManager() {
   }, [refreshKey])
 
   useEffect(() => {
-    if (view !== 'redemptions') return
     let unsub, retry
     const listen = () => {
       const q = query(collection(db, 'redemptions'), orderBy('date', 'desc'))
       unsub = onSnapshot(
         q,
-        (snap) => {
-          setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-        },
+        (snap) => setRedemptions(snap.docs.map((d) => ({ id: d.id, ...d.data() }))),
         (err) => {
           console.error('Redemptions onSnapshot:', err)
           retry = setTimeout(listen, 3000)
@@ -54,7 +51,7 @@ export default function UsersManager() {
     }
     listen()
     return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
-  }, [view, refreshKey])
+  }, [refreshKey])
 
   const assignPoints = async (userId, currentPoints) => {
     const added = Number(pointsInput[userId])
