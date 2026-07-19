@@ -13,6 +13,7 @@ const ProductDetail = lazy(() => import('./pages/ProductDetail'))
 const Torneos = lazy(() => import('./pages/Torneos'))
 const TournamentDetail = lazy(() => import('./pages/TournamentDetail'))
 const ClubBeneficios = lazy(() => import('./pages/ClubBeneficios'))
+const BenefitDetail = lazy(() => import('./pages/BenefitDetail'))
 const Login = lazy(() => import('./pages/Login'))
 const Register = lazy(() => import('./pages/Register'))
 const ResetPassword = lazy(() => import('./pages/ResetPassword'))
@@ -41,6 +42,7 @@ export default function App() {
               <Route path="/torneos" element={<Torneos />} />
               <Route path="/torneos/:id" element={<TournamentDetail />} />
               <Route path="/club-beneficios" element={<ClubBeneficios />} />
+              <Route path="/club-beneficios/:id" element={<BenefitDetail />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/reset-password" element={<ResetPassword />} />

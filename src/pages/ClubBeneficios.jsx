@@ -1,22 +1,14 @@
 import { useEffect, useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { collection, query, where, addDoc, doc, updateDoc, onSnapshot } from 'firebase/firestore'
+import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
-
-function generateCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  const arr = new Uint8Array(6)
-  crypto.getRandomValues(arr)
-  return Array.from(arr, (b) => chars[b % chars.length]).join('')
-}
 
 export default function ClubBeneficios() {
   const { user, userData } = useAuth()
   const [benefits, setBenefits] = useState([])
   const [selectedCategory, setSelectedCategory] = useState('')
   const [loading, setLoading] = useState(true)
-  const [message, setMessage] = useState('')
-  const [redeemed, setRedeemed] = useState(null)
 
   const uniqueCategories = [...new Set(benefits.map(b => b.category).filter(Boolean))]
 
@@ -42,39 +34,6 @@ export default function ClubBeneficios() {
     }
   }, [])
 
-  const handleRedeem = async (benefit) => {
-    if (!user) {
-      setMessage('Iniciá sesión para canjear')
-      return
-    }
-    if (benefit.pointsRequired) {
-      if ((userData?.points || 0) < benefit.pointsRequired) {
-        setMessage('No tenés suficientes puntos')
-        return
-      }
-      const code = generateCode()
-      try {
-        await addDoc(collection(db, 'redemptions'), {
-          userId: user.uid,
-          userName: userData?.displayName || user.email,
-          benefitId: benefit.id,
-          benefitName: benefit.name,
-          pointsSpent: benefit.pointsRequired,
-          code,
-          date: new Date().toISOString(),
-          status: 'pending',
-        })
-        const newPoints = (userData?.points || 0) - benefit.pointsRequired
-        await updateDoc(doc(db, 'users', user.uid), { points: newPoints })
-        setRedeemed({ benefit, code })
-      } catch {
-        setMessage('Error al canjear. Intentá de nuevo.')
-      }
-    } else {
-      setMessage('Consultá en el club por este beneficio.')
-    }
-  }
-
   if (loading) {
     return (
       <div className="flex justify-center py-20">
@@ -92,16 +51,6 @@ export default function ClubBeneficios() {
         <div className="bg-gray-900 border border-yellow-600/30 rounded-lg p-4 mb-8 inline-block">
           <span className="text-gray-400">Tus puntos: </span>
           <span className="text-club-yellow font-bold text-xl">{userData?.points ?? 0}</span>
-        </div>
-      )}
-
-      {message && (
-        <div className={`p-3 rounded mb-6 text-sm ${
-          message.includes('Error') || message.includes('suficientes') || message.includes('sesión')
-            ? 'bg-red-900/50 text-red-300'
-            : 'bg-green-900/50 text-green-300'
-        }`}>
-          {message}
         </div>
       )}
 
@@ -127,10 +76,10 @@ export default function ClubBeneficios() {
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {benefits.filter(b => !selectedCategory || b.category === selectedCategory).map((b) => (
-            <div key={b.id} className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden">
+            <Link key={b.id} to={`/club-beneficios/${b.id}`} className="bg-gray-900 rounded-lg border border-gray-800 overflow-hidden block hover:border-club-yellow/50 transition group">
               <div className="aspect-square bg-gray-800 flex items-center justify-center overflow-hidden">
                 {b.image ? (
-                  <img src={b.image} alt={b.name} className="w-full h-full object-cover" />
+                  <img src={b.image} alt={b.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
                 ) : (
                   <span className="text-gray-600 text-4xl">🎁</span>
                 )}
@@ -154,49 +103,12 @@ export default function ClubBeneficios() {
                     <span className="text-xs bg-green-900 text-green-300 px-2 py-0.5 rounded">-{b.discount}%</span>
                   )}
                 </div>
-                <button
-                  onClick={() => handleRedeem(b)}
-                  disabled={!user || (b.pointsRequired && (userData?.points || 0) < b.pointsRequired)}
-                  className="w-full mt-3 bg-club-yellow text-black font-semibold py-2 rounded hover:bg-yellow-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {!user ? 'Ingresá para canjear' : b.pointsRequired ? 'Canjear' : 'Consultar'}
-                </button>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       )}
 
-      {/* Modal post-canje */}
-      {redeemed && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4" onClick={() => setRedeemed(null)}>
-          <div className="bg-gray-900 border border-yellow-600/30 rounded-2xl p-8 max-w-sm w-full text-center" onClick={(e) => e.stopPropagation()}>
-            <div className="text-green-400 text-5xl mb-3">✓</div>
-            <h2 className="text-white text-xl font-bold mb-1">¡Canje exitoso!</h2>
-            <p className="text-gray-400 text-sm mb-4">Mostrá este código en el club</p>
-
-            <div className="bg-white rounded-xl p-4 inline-block mb-4">
-              <img
-                src={`https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(`https://proshop-baradero.vercel.app/verificar/${redeemed.code}`)}`}
-                alt="QR de canje"
-                className="w-44 h-44 mx-auto"
-              />
-            </div>
-
-            <p className="text-3xl font-bold tracking-widest text-club-yellow mb-2">{redeemed.code}</p>
-            <p className="text-white font-medium">{redeemed.benefit.name}</p>
-            <p className="text-gray-500 text-sm mt-1">-{redeemed.benefit.pointsRequired} pts</p>
-
-            <p className="text-gray-500 text-xs mt-4">Escaneá con tu celular o mostráselo al encargado</p>
-            <button
-              onClick={() => setRedeemed(null)}
-              className="mt-3 bg-club-yellow text-black font-semibold px-6 py-2 rounded hover:bg-yellow-400 transition w-full"
-            >
-              Cerrar
-            </button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
