@@ -66,7 +66,9 @@ export default function Home() {
       <section className="max-w-7xl mx-auto px-4 py-16">
         <div className="grid md:grid-cols-3 gap-8">
           <Link to="/proshop" className="bg-gray-900 p-6 rounded-lg border border-gray-800 text-center block hover:border-club-yellow/50 transition group">
-            <div className="text-club-yellow text-3xl mb-3">🏪</div>
+            <div className="mb-3 flex justify-center">
+              <img src="/logo.png" alt="Proshop" className="h-12 object-contain" />
+            </div>
             <h3 className="text-white font-bold text-lg mb-2 group-hover:text-club-yellow transition">Proshop</h3>
             <p className="text-gray-400 text-sm">
               Productos de primera calidad
