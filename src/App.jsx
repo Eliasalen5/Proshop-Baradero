@@ -1,77 +1,72 @@
-import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
 import AdminRoute from './components/AdminRoute'
-import Loading from './components/Loading'
-
-const AdminLayout = lazy(() => import('./pages/admin/AdminLayout'))
-const Home = lazy(() => import('./pages/Home'))
-const Proshop = lazy(() => import('./pages/Proshop'))
-const ProductDetail = lazy(() => import('./pages/ProductDetail'))
-const Torneos = lazy(() => import('./pages/Torneos'))
-const TournamentDetail = lazy(() => import('./pages/TournamentDetail'))
-const ClubBeneficios = lazy(() => import('./pages/ClubBeneficios'))
-const BenefitDetail = lazy(() => import('./pages/BenefitDetail'))
-const Login = lazy(() => import('./pages/Login'))
-const Register = lazy(() => import('./pages/Register'))
-const ResetPassword = lazy(() => import('./pages/ResetPassword'))
-const Profile = lazy(() => import('./pages/Profile'))
-const Dashboard = lazy(() => import('./pages/admin/Dashboard'))
-const ProductsManager = lazy(() => import('./pages/admin/ProductsManager'))
-const TournamentsManager = lazy(() => import('./pages/admin/TournamentsManager'))
-const BenefitsManager = lazy(() => import('./pages/admin/BenefitsManager'))
-const UsersManager = lazy(() => import('./pages/admin/UsersManager'))
-const CarouselManager = lazy(() => import('./pages/admin/CarouselManager'))
-const VerificarCanje = lazy(() => import('./pages/VerificarCanje'))
-const Pantalla = lazy(() => import('./pages/Pantalla'))
+import AdminLayout from './pages/admin/AdminLayout'
+import Home from './pages/Home'
+import Proshop from './pages/Proshop'
+import ProductDetail from './pages/ProductDetail'
+import Torneos from './pages/Torneos'
+import TournamentDetail from './pages/TournamentDetail'
+import ClubBeneficios from './pages/ClubBeneficios'
+import BenefitDetail from './pages/BenefitDetail'
+import Login from './pages/Login'
+import Register from './pages/Register'
+import ResetPassword from './pages/ResetPassword'
+import Profile from './pages/Profile'
+import Dashboard from './pages/admin/Dashboard'
+import ProductsManager from './pages/admin/ProductsManager'
+import TournamentsManager from './pages/admin/TournamentsManager'
+import BenefitsManager from './pages/admin/BenefitsManager'
+import UsersManager from './pages/admin/UsersManager'
+import CarouselManager from './pages/admin/CarouselManager'
+import VerificarCanje from './pages/VerificarCanje'
+import Pantalla from './pages/Pantalla'
 
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
-        <Suspense fallback={<Loading />}>
-          <Routes>
-            <Route path="/verificar/:code" element={<VerificarCanje />} />
-            <Route path="/pantalla" element={<Pantalla />} />
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/proshop" element={<Proshop />} />
-              <Route path="/proshop/:id" element={<ProductDetail />} />
-              <Route path="/torneos" element={<Torneos />} />
-              <Route path="/torneos/:id" element={<TournamentDetail />} />
-              <Route path="/club-beneficios" element={<ClubBeneficios />} />
-              <Route path="/club-beneficios/:id" element={<BenefitDetail />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route
-                path="/perfil"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin"
-                element={
-                  <AdminRoute>
-                    <AdminLayout />
-                  </AdminRoute>
-                }
-              >
-                <Route index element={<Dashboard />} />
-                <Route path="tournaments" element={<TournamentsManager />} />
-                <Route path="products" element={<ProductsManager />} />
-                <Route path="benefits" element={<BenefitsManager />} />
-                <Route path="users" element={<UsersManager />} />
-                <Route path="carousel" element={<CarouselManager />} />
-              </Route>
+        <Routes>
+          <Route path="/verificar/:code" element={<VerificarCanje />} />
+          <Route path="/pantalla" element={<Pantalla />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/proshop" element={<Proshop />} />
+            <Route path="/proshop/:id" element={<ProductDetail />} />
+            <Route path="/torneos" element={<Torneos />} />
+            <Route path="/torneos/:id" element={<TournamentDetail />} />
+            <Route path="/club-beneficios" element={<ClubBeneficios />} />
+            <Route path="/club-beneficios/:id" element={<BenefitDetail />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/reset-password" element={<ResetPassword />} />
+            <Route
+              path="/perfil"
+              element={
+                <ProtectedRoute>
+                  <Profile />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<Dashboard />} />
+              <Route path="tournaments" element={<TournamentsManager />} />
+              <Route path="products" element={<ProductsManager />} />
+              <Route path="benefits" element={<BenefitsManager />} />
+              <Route path="users" element={<UsersManager />} />
+              <Route path="carousel" element={<CarouselManager />} />
             </Route>
-          </Routes>
-        </Suspense>
+          </Route>
+        </Routes>
       </AuthProvider>
     </BrowserRouter>
   )
