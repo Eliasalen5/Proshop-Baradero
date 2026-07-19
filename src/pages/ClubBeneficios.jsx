@@ -120,7 +120,7 @@ export default function ClubBeneficios() {
               <Link to={`/club-beneficios/${b.id}`} className="block group">
                 <div className="aspect-square bg-gray-800 flex items-center justify-center overflow-hidden">
                   {b.image ? (
-                    <img src={b.image} alt={b.name} className="w-full h-full object-cover group-hover:scale-105 transition duration-300" />
+                    <img src={b.image} alt={b.name} className="w-full h-full object-contain group-hover:scale-105 transition duration-300" />
                   ) : (
                     <span className="text-gray-600 text-4xl">🎁</span>
                   )}

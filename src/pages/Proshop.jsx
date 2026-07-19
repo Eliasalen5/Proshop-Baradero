@@ -78,7 +78,7 @@ export default function Proshop() {
                   <img
                     src={product.image}
                     alt={product.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition"
+                    className="w-full h-full object-contain group-hover:scale-105 transition"
                   />
                 ) : (
                   <span className="text-gray-600 text-4xl">📦</span>
