@@ -66,7 +66,7 @@ export default function UsersManager() {
     if (!added || added <= 0) return
     const newTotal = (currentPoints || 0) + added
     await updateDoc(doc(db, 'users', userId), { points: newTotal })
-    setUsers(users.map((u) => (u.id === userId ? { ...u, points: newTotal } : u)))
+    setUsers((prev) => prev.map((u) => (u.id === userId ? { ...u, points: newTotal } : u)))
     setPointsInput({ ...pointsInput, [userId]: '' })
   }
 
@@ -85,7 +85,7 @@ export default function UsersManager() {
     }
     try {
       await updateDoc(doc(db, 'redemptions', match.id), { status: 'completed', completedAt: new Date().toISOString() })
-      setRedemptions(redemptions.map((r) => (r.id === match.id ? { ...r, status: 'completed' } : r)))
+      setRedemptions((prev) => prev.map((r) => (r.id === match.id ? { ...r, status: 'completed' } : r)))
       setConfirmMsg(`Canje de "${match.benefitName}" confirmado`)
       setCodeInput('')
     } catch {

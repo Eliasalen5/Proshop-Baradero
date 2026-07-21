@@ -11,13 +11,17 @@ export default function Proshop() {
   const uniqueCategories = [...new Set(products.map(p => p.category).filter(Boolean))]
 
   useEffect(() => {
+    let cancelled = false
     getDocs(query(collection(db, 'products'), orderBy('createdAt', 'desc'))).then((snap) => {
+      if (cancelled) return
       setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
       setLoading(false)
     }).catch((err) => {
+      if (cancelled) return
       setLoading(false)
       console.error(err)
     })
+    return () => { cancelled = true }
   }, [])
 
   const filtered = selected
@@ -89,7 +93,7 @@ export default function Proshop() {
                   {product.name}
                 </h3>
                 <p className="text-club-yellow font-bold text-lg mt-1">
-                  ${product.price?.toLocaleString('es-AR')}
+                  {product.price != null && `$${product.price.toLocaleString('es-AR')}`}
                 </p>
                 {product.category && (
                   <span className="text-xs text-gray-500 uppercase">{product.category}</span>

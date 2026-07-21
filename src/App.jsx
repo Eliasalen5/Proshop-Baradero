@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import Layout from './components/Layout'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -65,6 +66,15 @@ export default function App() {
               <Route path="users" element={<UsersManager />} />
               <Route path="carousel" element={<CarouselManager />} />
             </Route>
+            <Route path="*" element={
+              <div className="min-h-[60vh] flex flex-col items-center justify-center text-center px-4">
+                <h1 className="text-6xl font-bold text-club-yellow mb-4">404</h1>
+                <p className="text-gray-400 mb-6">La página que buscás no existe</p>
+                <Link to="/" className="bg-club-yellow text-black px-6 py-2 rounded font-semibold hover:bg-yellow-400 transition">
+                  Volver al inicio
+                </Link>
+              </div>
+            } />
           </Route>
         </Routes>
       </AuthProvider>

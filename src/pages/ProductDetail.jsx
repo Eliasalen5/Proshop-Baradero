@@ -63,7 +63,7 @@ export default function ProductDetail() {
             </span>
           )}
           <p className="text-3xl font-bold text-club-yellow mt-4">
-            ${product.price?.toLocaleString('es-AR')}
+            {product.price != null && `$${product.price.toLocaleString('es-AR')}`}
           </p>
           <p className="text-gray-400 mt-4">{product.description || 'Sin descripción'}</p>
         </div>

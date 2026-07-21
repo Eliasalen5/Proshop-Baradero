@@ -8,17 +8,21 @@ export default function Dashboard() {
   const [error, setError] = useState('')
 
   useEffect(() => {
+    let cancelled = false
     Promise.all([
       getCountFromServer(collection(db, 'products')),
       getCountFromServer(collection(db, 'tournaments')),
       getCountFromServer(collection(db, 'benefits')),
       getCountFromServer(collection(db, 'users')),
     ]).then(([p, t, b, u]) => {
+      if (cancelled) return
       setCounts({ products: p.data().count, tournaments: t.data().count, benefits: b.data().count, users: u.data().count })
     }).catch((err) => {
+      if (cancelled) return
       console.error(err)
       setError('Error al cargar estadísticas')
     })
+    return () => { cancelled = true }
   }, [])
 
   const cards = [

@@ -10,11 +10,15 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const [userMenu, setUserMenu] = useState(false)
   const menuRef = useRef(null)
+  const mobileMenuRef = useRef(null)
 
   useEffect(() => {
     const handleClick = (e) => {
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setUserMenu(false)
+      }
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(e.target) && !e.target.closest('button')) {
+        setOpen(false)
       }
     }
     document.addEventListener('mousedown', handleClick)
@@ -48,7 +52,7 @@ export default function Navbar() {
                   onClick={() => setUserMenu(!userMenu)}
                   className="flex items-center gap-1.5 text-gray-300 hover:text-club-yellow transition"
                 >
-                  <span className="max-w-[120px] truncate">{userData?.displayName}</span>
+                  <span className="max-w-[120px] truncate">{userData?.displayName || user.email}</span>
                   <HiChevronDown className={`w-4 h-4 transition ${userMenu ? 'rotate-180' : ''}`} />
                 </button>
                 {userMenu && (
@@ -94,7 +98,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      <div aria-hidden={!open} className={`md:hidden bg-club-black border-t border-yellow-600/30 transition-all duration-200 ${open ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+      <div ref={mobileMenuRef} aria-hidden={!open} className={`md:hidden bg-club-black border-t border-yellow-600/30 transition-all duration-200 ${open ? 'max-h-80 opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
         <div className="flex flex-col gap-1 px-4 pb-4 pt-3">
           <Link to="/" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Home</Link>
           <Link to="/proshop" onClick={() => setOpen(false)} className="text-gray-300 hover:text-club-yellow transition px-3 py-2 rounded hover:bg-gray-800">Proshop</Link>
@@ -108,7 +112,7 @@ export default function Navbar() {
               {userData?.role === 'admin' && (
                 <Link to="/admin" onClick={() => setOpen(false)} className="text-club-yellow font-semibold px-3 py-2 rounded hover:bg-gray-800 transition">Admin</Link>
               )}
-              <button onClick={handleLogout} className="text-left text-red-400 hover:bg-gray-800 transition px-3 py-2 rounded">Salir</button>
+              <button onClick={() => { setOpen(false); handleLogout() }} className="text-left text-red-400 hover:bg-gray-800 transition px-3 py-2 rounded">Salir</button>
             </>
           ) : (
             <Link to="/login" onClick={() => setOpen(false)} className="bg-club-yellow text-black font-semibold text-center px-3 py-2 rounded hover:bg-yellow-400 transition">Ingresar</Link>

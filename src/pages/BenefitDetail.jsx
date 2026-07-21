@@ -3,13 +3,7 @@ import { useParams, Link } from 'react-router-dom'
 import { doc, getDoc, runTransaction, collection } from 'firebase/firestore'
 import { db } from '../services/firebase'
 import { useAuth } from '../context/AuthContext'
-
-function generateCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  const arr = new Uint8Array(6)
-  crypto.getRandomValues(arr)
-  return Array.from(arr, (b) => chars[b % chars.length]).join('')
-}
+import generateCode from '../utils/generateCode'
 
 export default function BenefitDetail() {
   const { id } = useParams()

@@ -20,7 +20,7 @@ export default function AdminLayout() {
             key={link.path}
             to={link.path}
             className={`px-3 py-1.5 rounded text-sm transition ${
-              location.pathname === link.path
+              location.pathname === link.path || (link.path !== '/admin' && location.pathname.startsWith(link.path + '/'))
                 ? 'bg-club-yellow text-black font-semibold'
                 : 'text-gray-400 hover:text-white hover:bg-gray-800'
             }`}

@@ -710,7 +710,7 @@ export default function TournamentsManager() {
                 </div>
               )
             })()}
-            <button type="button" onClick={() => { setResults(null); setResultFiles({}) }}
+            <button type="button" onClick={() => { if (confirm('¿Quitar todos los resultados?')) { setResults(null); setResultFiles({}) } }}
               className="text-gray-400 hover:text-white text-sm transition">
               Quitar resultados
             </button>

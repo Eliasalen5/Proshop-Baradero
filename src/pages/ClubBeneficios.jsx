@@ -3,13 +3,7 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { collection, query, where, doc, runTransaction, onSnapshot } from 'firebase/firestore'
 import { db } from '../services/firebase'
-
-function generateCode() {
-  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-  const arr = new Uint8Array(6)
-  crypto.getRandomValues(arr)
-  return Array.from(arr, (b) => chars[b % chars.length]).join('')
-}
+import generateCode from '../utils/generateCode'
 
 export default function ClubBeneficios() {
   const { user, userData } = useAuth()

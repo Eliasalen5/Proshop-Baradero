@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react'
+import { useEffect, useState, useMemo, useCallback } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { doc, getDoc } from 'firebase/firestore'
 import { db } from '../services/firebase'
@@ -89,6 +89,15 @@ export default function TournamentDetail() {
     const id = setInterval(() => setNow(nowArgentina()), 30000)
     return () => clearInterval(id)
   }, [])
+
+  const closeLightbox = useCallback(() => setLightbox(null), [])
+
+  useEffect(() => {
+    if (!lightbox) return
+    const handleKey = (e) => { if (e.key === 'Escape') closeLightbox() }
+    document.addEventListener('keydown', handleKey)
+    return () => document.removeEventListener('keydown', handleKey)
+  }, [lightbox, closeLightbox])
 
   const matchStatuses = useMemo(
     () => getMatchStatuses(tournament?.zones, tournament?.elimination, tournament?.dateTime, tournament?.matchDuration, now),
@@ -305,7 +314,7 @@ export default function TournamentDetail() {
 
       {/* Lightbox */}
       {lightbox && (
-        <div className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={() => setLightbox(null)}>
+        <div role="dialog" aria-label="Flyer" className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4" onClick={closeLightbox}>
           <img src={lightbox} alt="Flyer" className="max-w-full max-h-full object-contain rounded-lg" />
         </div>
       )}

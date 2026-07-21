@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 
 const ATTEMPT_KEY = 'proshop_login_attempts'
@@ -32,6 +32,8 @@ export default function Login() {
   const [lockoutMins, setLockoutMins] = useState(0)
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
 
   useEffect(() => {
     const attempts = getAttempts()
@@ -54,7 +56,7 @@ export default function Login() {
     try {
       await login(email, password)
       clearAttempts()
-      navigate('/')
+      navigate(from, { replace: true })
     } catch (err) {
       recordAttempt()
       if (err.code === 'auth/too-many-requests') {

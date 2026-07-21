@@ -21,7 +21,18 @@ export default function ProductsManager() {
     getDocs(q).then((snap) => setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })))).catch((err) => setError('Error al cargar: ' + err.message))
   }
 
-  useEffect(() => { loadProducts() }, [])
+  useEffect(() => {
+    let cancelled = false
+    const q = query(collection(db, 'products'), orderBy('createdAt', 'desc'))
+    getDocs(q).then((snap) => {
+      if (cancelled) return
+      setProducts(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+    }).catch((err) => {
+      if (cancelled) return
+      setError('Error al cargar: ' + err.message)
+    })
+    return () => { cancelled = true }
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()

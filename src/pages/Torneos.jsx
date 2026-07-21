@@ -38,15 +38,20 @@ export default function Torneos() {
   const [now, setNow] = useState(nowArgentina())
 
   useEffect(() => {
-    const q = query(collection(db, 'tournaments'), orderBy('createdAt', 'desc'))
-    const unsub = onSnapshot(q, (snap) => {
-      setTournaments(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
-      setLoading(false)
-    }, (err) => {
-      setLoading(false)
-      console.error(err)
-    })
-    return unsub
+    let unsub, retry
+    const listen = () => {
+      const q = query(collection(db, 'tournaments'), orderBy('createdAt', 'desc'))
+      unsub = onSnapshot(q, (snap) => {
+        setTournaments(snap.docs.map((d) => ({ id: d.id, ...d.data() })))
+        setLoading(false)
+      }, (err) => {
+        setLoading(false)
+        console.error(err)
+        retry = setTimeout(listen, 3000)
+      })
+    }
+    listen()
+    return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
   }, [])
 
   useEffect(() => {
