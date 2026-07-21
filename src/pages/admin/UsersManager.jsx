@@ -52,6 +52,15 @@ export default function UsersManager() {
     return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
   }, [])
 
+  useEffect(() => {
+    return () => {
+      if (html5QrCodeRef.current) {
+        html5QrCodeRef.current.stop().catch(() => {})
+        html5QrCodeRef.current = null
+      }
+    }
+  }, [])
+
   const assignPoints = async (userId, currentPoints) => {
     const added = Number(pointsInput[userId])
     if (!added || added <= 0) return

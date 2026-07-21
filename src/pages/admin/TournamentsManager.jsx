@@ -194,12 +194,12 @@ export default function TournamentsManager() {
     try {
       let flyerUrl = form.flyer
       if (file) {
-        if (editing && form.flyer) {
-          try { await deleteObject(ref(storage, form.flyer)) } catch {}
-        }
         const ref_st = ref(storage, `tournaments/${Date.now()}_${file.name}`)
         await uploadBytes(ref_st, file)
         flyerUrl = await getDownloadURL(ref_st)
+        if (editing && form.flyer) {
+          try { await deleteObject(ref(storage, form.flyer)) } catch {}
+        }
       }
 
       const data = {
@@ -226,7 +226,6 @@ export default function TournamentsManager() {
       }
 
       if (editing) {
-        if (!file) delete data.flyer
         await updateDoc(doc(db, 'tournaments', editing), data)
       } else {
         data.createdAt = new Date().toISOString()

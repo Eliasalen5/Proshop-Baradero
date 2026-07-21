@@ -24,38 +24,46 @@ export function AuthProvider({ children }) {
       if (!firebaseUser) setUserData(null)
       setLoading(false)
     })
-    return unsubscribe
+    return () => { clearTimeout(fallback); unsubscribe() }
   }, [])
 
   useEffect(() => {
     if (!user) return
-    let unsub, retry
+    let unsub, retry, cleaned = false
     const listen = () => {
       unsub = onSnapshot(doc(db, 'users', user.uid), (snap) => {
+        if (cleaned) return
         if (snap.exists()) {
           setUserData(snap.data())
+        } else {
+          setUserData({})
         }
       }, (err) => {
         console.error('User doc onSnapshot:', err)
-        retry = setTimeout(listen, 3000)
+        if (!cleaned) retry = setTimeout(listen, 3000)
       })
     }
     listen()
-    return () => { if (unsub) unsub(); if (retry) clearTimeout(retry) }
+    return () => { cleaned = true; if (unsub) unsub(); if (retry) clearTimeout(retry) }
   }, [user])
 
   const register = async (email, password, name, phone, documento) => {
     const cred = await createUserWithEmailAndPassword(auth, email, password)
-    await setDoc(doc(db, 'users', cred.user.uid), {
-      email,
-      displayName: name,
-      phone: phone || '',
-      documento: documento || '',
-      photoURL: '',
-      role: 'user',
-      points: 0,
-      createdAt: new Date().toISOString(),
-    })
+    try {
+      await setDoc(doc(db, 'users', cred.user.uid), {
+        email,
+        displayName: name,
+        phone: phone || '',
+        documento: documento || '',
+        photoURL: '',
+        role: 'user',
+        points: 0,
+        createdAt: new Date().toISOString(),
+      })
+    } catch (err) {
+      try { await cred.user.delete() } catch {}
+      throw err
+    }
     return cred
   }
 
