@@ -17,12 +17,12 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    const fallback = setTimeout(() => setLoading(false), 5000)
     const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       setUser(firebaseUser)
-      if (!firebaseUser) {
-        setUserData(null)
-        setLoading(false)
-      }
+      clearTimeout(fallback)
+      if (!firebaseUser) setUserData(null)
+      setLoading(false)
     })
     return unsubscribe
   }, [])
@@ -35,10 +35,8 @@ export function AuthProvider({ children }) {
         if (snap.exists()) {
           setUserData(snap.data())
         }
-        setLoading(false)
       }, (err) => {
         console.error('User doc onSnapshot:', err)
-        setLoading(false)
         retry = setTimeout(listen, 3000)
       })
     }
