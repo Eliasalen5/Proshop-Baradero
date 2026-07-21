@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 
 export default function Dashboard() {
   const [counts, setCounts] = useState({ products: 0, tournaments: 0, benefits: 0, users: 0 })
+  const [error, setError] = useState('')
 
   useEffect(() => {
     Promise.all([
@@ -14,6 +15,9 @@ export default function Dashboard() {
       getCountFromServer(collection(db, 'users')),
     ]).then(([p, t, b, u]) => {
       setCounts({ products: p.data().count, tournaments: t.data().count, benefits: b.data().count, users: u.data().count })
+    }).catch((err) => {
+      console.error(err)
+      setError('Error al cargar estadísticas')
     })
   }, [])
 
@@ -27,6 +31,7 @@ export default function Dashboard() {
   return (
     <div>
       <h1 className="text-3xl font-bold text-club-yellow mb-8">Panel de Administración</h1>
+      {error && <p className="text-red-400 mb-4">{error}</p>}
       <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {cards.map((card) => (
           <Link

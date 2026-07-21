@@ -71,13 +71,18 @@ export default function TournamentDetail() {
   const [lightbox, setLightbox] = useState(null)
 
   useEffect(() => {
+    let cancelled = false
+    setLoading(true)
     getDoc(doc(db, 'tournaments', id)).then((snap) => {
+      if (cancelled) return
       if (snap.exists()) setTournament({ id: snap.id, ...snap.data() })
       setLoading(false)
     }).catch((err) => {
+      if (cancelled) return
       setLoading(false)
       console.error(err)
     })
+    return () => { cancelled = true }
   }, [id])
 
   useEffect(() => {

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { collection, getDocs, addDoc, updateDoc, deleteDoc, doc, query, orderBy } from 'firebase/firestore'
 import { ref, uploadBytes, getDownloadURL, deleteObject } from 'firebase/storage'
 import { db, storage } from '../../services/firebase'
@@ -62,8 +62,13 @@ export default function TournamentsManager() {
   const [formZones, setFormZones] = useState(() => generateZones(2, 3))
   const [elimination, setElimination] = useState([])
   const [expandedScores, setExpandedScores] = useState({})
+  const skipZoneRegen = useRef(false)
 
   useEffect(() => {
+    if (skipZoneRegen.current) {
+      skipZoneRegen.current = false
+      return
+    }
     setFormZones(generateZones(zoneCount, teamsPerZone))
   }, [form.zoneCount, form.teamsPerZone])
 
@@ -245,6 +250,7 @@ export default function TournamentsManager() {
           : team
       ),
     }))
+    skipZoneRegen.current = true
     setForm({
       name: t.name,
       dateTime: t.dateTime || '',

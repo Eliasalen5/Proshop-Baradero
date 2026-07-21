@@ -20,13 +20,18 @@ export default function BenefitDetail() {
   const [redeemed, setRedeemed] = useState(null)
 
   useEffect(() => {
+    let cancelled = false
+    setLoading(true)
     getDoc(doc(db, 'benefits', id)).then((snap) => {
+      if (cancelled) return
       if (snap.exists()) setBenefit({ id: snap.id, ...snap.data() })
       setLoading(false)
     }).catch((err) => {
+      if (cancelled) return
       setLoading(false)
       console.error(err)
     })
+    return () => { cancelled = true }
   }, [id])
 
   const handleRedeem = async () => {

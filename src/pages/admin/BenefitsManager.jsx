@@ -171,18 +171,18 @@ export default function BenefitsManager() {
             className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
         </div>
 
-        {!search ? (
-          <p className="text-gray-500 text-center py-8">
-            {benefits.length === 0 ? 'No hay beneficios. Creá el primero.' : 'Buscá un beneficio por nombre o categoría'}
-          </p>
+        {!search && benefits.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">No hay beneficios. Creá el primero.</p>
         ) : (
           <div className="grid gap-3">
             {(() => {
               const term = search.toLowerCase()
-              const filtered = benefits.filter((b) =>
-                (b.name?.toLowerCase() || '').includes(term) ||
-                (b.category?.toLowerCase() || '').includes(term)
-              )
+              const filtered = search
+                ? benefits.filter((b) =>
+                    (b.name?.toLowerCase() || '').includes(term) ||
+                    (b.category?.toLowerCase() || '').includes(term)
+                  )
+                : benefits
               if (filtered.length === 0) {
                 return <p className="text-gray-500 text-center py-8">No se encontraron beneficios</p>
               }

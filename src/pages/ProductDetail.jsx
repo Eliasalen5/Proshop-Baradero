@@ -9,13 +9,18 @@ export default function ProductDetail() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
+    let cancelled = false
+    setLoading(true)
     getDoc(doc(db, 'products', id)).then((snap) => {
+      if (cancelled) return
       if (snap.exists()) setProduct({ id: snap.id, ...snap.data() })
       setLoading(false)
     }).catch((err) => {
+      if (cancelled) return
       setLoading(false)
       console.error(err)
     })
+    return () => { cancelled = true }
   }, [id])
 
   if (loading) {

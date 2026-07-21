@@ -150,18 +150,18 @@ export default function ProductsManager() {
             className="w-full bg-gray-800 border border-gray-700 rounded px-3 py-2 text-white" />
         </div>
 
-        {!search ? (
-          <p className="text-gray-500 text-center py-8">
-            {products.length === 0 ? 'No hay productos. Creá el primero.' : 'Buscá un producto por nombre o categoría'}
-          </p>
+        {!search && products.length === 0 ? (
+          <p className="text-gray-500 text-center py-8">No hay productos. Creá el primero.</p>
         ) : (
           <div className="grid gap-3">
             {(() => {
               const term = search.toLowerCase()
-              const filtered = products.filter((p) =>
-                (p.name?.toLowerCase() || '').includes(term) ||
-                (p.category?.toLowerCase() || '').includes(term)
-              )
+              const filtered = search
+                ? products.filter((p) =>
+                    (p.name?.toLowerCase() || '').includes(term) ||
+                    (p.category?.toLowerCase() || '').includes(term)
+                  )
+                : products
               if (filtered.length === 0) {
                 return <p className="text-gray-500 text-center py-8">No se encontraron productos</p>
               }
